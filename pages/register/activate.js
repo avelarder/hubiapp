@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import ActivationModal from "./activationModal";
+import ActivationModal from "../../components/activationModal";
 
 function Activate() {
   const router = useRouter();
