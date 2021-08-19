@@ -8,7 +8,6 @@ const FirebaseCredentials = {
 
 // if a Firebase instance doesn't exist, create one
 if (Firebase.default.apps == null || !Firebase.default.apps.length) {
-  console.log("entro");
   Firebase.default.initializeApp(FirebaseCredentials);
 }
 
