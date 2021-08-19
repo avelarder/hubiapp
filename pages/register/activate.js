@@ -8,10 +8,6 @@ function Activate() {
   const [modalShow, setModalShow] = useState(false);
 
   const validateToken = (token, type) => {
-    //TODO: Call to Firebase to verify activation token.
-
-    console.log("token: " + token);
-    console.log("type: " + type);
     return Math.random() > 0.5;
   };
 
