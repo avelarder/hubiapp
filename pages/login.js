@@ -50,7 +50,16 @@ export default function Login() {
                 onClick={onSubmit}
                 className="h-10 w-max rounded-full px-20 bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"
               >
-                Registrar
+                Ingresar
+              </button>
+            </div>
+            <div className="box-content text-center font-sans pt-5 pb-5">
+              <div>No te has registrado aún?</div>
+              <button
+                onClick={onSubmit}
+                className="h-10 w-max  px-20 bg-opacity-100 text-purple-600 hover:text-purple-800"
+              >
+                <Link href="/">Puedes hacerlo desde aquí.</Link>
               </button>
             </div>
           </div>
