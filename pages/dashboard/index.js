@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../authUserProvider";
-import Header from "./header";
-import Footer from "./footer";
+import Header from "../../components/dashboard/header";
+import Footer from "../../components/dashboard/footer";
 import MainSection from "../../components/dashboard/mainSection";
 import Summary from "../../components/dashboard/summary";
 

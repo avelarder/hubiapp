@@ -52,7 +52,7 @@ function UserInfo({ user }) {
         />
         <div className="flex items-center truncate">
           <span className="truncate ml-2 text-sm font-medium group-hover:text-gray-800">
-            {user.email}
+            {user?.email}
           </span>
           <svg
             className="w-3 h-3 flex-shrink-0 ml-1 fill-current text-gray-400"
@@ -79,7 +79,7 @@ function UserInfo({ user }) {
           onBlur={() => setDropdownOpen(false)}
         >
           <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-gray-200">
-            <div className="font-medium text-gray-800">{user.email}</div>
+            <div className="font-medium text-gray-800">{user?.email}</div>
             <div className="text-xs text-gray-500 italic">Administrador</div>
           </div>
           <ul>
