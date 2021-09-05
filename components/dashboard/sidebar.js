@@ -1,6 +1,15 @@
 import React, { useRef, useEffect } from "react";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
+
+import {
+  ArrowLeftIcon,
+  OfficeBuildingIcon,
+  TemplateIcon,
+} from "@heroicons/react/outline";
+import SidebarItem from "./sidebarItem";
+import { text } from "dom-helpers";
 
 function Sidebar({ open, setOpen }) {
   const trigger = useRef(null);
@@ -32,6 +41,9 @@ function Sidebar({ open, setOpen }) {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
+  const router = useRouter();
+  const page = router.pathname;
+
   return (
     <div className="lg:w-64">
       {/* Sidebar backdrop (mobile only) */}
@@ -46,35 +58,31 @@ function Sidebar({ open, setOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-800 p-4 transition-transform duration-200 ease-in-out ${
+        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-800 p-2 transition-transform duration-200 ease-in-out ${
           open ? "translate-x-0" : "-translate-x-64"
         }`}
       >
         {/* Sidebar header */}
-        <div className="flex justify-between mb-10 pr-3 sm:px-2">
+        <div className="flex mb-10 sm:px-2">
           {/* Close button */}
-          <button
-            ref={trigger}
-            className="lg:hidden text-purple-200 hover:text-gray-400"
-            onClick={() => {
-              setOpen(!open);
-            }}
-            aria-controls="sidebar"
-            aria-expanded={open}
-          >
-            <span className="sr-only">Close sidebar</span>
-            <svg
-              className="w-6 h-6 fill-current"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="flex items-start pl-3 mt-4">
+            <button
+              ref={trigger}
+              className="lg:hidden text-purple-200 hover:text-gray-400"
+              onClick={() => {
+                setOpen(!open);
+              }}
+              aria-controls="sidebar"
+              aria-expanded={open}
             >
-              <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
-            </svg>
-          </button>
+              {/* <span className="sr-only">Close sidebar</span> */}
+              <ArrowLeftIcon className="text-purple-200 w-4 mr-2"></ArrowLeftIcon>
+            </button>
+          </div>
           {/* Logo */}
           <div className="flex flex-col items-end">
             <div className="flex">
-              <Link exact href="/dashboard" passHref>
+              <Link passHref href="/dashboard">
                 <Image
                   src="/hubi-white-logo.png"
                   width="50px"
@@ -87,6 +95,25 @@ function Sidebar({ open, setOpen }) {
               tu comunidad en línea.
             </div>
           </div>
+        </div>
+        <div>
+          <h3 className="text-xs uppercase text-purple-100 font-semibold pl-3">
+            ACCESOS
+          </h3>
+          <ul className="mt-3">
+            {/* Dashboard */}
+            <SidebarItem
+              icon={<TemplateIcon></TemplateIcon>}
+              path="/dashboard"
+              text="Panel de Control"
+            ></SidebarItem>
+            {/* Customers */}
+            <SidebarItem
+              icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
+              path="/buildings"
+              text="Edificios"
+            ></SidebarItem>
+          </ul>
         </div>
       </div>
     </div>
