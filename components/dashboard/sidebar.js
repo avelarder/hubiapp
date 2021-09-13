@@ -1,17 +1,12 @@
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/router";
-import Link from "next/link";
+
+import NavLink from "../NavLink";
+import SidebarItem from "./sidebarItem";
+import { OfficeBuildingIcon, TemplateIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 
-import {
-  ArrowLeftIcon,
-  OfficeBuildingIcon,
-  TemplateIcon,
-} from "@heroicons/react/outline";
-import SidebarItem from "./sidebarItem";
-import { text } from "dom-helpers";
-
-function Sidebar({ open, setOpen }) {
+function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
@@ -20,12 +15,12 @@ function Sidebar({ open, setOpen }) {
     const clickHandler = ({ target }) => {
       if (!sidebar.current || !trigger.current) return;
       if (
-        !open ||
+        !sidebarOpen ||
         sidebar.current.contains(target) ||
         trigger.current.contains(target)
       )
         return;
-      setOpen(false);
+      setSidebarOpen(false);
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
@@ -34,8 +29,8 @@ function Sidebar({ open, setOpen }) {
   // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }) => {
-      if (!open || keyCode !== 27) return;
-      setOpen(false);
+      if (!sidebarOpen || keyCode !== 27) return;
+      setSidebarOpen(false);
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
@@ -48,8 +43,8 @@ function Sidebar({ open, setOpen }) {
     <div className="lg:w-64">
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0 bg-gray-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 bg-purple-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
+          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         aria-hidden="true"
       ></div>
@@ -58,47 +53,45 @@ function Sidebar({ open, setOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-800 p-2 transition-transform duration-200 ease-in-out ${
-          open ? "translate-x-0" : "-translate-x-64"
+        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-900 p-4 transition-transform duration-200 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
       >
         {/* Sidebar header */}
-        <div className="flex mb-10 sm:px-2">
+        <div className="flex justify-between mb-10 pr-3 sm:px-2">
           {/* Close button */}
-          <div className="flex items-start pl-3 mt-4">
-            <button
-              ref={trigger}
-              className="lg:hidden text-purple-200 hover:text-gray-400"
-              onClick={() => {
-                setOpen(!open);
-              }}
-              aria-controls="sidebar"
-              aria-expanded={open}
+          <button
+            ref={trigger}
+            className="lg:hidden text-gray-500 hover:text-gray-400"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-controls="sidebar"
+            aria-expanded={sidebarOpen}
+          >
+            <span className="sr-only">Close sidebar</span>
+            <svg
+              className="w-6 h-6 fill-current"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              {/* <span className="sr-only">Close sidebar</span> */}
-              <ArrowLeftIcon className="text-purple-200 w-4 mr-2"></ArrowLeftIcon>
-            </button>
-          </div>
+              <path d="M10.7 18.7l1.4-1.4L7.8 13H20v-2H7.8l4.3-4.3-1.4-1.4L4 12z" />
+            </svg>
+          </button>
           {/* Logo */}
-          <div className="flex flex-col items-end">
-            <div className="flex">
-              <Link passHref href="/dashboard">
-                <Image
-                  src="/hubi-white-logo.png"
-                  width="50px"
-                  height="50px"
-                  alt="Hubi Logo"
-                ></Image>
-              </Link>
-            </div>
-            <div className="flex text-sm text-white h-full font-bold">
-              tu comunidad en línea.
-            </div>
-          </div>
+          <NavLink exact to="/" className="block">
+            <Image
+              className="flex align-bottom"
+              src="/hubi-white-logo.png"
+              width="50px"
+              height="50px"
+              alt="logo"
+            ></Image>
+          </NavLink>
         </div>
+
+        {/* Links */}
         <div>
-          <h3 className="text-xs uppercase text-purple-100 font-semibold pl-3">
-            ACCESOS
+          <h3 className="text-sm uppercase text-gray-200 font-semibold pl-3">
+            ACCESSOS
           </h3>
           <ul className="mt-3">
             {/* Dashboard */}
@@ -107,11 +100,10 @@ function Sidebar({ open, setOpen }) {
               path="/dashboard"
               text="Panel de Control"
             ></SidebarItem>
-            {/* Customers */}
             <SidebarItem
               icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
               path="/buildings"
-              text="Edificios"
+              text="Mis edificios"
             ></SidebarItem>
           </ul>
         </div>

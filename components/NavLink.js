@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-function NavLink({ href, children }) {
+function NavLink({ to, children }) {
   // Must add  to Link
   return (
-    <Link href={href} passHref>
+    <Link href={to} passHref>
       {children}
     </Link>
   );

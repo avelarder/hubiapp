@@ -14,7 +14,7 @@ function SidebarItem({ icon, path, text }) {
     >
       <NavLink
         passHref
-        href={path}
+        to={path}
         className={`block text-gray-200 hover:text-white transition duration-150 ${
           page === "" && "hover:text-gray-200"
         }`}
@@ -23,7 +23,7 @@ function SidebarItem({ icon, path, text }) {
           <div className="text-sm font-medium text-purple-200 mr-2 w-5">
             {icon}
           </div>
-          <span className="text-sm font-medium text-purple-200">{text}</span>
+          <span className="text-sm font-medium text-white">{text}</span>
         </div>
       </NavLink>
     </li>

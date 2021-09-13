@@ -1,7 +1,7 @@
 import React from "react";
 
 function MainSection({ children }) {
-  return <main>{children}</main>;
+  return <section className="flex justify-evenly w-full">{children}</section>;
 }
 
 export default MainSection;
