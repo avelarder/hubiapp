@@ -1,5 +1,5 @@
 import React from "react";
-import NavLink from "../NavLink";
+import { NavLink } from "../navLink";
 import { useRouter } from "next/router";
 
 function SidebarItem({ icon, path, text }) {
@@ -13,8 +13,7 @@ function SidebarItem({ icon, path, text }) {
       }`}
     >
       <NavLink
-        passHref
-        to={path}
+        href={path}
         className={`block text-gray-200 hover:text-white transition duration-150 ${
           page === "" && "hover:text-gray-200"
         }`}

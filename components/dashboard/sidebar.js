@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 
-import NavLink from "../NavLink";
+import { NavLink } from "../navLink";
 import SidebarItem from "./sidebarItem";
 import { OfficeBuildingIcon, TemplateIcon } from "@heroicons/react/solid";
 import Image from "next/image";
@@ -77,7 +77,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             </svg>
           </button>
           {/* Logo */}
-          <NavLink exact to="/" className="block">
+          <NavLink exact href="/" className="block">
             <Image
               className="flex align-bottom"
               src="/hubi-white-logo.png"
@@ -91,7 +91,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
         {/* Links */}
         <div>
           <h3 className="text-sm uppercase text-gray-200 font-semibold pl-3">
-            ACCESSOS
+            ACCESOS
           </h3>
           <ul className="mt-3">
             {/* Dashboard */}
