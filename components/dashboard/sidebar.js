@@ -3,7 +3,16 @@ import { useRouter } from "next/router";
 
 import { NavLink } from "../navLink";
 import SidebarItem from "./sidebarItem";
-import { OfficeBuildingIcon, TemplateIcon } from "@heroicons/react/solid";
+import {
+  ClipboardCheckIcon,
+  CogIcon,
+  IdentificationIcon,
+  LinkIcon,
+  OfficeBuildingIcon,
+  PresentationChartBarIcon,
+  SupportIcon,
+  TemplateIcon,
+} from "@heroicons/react/solid";
 import Image from "next/image";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
@@ -97,13 +106,43 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             {/* Dashboard */}
             <SidebarItem
               icon={<TemplateIcon></TemplateIcon>}
-              path="/dashboard"
+              path="/app/dashboard"
               text="Panel de Control"
             ></SidebarItem>
             <SidebarItem
+              icon={<PresentationChartBarIcon></PresentationChartBarIcon>}
+              path="/app/reports"
+              text="Informes"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<IdentificationIcon></IdentificationIcon>}
+              path="/Visitas"
+              text="Adm. Visitas"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<ClipboardCheckIcon></ClipboardCheckIcon>}
+              path="/empleados"
+              text="Empleados"
+            ></SidebarItem>
+            <SidebarItem
               icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
-              path="/buildings"
-              text="Mis edificios"
+              path="/adm-servicios"
+              text="Adm. Servicios"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<LinkIcon></LinkIcon>}
+              path="/integraciones"
+              text="Integraciones"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<CogIcon></CogIcon>}
+              path="/configuracion"
+              text="Configuración"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<SupportIcon></SupportIcon>}
+              path="/ayuda"
+              text="Ayuda"
             ></SidebarItem>
           </ul>
         </div>
