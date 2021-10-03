@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import { NavLink } from "../navLink";
 import SidebarItem from "./sidebarItem";
 import {
+  BellIcon,
   ClipboardCheckIcon,
   CogIcon,
+  GlobeAltIcon,
   IdentificationIcon,
   LinkIcon,
   OfficeBuildingIcon,
@@ -110,38 +112,48 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               text="Panel de Control"
             ></SidebarItem>
             <SidebarItem
+              icon={<GlobeAltIcon></GlobeAltIcon>}
+              path="/app/comunidad"
+              text="Comunidad"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<ClipboardCheckIcon></ClipboardCheckIcon>}
+              path="/app/employees"
+              text="Empleados"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<BellIcon></BellIcon>}
+              path="/app/seguridad"
+              text="Seguridad"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
+              path="/app/servicios"
+              text="Servicios"
+            ></SidebarItem>
+            <SidebarItem
               icon={<PresentationChartBarIcon></PresentationChartBarIcon>}
-              path="/app/reports"
+              path="/app/informes"
               text="Informes"
             ></SidebarItem>
             <SidebarItem
               icon={<IdentificationIcon></IdentificationIcon>}
-              path="/Visitas"
+              path="/app/visitas"
               text="Adm. Visitas"
             ></SidebarItem>
             <SidebarItem
-              icon={<ClipboardCheckIcon></ClipboardCheckIcon>}
-              path="/empleados"
-              text="Empleados"
-            ></SidebarItem>
-            <SidebarItem
-              icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
-              path="/adm-servicios"
-              text="Adm. Servicios"
-            ></SidebarItem>
-            <SidebarItem
               icon={<LinkIcon></LinkIcon>}
-              path="/integraciones"
+              path="/app/integraciones"
               text="Integraciones"
             ></SidebarItem>
             <SidebarItem
               icon={<CogIcon></CogIcon>}
-              path="/configuracion"
+              path="/app/configuracion"
               text="Configuración"
             ></SidebarItem>
             <SidebarItem
               icon={<SupportIcon></SupportIcon>}
-              path="/ayuda"
+              path="/app/ayuda"
               text="Ayuda"
             ></SidebarItem>
           </ul>

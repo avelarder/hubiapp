@@ -4,7 +4,7 @@ import Layout from "../../components/layout";
 import MainSection from "../../components/dashboard/mainSection";
 import Tile from "../../components/dashboard/tile";
 
-function Dashboard() {
+function DashboardPage() {
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
@@ -23,4 +23,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default DashboardPage;
