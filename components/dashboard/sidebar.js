@@ -139,7 +139,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <SidebarItem
               icon={<IdentificationIcon></IdentificationIcon>}
               path="/app/visitas"
-              text="Adm. Visitas"
+              text="Visitas"
             ></SidebarItem>
             <SidebarItem
               icon={<LinkIcon></LinkIcon>}
