@@ -19,7 +19,7 @@ function AdminRegister() {
       createUserWithEmailAndPassword(email, passwordOne)
         .then((authUser) => {
           console.log("Success. The user is created in Firebase");
-          router.push("/dashboard");
+          router.push("/app/dashboard");
         })
         .catch((error) => {
           // An error occurred. Set error message to be displayed to user
