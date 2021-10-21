@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "../navLink";
 import { useRouter } from "next/router";
 
-function SidebarItem({ icon, path, text }) {
+function SidebarItem({ icon, path, text, nestedItems }) {
   const router = useRouter();
   const page = router.pathname;
+  const [isNestedContainerCollapsed, setIsNestedContainerCollapsed] =
+    useState(true);
+
+  const handleNestedContainerCollapsed = () => {
+    setIsNestedContainerCollapsed(!isNestedContainerCollapsed);
+  };
 
   return (
     <li
       className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${
         page === "" && "bg-gray-900"
       }`}
+      onClick={handleNestedContainerCollapsed}
     >
       <NavLink
         href={path}
@@ -19,12 +26,28 @@ function SidebarItem({ icon, path, text }) {
         }`}
       >
         <div className="flex flex-grow">
-          <div className="text-sm font-medium text-purple-200 mr-2 w-5">
-            {icon}
-          </div>
+          {icon && (
+            <div className="text-sm font-medium text-purple-200 mr-2 w-5">
+              {icon}
+            </div>
+          )}
           <span className="text-sm font-medium text-white">{text}</span>
         </div>
       </NavLink>
+
+      {nestedItems && !isNestedContainerCollapsed && (
+        <div className="bg-purple-800 rounded-lg border-2 border-purple-500 mt-4 ">
+          <ul>
+            {nestedItems.map((nestedItem) => (
+              <SidebarItem
+                key={nestedItem.key}
+                path={nestedItem.path}
+                text={nestedItem.text}
+              ></SidebarItem>
+            ))}
+          </ul>
+        </div>
+      )}
     </li>
   );
 }

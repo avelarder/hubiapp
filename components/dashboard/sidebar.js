@@ -8,7 +8,6 @@ import {
   ClipboardCheckIcon,
   CogIcon,
   GlobeAltIcon,
-  IdentificationIcon,
   LinkIcon,
   OfficeBuildingIcon,
   PresentationChartBarIcon,
@@ -21,14 +20,62 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
+  const optionsForComunidad = [
+    {
+      key: "avisos",
+      text: "Publicaciones de Avisos para Comunidad",
+      path: "#avisos",
+    },
+    {
+      key: "productos",
+      text: "Publicación de productos para vender y comprar.",
+      path: "#productos",
+    },
+    {
+      key: "publicaciones",
+      text: "Publicación de Reuniones y Eventos.",
+      path: "#publicaciones",
+    },
+    {
+      key: "notificaciones",
+      text: "Notificaciones de Reuniones y Eventos.",
+      path: "#notificaciones",
+    },
+    {
+      key: "constancias",
+      text: "Envío de Constancias de Pago.",
+      path: "#constancias",
+    },
+    {
+      key: "reportes",
+      text: "Reportes financieros a nivel Comunidad.",
+      path: "#reportes",
+    },
+    {
+      key: "consultas",
+      text: "Consulta de documentos e informes.",
+      path: "#consultas",
+    },
+    {
+      key: "solicitudes",
+      text: "Solicitudes a la Administración.",
+      path: "#solicitudes",
+    },
+    {
+      key: "encuestas",
+      text: "Encuentas y Votaciones.",
+      path: "#encuentas",
+    },
+  ];
+
   // close on click outside
   useEffect(() => {
-    const clickHandler = ({ target }) => {
+    const clickHandler = ({ path }) => {
       if (!sidebar.current || !trigger.current) return;
       if (
         !sidebarOpen ||
-        sidebar.current.contains(target) ||
-        trigger.current.contains(target)
+        sidebar.current.contains(path) ||
+        trigger.current.contains(path)
       )
         return;
       setSidebarOpen(false);
@@ -115,6 +162,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               icon={<GlobeAltIcon></GlobeAltIcon>}
               path="/app/comunidad"
               text="Comunidad"
+              nestedItems={optionsForComunidad}
             ></SidebarItem>
             <SidebarItem
               icon={<ClipboardCheckIcon></ClipboardCheckIcon>}
