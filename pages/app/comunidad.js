@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Layout from "../../components/layout";
 import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
 import TableSection from "../../components/common/table-section";
+import CreatePost from "../../components/post/create-post";
 
 const avisos = {
   headers: [
@@ -65,22 +66,57 @@ const products = {
   ],
 };
 function Comunidad() {
+  const [showCreatePost, setshowCreatePost] = useState(false);
+
+  const showCreatePostModal = () => {
+    setshowCreatePost(true);
+  };
+
+  const hideCreatePostModal = () => {
+    setshowCreatePost(false);
+  };
+
+  const handlePostCreated = () => {
+    console.log("Post is created");
+    setshowCreatePost(false);
+  };
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
         <MainSection>
           <div className="flex flex-col w-full">
-            <TableSection sectionTitle="Avisos" dataset={avisos}></TableSection>
-            <div className="mt-4"></div>
-            <TableSection
-              sectionTitle="Marketplace Venta/Compra"
-              dataset={products}
-            ></TableSection>
+            <button
+              className="bg-purple-600 shadow-md h-8 rounded-full w-40  text-white font-medium"
+              onClick={() => {
+                setshowCreatePost(true);
+              }}
+            >
+              Create a Post
+            </button>
+            <div className="mt-4">
+              <TableSection
+                sectionTitle="Avisos"
+                dataset={avisos}
+              ></TableSection>
+              <div className="mt-4"></div>
+              <TableSection
+                sectionTitle="Marketplace Venta/Compra"
+                dataset={products}
+              ></TableSection>
+            </div>
           </div>
         </MainSection>
+        <div></div>
         <div>
           <Footer></Footer>
         </div>
+        {showCreatePost && (
+          <CreatePost
+            onCancel={hideCreatePostModal}
+            onConfirm={handlePostCreated}
+          ></CreatePost>
+        )}
       </div>
     </Layout>
   );

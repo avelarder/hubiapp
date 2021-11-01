@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { NavLink } from "../navLink";
@@ -19,6 +19,9 @@ import Image from "next/image";
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
+
+  const [isNestedContainerCollapsed, setIsNestedContainerCollapsed] =
+    useState(false);
 
   const optionsForComunidad = [
     {
@@ -163,6 +166,10 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               path="/app/comunidad"
               text="Comunidad"
               nestedItems={optionsForComunidad}
+              nestedItemCollapsed={isNestedContainerCollapsed}
+              setItemCollapsed={() =>
+                setIsNestedContainerCollapsed(!isNestedContainerCollapsed)
+              }
             ></SidebarItem>
             <SidebarItem
               icon={<ClipboardCheckIcon></ClipboardCheckIcon>}

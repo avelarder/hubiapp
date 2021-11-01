@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { NavLink } from "../navLink";
 import { useRouter } from "next/router";
 
-function SidebarItem({ icon, path, text, nestedItems }) {
+function SidebarItem({
+  icon,
+  path,
+  text,
+  nestedItems,
+  nestedItemCollapsed,
+  setItemCollapsed,
+}) {
   const router = useRouter();
   const page = router.pathname;
-  const [isNestedContainerCollapsed, setIsNestedContainerCollapsed] =
-    useState(true);
 
   const handleNestedContainerCollapsed = () => {
-    setIsNestedContainerCollapsed(!isNestedContainerCollapsed);
+    setItemCollapsed && nestedItems && setItemCollapsed();
   };
 
   return (
@@ -35,7 +40,7 @@ function SidebarItem({ icon, path, text, nestedItems }) {
         </div>
       </NavLink>
 
-      {nestedItems && !isNestedContainerCollapsed && (
+      {nestedItems && nestedItemCollapsed && (
         <div className="bg-purple-800 rounded-lg border-2 border-purple-500 mt-4 ">
           <ul>
             {nestedItems.map((nestedItem) => (
