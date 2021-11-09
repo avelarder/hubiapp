@@ -1,6 +1,95 @@
-import React from "react";
+import React, { useState } from "react";
+import classNames from "classnames";
+const postOptions = {
+  NEWS: "news",
+  MARKETPLACE: "marketplace",
+  SURVEY: "survey",
+  RENT: "rent",
+  REPORT: "report",
+};
+
+function PostIndicator({ currentStep, totalSteps }) {
+  const items = [];
+
+  for (let index = 0; index < totalSteps; index++) {
+    items[index] = 1;
+  }
+
+  return (
+    <div className="flex justify-evenly flex-wrap w-full mb-4">
+      {items.map((_, i) => (
+        <div
+          className={classNames(
+            "h-2 flex-grow mr-1 rounded-md ",
+            i + 1 === currentStep ? `bg-purple-400` : `bg-gray-400`
+          )}
+          key={i}
+        ></div>
+      ))}
+    </div>
+  );
+}
+
+function PostTile({ title, type, onClick }) {
+  return (
+    <button
+      className="mt-2 border-2 rounded-md border-purple-600 bg-purple-700 text-white w-40 h-40 text-lg font-medium"
+      onClick={() => onClick(type)}
+    >
+      {title}
+    </button>
+  );
+}
+
+function PostTypeScreen({ onCurrentStepChange, onCurrentOptionChange }) {
+  const handleCurrentOptionChange = (type) => {
+    onCurrentOptionChange(type);
+    onCurrentStepChange(2);
+  };
+
+  return (
+    <div className="flex justify-evenly flex-wrap w-full">
+      <PostTile
+        title={"Aviso"}
+        type={postOptions.NEWS}
+        onClick={handleCurrentOptionChange}
+      ></PostTile>
+      <PostTile
+        title={"Compra Venta"}
+        type={postOptions.MARKETPLACE}
+        onClick={handleCurrentOptionChange}
+      ></PostTile>
+      <PostTile
+        title={"Encuestas"}
+        type={postOptions.SURVEY}
+        onClick={handleCurrentOptionChange}
+      ></PostTile>
+      <PostTile
+        title={"Alquiler"}
+        type={postOptions.RENT}
+        onClick={handleCurrentOptionChange}
+      ></PostTile>
+      <PostTile
+        title={"Informes"}
+        type={postOptions.REPORT}
+        onClick={handleCurrentOptionChange}
+      ></PostTile>
+    </div>
+  );
+}
 
 function CreatePost({ onCancel, onConfirm }) {
+  const [currentStep, setCurrentStep] = useState(1);
+  const [currentOption, setCurrentOption] = useState("");
+
+  const handleCurrentStepChange = (step) => {
+    setCurrentStep(step);
+  };
+
+  const handleCurrentOptionChange = (type) => {
+    setCurrentOption(type);
+  };
+
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -31,27 +120,42 @@ function CreatePost({ onCancel, onConfirm }) {
               <div className="sm:flex sm:items-center">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                   <h3
-                    className="text-lg leading-6 font-medium text-gray-900 text-center"
+                    className="text-lg leading-6 font-medium text-gray-900 text-center mb-4"
                     id="modal-title"
                   >
                     Crear Publicación
                   </h3>
-                  <div className="mt-2 ">
-                    <button>La Floresta / Vecinos / Publico</button>
-                  </div>
-                  <div className="mt-2 ">
-                    <button>Aviso / Compra-Venta / Encuesta</button>
-                  </div>
-                  <div className="mt-2 ">
-                    <textArea
-                      className="text-sm text-gray-500 w-full h-40 border-gray-200 rounded-lg p-2 border-2"
-                      aria-multiline={true}
-                      multiple={true}
-                      value={
-                        "Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
-                      }
-                    ></textArea>
-                  </div>
+                  <PostIndicator
+                    currentStep={currentStep}
+                    totalSteps={10}
+                  ></PostIndicator>
+                  {/* Step Container */}
+                  {currentStep === 1 && (
+                    <PostTypeScreen
+                      onCurrentStepChange={handleCurrentStepChange}
+                      onCurrentOptionChange={handleCurrentOptionChange}
+                    ></PostTypeScreen>
+                  )}
+                  {currentStep === 2 && (
+                    <div>
+                      <div className="mt-2 ">
+                        <button>La Floresta / Vecinos / Publico</button>
+                      </div>
+                      <div className="mt-2 ">
+                        <button>Aviso / Compra-Venta / Encuesta</button>
+                      </div>
+                      <div className="mt-2 ">
+                        <textArea
+                          className="text-sm text-gray-500 w-full h-40 border-gray-200 rounded-lg p-2 border-2"
+                          aria-multiline={true}
+                          multiple={true}
+                          value={
+                            "Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
+                          }
+                        ></textArea>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
