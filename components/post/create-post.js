@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-const postOptions = {
-  NEWS: "news",
-  MARKETPLACE: "marketplace",
-  SURVEY: "survey",
-  RENT: "rent",
-  REPORT: "report",
-};
+import TextareaAutosize from "react-textarea-autosize";
+
+const postOptions = [
+  { key: "news", steps: 3 },
+  { key: "marketplace", steps: 4 },
+  { key: "survey", steps: 4 },
+  { key: "rent", steps: 4 },
+  { key: "report", steps: 3 },
+];
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -51,27 +53,27 @@ function PostTypeScreen({ onCurrentStepChange, onCurrentOptionChange }) {
     <div className="flex justify-evenly flex-wrap w-full">
       <PostTile
         title={"Aviso"}
-        type={postOptions.NEWS}
+        type={postOptions.find((x) => x.key === "news")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
       <PostTile
         title={"Compra Venta"}
-        type={postOptions.MARKETPLACE}
+        type={postOptions.find((x) => x.key === "marketplace")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
       <PostTile
         title={"Encuestas"}
-        type={postOptions.SURVEY}
+        type={postOptions.find((x) => x.key === "survey")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
       <PostTile
         title={"Alquiler"}
-        type={postOptions.RENT}
+        type={postOptions.find((x) => x.key === "rent")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
       <PostTile
         title={"Informes"}
-        type={postOptions.REPORT}
+        type={postOptions.find((x) => x.key === "reports")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
     </div>
@@ -80,13 +82,14 @@ function PostTypeScreen({ onCurrentStepChange, onCurrentOptionChange }) {
 
 function CreatePost({ onCancel, onConfirm }) {
   const [currentStep, setCurrentStep] = useState(1);
-  const [currentOption, setCurrentOption] = useState("");
+  const [currentOption, setCurrentOption] = useState(null);
 
   const handleCurrentStepChange = (step) => {
     setCurrentStep(step);
   };
 
   const handleCurrentOptionChange = (type) => {
+    console.log(type);
     setCurrentOption(type);
   };
 
@@ -127,7 +130,7 @@ function CreatePost({ onCancel, onConfirm }) {
                   </h3>
                   <PostIndicator
                     currentStep={currentStep}
-                    totalSteps={10}
+                    totalSteps={currentOption ? currentOption.steps : 0}
                   ></PostIndicator>
                   {/* Step Container */}
                   {currentStep === 1 && (
@@ -145,14 +148,14 @@ function CreatePost({ onCancel, onConfirm }) {
                         <button>Aviso / Compra-Venta / Encuesta</button>
                       </div>
                       <div className="mt-2 ">
-                        <textArea
+                        <TextareaAutosize
                           className="text-sm text-gray-500 w-full h-40 border-gray-200 rounded-lg p-2 border-2"
                           aria-multiline={true}
                           multiple={true}
                           value={
                             "Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone."
                           }
-                        ></textArea>
+                        ></TextareaAutosize>
                       </div>
                     </div>
                   )}

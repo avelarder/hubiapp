@@ -14,7 +14,7 @@ export default function Login() {
     setError(null);
     signInWithEmailAndPassword(email, password)
       .then((authUser) => {
-        router.push("/dashboard");
+        router.push("/app/dashboard");
       })
       .catch((error) => {
         setError(error.message);
