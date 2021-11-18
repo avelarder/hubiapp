@@ -81,6 +81,11 @@ function Comunidad() {
     setshowCreatePost(false);
   };
 
+  const handlePostPreview = () => {
+    console.log("Post is created");
+    setshowCreatePost(false);
+  };
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
@@ -115,6 +120,7 @@ function Comunidad() {
           <CreatePost
             onCancel={hideCreatePostModal}
             onConfirm={handlePostCreated}
+            onPreview={handlePostPreview}
           ></CreatePost>
         )}
       </div>
