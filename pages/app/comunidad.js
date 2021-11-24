@@ -5,6 +5,7 @@ import Footer from "../../components/dashboard/footer";
 import TableSection from "../../components/common/table-section";
 import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
+import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 
 const initCommunityNews = {
   headers: [
@@ -43,42 +44,32 @@ const products = {
   ],
 };
 function Comunidad() {
+  const db = Firebase.default.firestore();
+  let communityNews = {};
   const [showCreatePost, setshowCreatePost] = useState(false);
-  const [communityNews, setCommunityNews] = useState({});
 
-  // db.settings({
-  //   timestampsInSnapshots: true,
-  // });
-  // db.collection("CommunityNews")
-  //   .get()
-  //   .then((data) => data.query().then((result) => console.log(result)));
-
-  const getCommunityNews = () => {
-    const db = Firebase.default.firestore();
+  const { data, status, error } = useFirestoreQuery(
     db.collection("CommunityNews")
-      // .where("title", "==", "Asamblea - Preparacion campaña navideña")
-      .get()
-      .then((docRef) => {
-        var currentDocs = [];
-        docRef.forEach((doc) => {
-          var data = doc.data();
-          currentDocs.push({
-            id: doc.id,
-            title: data.title,
-            publishedOn: new Date(data.publishedOn.seconds).toString(),
-            expiresBy: new Date(data.expiresBy.seconds).toString(),
-          });
-        });
-        setCommunityNews({ ...initCommunityNews, data: currentDocs });
-      });
-  };
+  );
 
-  // db.collection("CommunityNews")
-  //   .doc("zHATZnHfSrqCN4qIXnk0")
-  //   .get()
-  //   .then((docRef) => {
-  //     console.log(docRef.data());
-  //   });
+  if (status === "loading") {
+    return "Loading...";
+  }
+  if (status === "error") {
+    return `Error: ${error.message}`;
+  }
+
+  if (data) {
+    var currentDocs = data.map((doc) => ({
+      id: doc.id,
+      title: doc.title,
+      publishedOn: new Date(doc.publishedOn.seconds).toString(),
+      expiresBy: new Date(doc.expiresBy.seconds).toString(),
+    }));
+
+    communityNews = { ...initCommunityNews, data: currentDocs };
+  }
+
   const showCreatePostModal = () => {
     setshowCreatePost(true);
   };
@@ -97,7 +88,7 @@ function Comunidad() {
     setshowCreatePost(false);
   };
 
-  getCommunityNews();
+  // getCommunityNews();
 
   return (
     <Layout>
