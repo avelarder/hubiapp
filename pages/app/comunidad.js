@@ -4,45 +4,22 @@ import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
 import TableSection from "../../components/common/table-section";
 import CreatePost from "../../components/post/create-post";
+import Firebase from "../../firebase";
 
-const avisos = {
+const initCommunityNews = {
   headers: [
     { source: "title", columnName: "Título" },
     { source: "publishedOn", columnName: "Publicado" },
-    { source: "expiresOn", columnName: "Expiración" },
+    { source: "expiresBy", columnName: "Expiración" },
   ],
-  data: [
-    {
-      id: 1,
-      title:
-        "Protocolo COVID 2021 Protocolo COVID 2021 Protocolo COVID 2021 Protocolo COVID 2021 Protocolo COVID 2021",
-      description:
-        "Estimados vecinos, se les informa que a partir del 1ro de Febrero se restringirá el acceso de visitantes dentro del condominio.",
-      publishedOn: "21/01/2021 5:00pm",
-      expiresOn: "21/01/2022 5:00pm",
-      status: "Active",
-      image:
-        "https://www.coe.int/documents/21202288/62129062/languages-COVID-19_used+by+CoE+main+portal.jpg/b9882ed7-9e7b-caf8-c6e4-9cec0f125baa?t=1585837178000",
-    },
-    {
-      id: 2,
-      title: "Ciclo gratuito de vacunación",
-      description:
-        "Estimados vecinos, se les informa que el próximo domingo (23 de Febrero del 2020) la municipalidad brindará el servicio de vacunación de forma gratuita. Favor, registrarse en www.yomevacuno.com.",
-      publishedOn: "21/01/2021 5:00pm",
-      expiresOn: "21/01/2022 5:00pm",
-      status: "Active",
-      image:
-        "https://www.coe.int/documents/21202288/62129062/languages-COVID-19_used+by+CoE+main+portal.jpg/b9882ed7-9e7b-caf8-c6e4-9cec0f125baa?t=1585837178000",
-    },
-  ],
+  data: [],
 };
 
 const products = {
   headers: [
     { source: "title", columnName: "Título" },
     { source: "publishedOn", columnName: "Publicado" },
-    { source: "expiresOn", columnName: "Expiración" },
+    { source: "expiresBy", columnName: "Expiración" },
   ],
   data: [
     {
@@ -67,7 +44,41 @@ const products = {
 };
 function Comunidad() {
   const [showCreatePost, setshowCreatePost] = useState(false);
+  const [communityNews, setCommunityNews] = useState({});
 
+  // db.settings({
+  //   timestampsInSnapshots: true,
+  // });
+  // db.collection("CommunityNews")
+  //   .get()
+  //   .then((data) => data.query().then((result) => console.log(result)));
+
+  const getCommunityNews = () => {
+    const db = Firebase.default.firestore();
+    db.collection("CommunityNews")
+      // .where("title", "==", "Asamblea - Preparacion campaña navideña")
+      .get()
+      .then((docRef) => {
+        var currentDocs = [];
+        docRef.forEach((doc) => {
+          var data = doc.data();
+          currentDocs.push({
+            id: doc.id,
+            title: data.title,
+            publishedOn: new Date(data.publishedOn.seconds).toString(),
+            expiresBy: new Date(data.expiresBy.seconds).toString(),
+          });
+        });
+        setCommunityNews({ ...initCommunityNews, data: currentDocs });
+      });
+  };
+
+  // db.collection("CommunityNews")
+  //   .doc("zHATZnHfSrqCN4qIXnk0")
+  //   .get()
+  //   .then((docRef) => {
+  //     console.log(docRef.data());
+  //   });
   const showCreatePostModal = () => {
     setshowCreatePost(true);
   };
@@ -86,6 +97,8 @@ function Comunidad() {
     setshowCreatePost(false);
   };
 
+  getCommunityNews();
+
   return (
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
@@ -99,11 +112,16 @@ function Comunidad() {
             >
               Create a Post
             </button>
+
             <div className="mt-4">
-              <TableSection
-                sectionTitle="Avisos"
-                dataset={avisos}
-              ></TableSection>
+              {communityNews.data ? (
+                <TableSection
+                  sectionTitle="Avisos"
+                  dataset={communityNews}
+                ></TableSection>
+              ) : (
+                <div>Loading...</div>
+              )}
               <div className="mt-4"></div>
               <TableSection
                 sectionTitle="Marketplace Venta/Compra"
