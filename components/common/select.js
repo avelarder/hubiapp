@@ -69,11 +69,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Select({ title, showTitle, options, selectedOption }) {
-  const [selected, setSelected] = useState(options[0]);
-
+export default function Select({
+  title,
+  showTitle,
+  options,
+  selectedOption,
+  onOptionChanged,
+}) {
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selectedOption} onChange={onOptionChanged}>
       {({ open }) => (
         <>
           {showTitle && (
@@ -84,7 +88,9 @@ export default function Select({ title, showTitle, options, selectedOption }) {
           <div className="mt-1 relative">
             <Listbox.Button className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
               <span className="flex items-center">
-                <span className="ml-3 block truncate">{selected.text}</span>
+                <span className="ml-3 block truncate">
+                  {selectedOption.text}
+                </span>
               </span>
               <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
                 <SelectorIcon

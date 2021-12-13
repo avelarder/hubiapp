@@ -7,6 +7,19 @@ import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 
+const postOptions = [
+  { key: "news", steps: 3 },
+  { key: "marketplace", steps: 4 },
+  { key: "survey", steps: 4 },
+  { key: "rent", steps: 4 },
+  { key: "report", steps: 3 },
+];
+
+const postScopeOptions = [
+  { id: "PUBLIC", text: "Público" },
+  { id: "A", text: "La Floresta" },
+];
+
 const initCommunityNews = {
   headers: [
     { source: "title", columnName: "Título" },
@@ -43,10 +56,14 @@ const products = {
     },
   ],
 };
+
 function Comunidad() {
   const db = Firebase.default.firestore();
   let communityNews = {};
   const [showCreatePost, setshowCreatePost] = useState(false);
+
+  const [currentStep, setCurrentStep] = useState(1);
+  const [currentOption, setCurrentOption] = useState(null);
 
   const { data, status, error } = useFirestoreQuery(
     db.collection("CommunityNews")
@@ -70,11 +87,9 @@ function Comunidad() {
     communityNews = { ...initCommunityNews, data: currentDocs };
   }
 
-  const showCreatePostModal = () => {
-    setshowCreatePost(true);
-  };
-
   const hideCreatePostModal = () => {
+    setCurrentStep(1);
+    setCurrentOption(null);
     setshowCreatePost(false);
   };
 
@@ -83,9 +98,17 @@ function Comunidad() {
     setshowCreatePost(false);
   };
 
-  const handlePostPreview = () => {
-    console.log("Post is created");
-    setshowCreatePost(false);
+  const handlePostPreview = (postData) => {
+    console.log(postData);
+    handleStepChange(currentStep + 1);
+  };
+
+  const handleStepChange = (newStep) => {
+    setCurrentStep(newStep);
+  };
+
+  const handleCurrentOptionChange = (type) => {
+    setCurrentOption(type);
   };
 
   // getCommunityNews();
@@ -127,6 +150,12 @@ function Comunidad() {
         </div>
         {showCreatePost && (
           <CreatePost
+            step={currentStep}
+            onStepChanged={handleStepChange}
+            option={currentOption}
+            onOptionChanged={handleCurrentOptionChange}
+            postOptions={postOptions}
+            postScopeOptions={postScopeOptions}
             onCancel={hideCreatePostModal}
             onConfirm={handlePostCreated}
             onPreview={handlePostPreview}

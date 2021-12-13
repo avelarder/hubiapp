@@ -9,14 +9,6 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/solid";
 
-const postOptions = [
-  { key: "news", steps: 3 },
-  { key: "marketplace", steps: 4 },
-  { key: "survey", steps: 4 },
-  { key: "rent", steps: 4 },
-  { key: "report", steps: 3 },
-];
-
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
 
@@ -50,7 +42,11 @@ function PostTile({ title, type, onClick }) {
   );
 }
 
-function PostTypeScreen({ onCurrentStepChange, onCurrentOptionChange }) {
+function PostTypeScreen({
+  postOptions,
+  onCurrentStepChange,
+  onCurrentOptionChange,
+}) {
   const handleCurrentOptionChange = (type) => {
     onCurrentOptionChange(type);
     onCurrentStepChange(2);
@@ -87,19 +83,46 @@ function PostTypeScreen({ onCurrentStepChange, onCurrentOptionChange }) {
   );
 }
 
-function CreatePost({ onCancel, onConfirm, onPreview }) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [currentOption, setCurrentOption] = useState(null);
+function CreatePost({
+  step,
+  onStepChanged,
+  option,
+  onOptionChanged,
+  postOptions,
+  postScopeOptions,
+  onCancel,
+  onConfirm,
+  onPreview,
+}) {
+  const [postData, setPostData] = useState({
+    option: option,
+    step: step,
+    data: [],
+  });
 
-  const handleCurrentStepChange = (step) => {
-    setCurrentStep(step);
+  const [postAttributes, setPostAttributes] = useState([]);
+
+  const handleScopeChange = (newScope) => {
+    setPostAttributes([...postAttributes, { key: "scope", value: newScope }]);
+  };
+  const handleDescriptionChange = (description) => {
+    setPostAttributes([
+      ...postAttributes,
+      {
+        key: "description",
+        value: description,
+      },
+    ]);
   };
 
-  const handleCurrentOptionChange = (type) => {
-    console.log(type);
-    setCurrentOption(type);
+  const handlePostDataChange = () => {
+    let latestPostData = { ...postData, data: postAttributes };
+    setPostData(latestPostData);
+
+    onPreview(latestPostData);
   };
 
+  console.log(postData);
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -136,26 +159,33 @@ function CreatePost({ onCancel, onConfirm, onPreview }) {
                     Crear Publicación
                   </h3>
                   <PostIndicator
-                    currentStep={currentStep}
-                    totalSteps={currentOption ? currentOption.steps : 0}
+                    currentStep={step}
+                    totalSteps={option ? option.steps : 0}
                   ></PostIndicator>
                   {/* Step Container */}
-                  {currentStep === 1 && (
+                  {step === 1 && (
                     <PostTypeScreen
-                      onCurrentStepChange={handleCurrentStepChange}
-                      onCurrentOptionChange={handleCurrentOptionChange}
+                      postOptions={postOptions}
+                      onCurrentStepChange={onStepChanged}
+                      onCurrentOptionChange={onOptionChanged}
                     ></PostTypeScreen>
                   )}
-                  {currentStep === 2 && (
+                  {step === 2 && (
                     <div>
                       <div className="mt-2 ">
                         <Select
-                          title={"Tu aviso será visiable a:"}
+                          title={"Tu aviso será visible a:"}
                           showTitle={true}
-                          options={[
-                            { id: "PUBLIC", text: "Público" },
-                            { id: "A", text: "La Floresta" },
-                          ]}
+                          options={postScopeOptions}
+                          selectedOption={
+                            postScopeOptions.find(
+                              (x) =>
+                                x.id ===
+                                postAttributes.find((x) => x.key === "scope")
+                                  ?.value
+                            ) ?? postScopeOptions[0]
+                          }
+                          onOptionChanged={handleScopeChange}
                         ></Select>
                       </div>
                       <div className="mt-2 ">
@@ -167,6 +197,13 @@ function CreatePost({ onCancel, onConfirm, onPreview }) {
                           aria-multiline={true}
                           multiple={true}
                           placeholder="Ingresa la descripción de tu aviso aquí."
+                          value={
+                            postAttributes.find((x) => x.key === "description")
+                              ?.value
+                          }
+                          onBlur={(e) =>
+                            handleDescriptionChange(e.currentTarget.value)
+                          }
                         ></TextareaAutosize>
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
@@ -177,26 +214,52 @@ function CreatePost({ onCancel, onConfirm, onPreview }) {
                       </div>
                     </div>
                   )}
+                  {step === option?.steps && (
+                    <div>
+                      <div className="mt-2 ">
+                        <span className="block text-xs font-medium text-gray-700">
+                          Descripción
+                        </span>
+                        <div className="text-sm text-gray-500 w-full h-40 border-gray-50 rounded-lg p-2 border-2">
+                          {
+                            postData.data.find((x) => x.key === "description")
+                              .value
+                          }
+                        </div>
+                      </div>
+                      <div className="mt-2 ">
+                        <span className="text-xs">
+                          Visible a:
+                          <b>
+                            {
+                              postData.data.find((x) => x.key === "scope").value
+                                .text
+                            }
+                          </b>
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-              {currentOption?.steps === currentStep && (
+              {option?.steps === step && (
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => onConfirm()}
+                  onClick={() => onConfirm(postData)}
                   autoFocus
                 >
                   Publicar
                 </button>
               )}
 
-              {currentOption?.steps - 1 === currentStep && (
+              {option?.steps - 1 === step && (
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => onPreview()}
+                  onClick={() => handlePostDataChange()}
                   autoFocus
                 >
                   Previsualizar
