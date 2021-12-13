@@ -6,6 +6,8 @@ import TableSection from "../../components/common/table-section";
 import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
+import { v4 } from "uuid";
+import moment from "moment";
 
 const postOptions = [
   { key: "news", steps: 3 },
@@ -80,8 +82,12 @@ function Comunidad() {
     var currentDocs = data.map((doc) => ({
       id: doc.id,
       title: doc.title,
-      publishedOn: new Date(doc.publishedOn.seconds).toString(),
-      expiresBy: new Date(doc.expiresBy.seconds).toString(),
+      publishedOn: moment(new Date(doc.publishedOn.seconds), true).format(
+        "DD/MM/YYYY"
+      ),
+      expiresBy: moment(new Date(doc.expiresBy.seconds), true).format(
+        "DD/MM/YYYY"
+      ),
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
@@ -93,13 +99,24 @@ function Comunidad() {
     setshowCreatePost(false);
   };
 
-  const handlePostCreated = () => {
-    console.log("Post is created");
-    setshowCreatePost(false);
+  const handlePostCreated = (postData) => {
+    const documentId = v4();
+    const publishedOn = new Date();
+    const expiresBy = new Date(publishedOn.getDate() + 10);
+
+    db.collection("CommunityNews")
+      .doc(documentId)
+      .set({
+        description: postData.data.find((x) => x.key === "description").value,
+        title: postData.data.find((x) => x.key === "title").value,
+        expiresBy: expiresBy,
+        publishedOn: publishedOn,
+      });
+
+    hideCreatePostModal();
   };
 
   const handlePostPreview = (postData) => {
-    console.log(postData);
     handleStepChange(currentStep + 1);
   };
 

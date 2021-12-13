@@ -114,6 +114,15 @@ function CreatePost({
       },
     ]);
   };
+  const handleTitleChange = (title) => {
+    setPostAttributes([
+      ...postAttributes,
+      {
+        key: "title",
+        value: title,
+      },
+    ]);
+  };
 
   const handlePostDataChange = () => {
     let latestPostData = { ...postData, data: postAttributes };
@@ -122,7 +131,6 @@ function CreatePost({
     onPreview(latestPostData);
   };
 
-  console.log(postData);
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -182,11 +190,28 @@ function CreatePost({
                               (x) =>
                                 x.id ===
                                 postAttributes.find((x) => x.key === "scope")
-                                  ?.value
+                                  ?.value.id
                             ) ?? postScopeOptions[0]
                           }
                           onOptionChanged={handleScopeChange}
                         ></Select>
+                      </div>
+                      <div className="mt-2 ">
+                        <span className="block text-sm font-medium text-gray-700">
+                          Título
+                        </span>
+                        <TextareaAutosize
+                          className="text-sm text-gray-500 w-full h-20 border-gray-200 rounded-lg p-2 border-2"
+                          aria-multiline={true}
+                          multiple={true}
+                          placeholder="Ingresa la descripción de tu aviso aquí."
+                          value={
+                            postAttributes.find((x) => x.key === "title")?.value
+                          }
+                          onBlur={(e) =>
+                            handleTitleChange(e.currentTarget.value)
+                          }
+                        ></TextareaAutosize>
                       </div>
                       <div className="mt-2 ">
                         <span className="block text-sm font-medium text-gray-700">
@@ -216,6 +241,14 @@ function CreatePost({
                   )}
                   {step === option?.steps && (
                     <div>
+                      <div className="mt-2 ">
+                        <span className="block text-xs font-medium text-gray-700">
+                          Título
+                        </span>
+                        <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2">
+                          {postData.data.find((x) => x.key === "title").value}
+                        </div>
+                      </div>
                       <div className="mt-2 ">
                         <span className="block text-xs font-medium text-gray-700">
                           Descripción
