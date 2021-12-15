@@ -1,4 +1,5 @@
 import { DotsVerticalIcon } from "@heroicons/react/outline";
+import { NavLink } from "../navLink";
 import React from "react";
 
 function TableSection({ sectionTitle, dataset }) {
@@ -35,7 +36,17 @@ function TableSection({ sectionTitle, dataset }) {
                       <td key={header.source} className="p-2">
                         <div className="flex items-center">
                           <div className="font-medium text-gray-800">
-                            {row[header.source]}
+                            {header.isLink ? (
+                              <NavLink
+                                className={`block underline
+                                 text-purple-600 hover:text-purple-400 transition duration-150 hover:text-gray-200"}`}
+                                href={header.path + row["id"]}
+                              >
+                                {row[header.source]}
+                              </NavLink>
+                            ) : (
+                              row[header.source]
+                            )}
                           </div>
                         </div>
                       </td>

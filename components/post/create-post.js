@@ -134,11 +134,12 @@ function CreatePost({
   return (
     <div
       onKeyDownCapture={(e) => {
+        console.log(e.key);
         if (e.key === "Escape") onCancel();
       }}
     >
       <div
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="fixed z-100 inset-0 overflow-y-auto"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
@@ -201,10 +202,10 @@ function CreatePost({
                           Título
                         </span>
                         <TextareaAutosize
-                          className="text-sm text-gray-500 w-full h-20 border-gray-200 rounded-lg p-2 border-2"
+                          className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 border-2"
                           aria-multiline={true}
                           multiple={true}
-                          placeholder="Ingresa la descripción de tu aviso aquí."
+                          placeholder="Ingresa el título de tu aviso aquí."
                           value={
                             postAttributes.find((x) => x.key === "title")?.value
                           }
@@ -218,9 +219,10 @@ function CreatePost({
                           Descripción
                         </span>
                         <TextareaAutosize
-                          className="text-sm text-gray-500 w-full h-40 border-gray-200 rounded-lg p-2 border-2"
-                          aria-multiline={true}
-                          multiple={true}
+                          className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-2"
+                          rows={5}
+                          minRows={3}
+                          maxRows={10}
                           placeholder="Ingresa la descripción de tu aviso aquí."
                           value={
                             postAttributes.find((x) => x.key === "description")
@@ -298,7 +300,20 @@ function CreatePost({
                   Previsualizar
                 </button>
               )}
+
+              {option?.steps - 1 < step && (
+                <button
+                  type="button"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={() => handlePostDataChange()}
+                  autoFocus
+                >
+                  Siguiente
+                </button>
+              )}
+
               <button
+                autoFocus
                 type="button"
                 className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={() => onCancel()}

@@ -24,9 +24,8 @@ const postScopeOptions = [
 
 const initCommunityNews = {
   headers: [
-    { source: "title", columnName: "Título" },
+    { source: "title", columnName: "Título", isLink: true, path: "posts/" },
     { source: "publishedOn", columnName: "Publicado" },
-    { source: "expiresBy", columnName: "Expiración" },
   ],
   data: [],
 };
@@ -109,6 +108,7 @@ function Comunidad() {
       .set({
         description: postData.data.find((x) => x.key === "description").value,
         title: postData.data.find((x) => x.key === "title").value,
+        scope: postData.data.find((x) => x.key === "scope").value.id,
         expiresBy: expiresBy,
         publishedOn: publishedOn,
       });
