@@ -3,9 +3,14 @@ import { useRouter } from "next/router";
 import Firebase from "../../../firebase";
 import useFirestoreQuery from "../../../hooks/useFirestoreQuery";
 import moment from "moment";
+import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
+import ViewPost from "../../../components/post/view-post";
 
-function ViewPost() {
-  const { query } = useRouter();
+function ViewPostPage() {
+
+  const router = useRouter();
+  const { query } = router;
+
   const id = query.id;
 
   const db = Firebase.default.firestore();
@@ -37,14 +42,19 @@ function ViewPost() {
     };
   }
 
+  const handleBack = () => { router.back() }
+
   return (
-    <div>
-      <div>{post.title}</div>
-      <div>{post.description}</div>
-      <div>{post.publishedOn}</div>
-      <div>{post.scope}</div>
-    </div>
+    <div className="flex bg-gray-300">
+      <ArrowCircleLeftIcon className="flex  m-4 cursor-pointer w-10 h-10" onClick={handleBack}></ArrowCircleLeftIcon>
+      <div className="flex align-middle justify-center w-full">
+        <ViewPost id={post.id} title={post.title} description={post.description} scope={post.scope} publishedOn={post.publishedOn} expiresBy={post.expiresBy}
+          onCancel={handleBack}>
+        </ViewPost>
+      </div>
+
+    </div >
   );
 }
 
-export default ViewPost;
+export default ViewPostPage;
