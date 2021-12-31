@@ -8,7 +8,7 @@ function ViewPost({ id, title, description, scope, publishedOn, expiresBy, onCan
   return (
     <div className=" min-h-screenpt-4 w-full px-4 pb-20 text-center sm:block sm:p-0"
       onKeyDownCapture={(e) => {
-        console.log(e.key);
+
         if (e.key === "Escape") onCancel();
       }}
     >

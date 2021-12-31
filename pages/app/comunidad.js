@@ -63,7 +63,10 @@ function Comunidad() {
   let communityNews = {};
   const [showCreatePost, setshowCreatePost] = useState(false);
 
+  const defaultActioBarStatus = { backEnabled: false, nextEnabled: false, closeEnabled: true, publishEnabled: false };
+
   const [currentStep, setCurrentStep] = useState(1);
+  const [postActionBarStatus, setPostActionBarStatus] = useState(defaultActioBarStatus);
   const [currentOption, setCurrentOption] = useState(null);
 
   const { data, status, error } = useFirestoreQuery(
@@ -116,16 +119,31 @@ function Comunidad() {
     hideCreatePostModal();
   };
 
-  const handlePostPreview = (postData) => {
-    handleStepChange(currentStep + 1);
+  const handleCreatePostVisibility = (visible) => {
+    setshowCreatePost(visible);
+    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: false, closeEnabled: true, publishEnabled: false });
+  }
+  const handlePostPreview = () => {
+    handleStepNext();
+    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: true, nextEnabled: false, closeEnabled: true, publishEnabled: true });
   };
 
   const handleStepChange = (newStep) => {
     setCurrentStep(newStep);
+
+  };
+  const handleStepBack = () => {
+    setCurrentStep(currentStep - 1);
+    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: true, closeEnabled: true, publishEnabled: false });
+  };
+  const handleStepNext = () => {
+    setCurrentStep(currentStep + 1);
+    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: true, nextEnabled: false, closeEnabled: true, publishEnabled: false });
   };
 
   const handleCurrentOptionChange = (type) => {
     setCurrentOption(type);
+    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: true, closeEnabled: true, publishEnabled: false });
   };
 
   // getCommunityNews();
@@ -138,7 +156,7 @@ function Comunidad() {
             <button
               className="bg-purple-600 shadow-md h-8 rounded-full w-40  text-white font-medium"
               onClick={() => {
-                setshowCreatePost(true);
+                handleCreatePostVisibility(true);
               }}
             >
               Create a Post
@@ -168,6 +186,7 @@ function Comunidad() {
         {showCreatePost && (
           <CreatePost
             step={currentStep}
+            postActionBarStatus={postActionBarStatus}
             onStepChanged={handleStepChange}
             option={currentOption}
             onOptionChanged={handleCurrentOptionChange}
@@ -176,6 +195,8 @@ function Comunidad() {
             onCancel={hideCreatePostModal}
             onConfirm={handlePostCreated}
             onPreview={handlePostPreview}
+            onBack={handleStepBack}
+            onNext={handleStepNext}
           ></CreatePost>
         )}
       </div>
