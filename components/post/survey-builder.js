@@ -1,4 +1,4 @@
-import { DocumentAddIcon, DocumentRemoveIcon } from '@heroicons/react/solid';
+import { MinusIcon, PlusIcon } from '@heroicons/react/outline';
 import React, { useState } from 'react'
 import moment from 'moment';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -27,8 +27,8 @@ function SurveyOptionItem({ text, optionKey, onAddOption, onRemoveOption }) {
             ></TextareaAutosize>
             </div>
             <div className='flex'>
-                <DocumentRemoveIcon className='w-7 h-7 text-purple-600  border-2 border-purple-50 m-1 rounded-sm cursor-pointer' onClick={onRemoveOption} ></DocumentRemoveIcon>
-                <DocumentAddIcon className='w-7 h-7 text-purple-600 border-2 border-purple-50 m-1 rounded-sm cursor-pointer' onClick={onAddOption}></DocumentAddIcon>
+                {optionKey !== 0 && <MinusIcon className='w-7 h-7 text-purple-600  border-2 border-purple-50 m-1 rounded-sm cursor-pointer' onClick={onRemoveOption} ></MinusIcon>}
+                <PlusIcon className='w-7 h-7 text-purple-600 border-2 border-purple-50 m-1 rounded-sm cursor-pointer' onClick={onAddOption}></PlusIcon>
             </div>
         </div>
     )
@@ -57,10 +57,10 @@ function SurveyBuilder() {
             </div>
             <div className="divide-red-50 mb-4"></div>
             <div className="flex flex-col">
-                <span>Díganos cuándo caduca esta encuesta? </span>
+                <span className='w-full block text-sm font-medium text-gray-700'>Díganos, cuándo caduca esta encuesta? </span>
 
                 <TextareaAutosize
-                    className="text-sm text-gray-500 w-28 h-10 border-gray-200 rounded-lg p-2 border-2"
+                    className="text-sm text-gray-500 w-40 h-10 border-gray-200 rounded-lg p-2 border-2"
                     aria-multiline={true}
                     multiple={true}
                     placeholder="DD-MM-YYYY"

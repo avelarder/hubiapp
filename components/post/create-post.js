@@ -250,7 +250,7 @@ function CreatePost({
                         ></TextareaAutosize>
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
-                        <QuestionMarkCircleIcon onClick={handleShowSurvey} className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></QuestionMarkCircleIcon>
+                        <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
                         <PhotographIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></PhotographIcon>
                         <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
                         <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
