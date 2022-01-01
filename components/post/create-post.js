@@ -10,6 +10,7 @@ import {
   VideoCameraIcon,
 } from "@heroicons/react/solid";
 import PostActionBar from "./shared/post-action-bar";
+import SurveyBuilder from "./survey-builder";
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -102,6 +103,7 @@ function CreatePost({
   });
 
   const [postAttributes, setPostAttributes] = useState([]);
+  const [showSurvey, setShowSurvey] = useState(false);
 
   const setAttributeValue = (fieldName, value) => {
     const field = postAttributes.find((x) => x.key === fieldName)
@@ -142,6 +144,9 @@ function CreatePost({
     onConfirm(postData);
   }
 
+  const handleShowSurvey = () => {
+    setShowSurvey(!showSurvey)
+  }
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -245,11 +250,14 @@ function CreatePost({
                         ></TextareaAutosize>
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
-                        <QuestionMarkCircleIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></QuestionMarkCircleIcon>
+                        <QuestionMarkCircleIcon onClick={handleShowSurvey} className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></QuestionMarkCircleIcon>
                         <PhotographIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></PhotographIcon>
                         <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
                         <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
                         <LinkIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></LinkIcon>
+                      </div>
+                      <div className="mt-2 ">
+                        {showSurvey && <SurveyBuilder></SurveyBuilder>}
                       </div>
                     </div>
                   )}
