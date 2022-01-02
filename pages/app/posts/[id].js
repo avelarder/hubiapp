@@ -33,12 +33,13 @@ function ViewPostPage() {
       title: data.title,
       description: data.description,
       scope: data.scope,
+      postType: data.postType,
+      answerType: data.answerType,
+      options: data.options,
       publishedOn: moment(new Date(data.publishedOn.seconds), true).format(
         "DD/MM/YYYY"
       ),
-      expiresBy: moment(new Date(data.expiresBy.seconds), true).format(
-        "DD/MM/YYYY"
-      ),
+      expiresBy: data.expiresBy
     };
   }
 
@@ -48,7 +49,7 @@ function ViewPostPage() {
     <div className="flex bg-gray-300">
       <ArrowCircleLeftIcon className="flex  m-4 cursor-pointer w-10 h-10" onClick={handleBack}></ArrowCircleLeftIcon>
       <div className="flex align-middle justify-center w-full">
-        <ViewPost id={post.id} title={post.title} description={post.description} scope={post.scope} publishedOn={post.publishedOn} expiresBy={post.expiresBy}
+        <ViewPost post={post}
           onCancel={handleBack}>
         </ViewPost>
       </div>
