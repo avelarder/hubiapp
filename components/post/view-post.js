@@ -1,7 +1,6 @@
 import React from "react";
 
 function ViewPost({ post, onCancel }) {
-  console.log(post);
   return (
     <div className=" min-h-screenpt-4 w-full px-4 pb-20 text-center sm:block sm:p-0"
       onKeyDownCapture={(e) => {
@@ -41,9 +40,9 @@ function ViewPost({ post, onCancel }) {
                       <span className="text-xs">
                         Detalles de la Encuesta ({post.answerType.name}):
                       </span>
-                      <ul className="block list-disc mb-2">
+                      <ul className="block list-disc">
                         {post.options.map((option) => {
-                          return (<li className=" text-sm text-gray-500 w-full " key={option.key}>{option.text}</li>)
+                          return (<li className=" mt-2 text-sm text-gray-500 w-full " key={option.key}>{option.text}</li>)
                         })}
                       </ul>
                       <div className="mt-2 ">
