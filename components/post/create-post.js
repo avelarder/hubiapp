@@ -69,7 +69,7 @@ function PostTypeScreen({
         onClick={handleCurrentOptionChange}
       ></PostTile>
       <PostTile
-        title={"Encuestas"}
+        title={"Evento"}
         type={postOptions.find((x) => x.key === "survey")}
         onClick={handleCurrentOptionChange}
       ></PostTile>
