@@ -104,18 +104,18 @@ function Comunidad() {
   const handlePostCreated = (postData) => {
     const documentId = v4();
     const publishedOn = new Date();
-    const expiresBy = new Date(publishedOn.getDate() + 10);
+
 
     db.collection("CommunityNews")
       .doc(documentId)
       .set({
         description: postData.data.find((x) => x.key === "description").value,
         title: postData.data.find((x) => x.key === "title").value,
-        scope: postData.data.find((x) => x.key === "scope").value.id,
+        scope: postData.data.find((x) => x.key === "scope").value,
         postType: postData.data.find((x) => x.key === "postType").value,
         answerType: postData.data.find((x) => x.key === "answerType").value,
         options: postData.data.find((x) => x.key === "options").value,
-        expiresBy: expiresBy,
+        expiresBy: postData.data.find((x) => x.key === "expiresBy").value,
         publishedOn: publishedOn,
       });
 

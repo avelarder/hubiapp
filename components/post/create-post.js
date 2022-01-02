@@ -155,7 +155,6 @@ function CreatePost({
   const handlePostDataChange = () => {
 
     let latestPostData = { ...postData, data: postAttributes };
-    console.log(latestPostData)
     setPostData(latestPostData);
     onPreview(latestPostData);
   };
@@ -180,7 +179,7 @@ function CreatePost({
     setShowImageUploader(!showImageUploader)
   }
 
-  console.log("postAttributes", postAttributes)
+
   return (
     <div
       onKeyDownCapture={(e) => {
