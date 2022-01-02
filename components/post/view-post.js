@@ -2,7 +2,7 @@ import React from "react";
 
 
 
-function ViewPost({ id, title, description, scope, publishedOn, expiresBy, onCancel }) {
+function ViewPost({ id, title, description, scope, publishedOn, expiresBy, postType, surveyOptions, onCancel }) {
 
 
   return (

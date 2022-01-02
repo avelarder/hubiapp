@@ -112,6 +112,9 @@ function Comunidad() {
         description: postData.data.find((x) => x.key === "description").value,
         title: postData.data.find((x) => x.key === "title").value,
         scope: postData.data.find((x) => x.key === "scope").value.id,
+        postType: postData.data.find((x) => x.key === "postType").value,
+        answerType: postData.data.find((x) => x.key === "answerType").value,
+        options: postData.data.find((x) => x.key === "options").value,
         expiresBy: expiresBy,
         publishedOn: publishedOn,
       });

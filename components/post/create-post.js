@@ -11,6 +11,7 @@ import {
 } from "@heroicons/react/solid";
 import PostActionBar from "./shared/post-action-bar";
 import SurveyBuilder from "./survey-builder";
+import ImageUploader from "./image-uploader";
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -104,6 +105,9 @@ function CreatePost({
 
   const [postAttributes, setPostAttributes] = useState([]);
   const [showSurvey, setShowSurvey] = useState(false);
+  const [showImageUploader, setShowImageUploader] = useState(false);
+
+
 
   const setAttributeValue = (fieldName, value) => {
     const field = postAttributes.find((x) => x.key === fieldName)
@@ -122,9 +126,23 @@ function CreatePost({
     }
   };
 
+  const handleOptionsChange = (options) => {
+    setAttributeValue("options", options);
+  };
+  const handleExpiresChange = (expiration) => {
+    setAttributeValue("expiresBy", expiration);
+  };
+  const handlePostTypeChange = (postType) => {
+    setAttributeValue("postType", postType);
+  };
+  const handleAnswerTypeChange = (answerType) => {
+    setAttributeValue("answerType", answerType);
+  };
+
   const handleScopeChange = (newScope) => {
     setAttributeValue("scope", newScope);
   };
+
 
   const handleDescriptionChange = (description) => {
     setAttributeValue("description", description);
@@ -135,7 +153,9 @@ function CreatePost({
   };
 
   const handlePostDataChange = () => {
+
     let latestPostData = { ...postData, data: postAttributes };
+    console.log(latestPostData)
     setPostData(latestPostData);
     onPreview(latestPostData);
   };
@@ -145,8 +165,22 @@ function CreatePost({
   }
 
   const handleShowSurvey = () => {
-    setShowSurvey(!showSurvey)
+    const toggleSurvey = !showSurvey;
+    if (toggleSurvey) {
+      handlePostTypeChange("survey");
+    }
+    else {
+      handlePostTypeChange("news");
+    }
+    setShowSurvey(toggleSurvey)
+
   }
+
+  const handleShowImages = () => {
+    setShowImageUploader(!showImageUploader)
+  }
+
+  console.log("postAttributes", postAttributes)
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -251,13 +285,27 @@ function CreatePost({
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
                         <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
-                        <PhotographIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></PhotographIcon>
+                        <PhotographIcon onClick={handleShowImages} className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></PhotographIcon>
                         <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
                         <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
                         <LinkIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></LinkIcon>
                       </div>
                       <div className="mt-2 ">
-                        {showSurvey && <SurveyBuilder></SurveyBuilder>}
+                        {showImageUploader && <ImageUploader></ImageUploader>}
+                      </div>
+                      <div className="mt-2 ">
+                        {showSurvey &&
+                          <SurveyBuilder
+                            answerType={postAttributes.find((x) => x.key === "answerType")
+                              ?.value}
+                            expirationDate={postAttributes.find((x) => x.key === "expiresBy")
+                              ?.value}
+                            options={postAttributes.find((x) => x.key === "options")
+                              ?? []}
+                            onAnswerTypeChanged={handleAnswerTypeChange}
+                            onExpirationChanged={handleExpiresChange}
+                            onOptionChanged={handleOptionsChange}>
+                          </SurveyBuilder>}
                       </div>
                     </div>
                   )}
@@ -283,13 +331,30 @@ function CreatePost({
                           }
                         </div>
                       </div>
+                      {postAttributes.find((x) => x.key === "postType")?.value === "survey" && (
+                        <div className="mt-2 ">
+                          <span className="block text-xs font-medium text-gray-700 mb-2">
+                            Opciones de la Encuestas ({postAttributes.find((x) => x.key === "answerType")?.value.name}) y expira en {postAttributes.find((x) => x.key === "expiresBy")?.value}
+                          </span>
+                          <ul className="block list-disc mb-2">
+                            {postAttributes.find((x) => x.key === "options").value.map((option) => {
+                              return (<li className=" text-sm text-gray-500 w-full " key={option.key}>
+                                {
+                                  option.text
+                                }
+                              </li>)
+                            })}
+                          </ul>
+
+                        </div>
+                      )}
                       <div className="mt-2 ">
-                        <span className="text-xs">
+                        <span className="block text-xs font-medium text-gray-700 mb-2">
                           Visible a:&nbsp;
                           <b>
                             {
                               postAttributes.find((x) => x.key === "scope")
-                                ?.value.name
+                                ?.value.text
                             }
                           </b>
                         </span>

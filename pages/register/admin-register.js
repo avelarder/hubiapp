@@ -18,7 +18,7 @@ function AdminRegister() {
     if (passwordOne === passwordTwo) {
       createUserWithEmailAndPassword(email, passwordOne)
         .then((authUser) => {
-          console.log("Success. The user is created in Firebase");
+
           router.push("/app/dashboard");
         })
         .catch((error) => {
