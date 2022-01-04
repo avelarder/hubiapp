@@ -87,9 +87,7 @@ function Comunidad() {
       publishedOn: moment(new Date(doc.publishedOn.seconds), true).format(
         "DD/MM/YYYY"
       ),
-      expiresBy: moment(new Date(doc.expiresBy.seconds), true).format(
-        "DD/MM/YYYY"
-      ),
+
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
@@ -102,6 +100,8 @@ function Comunidad() {
   };
 
   const handlePostCreated = (postData) => {
+
+
     const documentId = v4();
     const publishedOn = new Date();
 
@@ -113,9 +113,9 @@ function Comunidad() {
         title: postData.data.find((x) => x.key === "title").value,
         scope: postData.data.find((x) => x.key === "scope").value,
         postType: postData.data.find((x) => x.key === "postType").value,
-        answerType: postData.data.find((x) => x.key === "answerType").value,
-        options: postData.data.find((x) => x.key === "options").value,
-        expiresBy: postData.data.find((x) => x.key === "expiresBy").value,
+        answerType: postData.data.find((x) => x.key === "answerType")?.value ?? null,
+        options: postData.data.find((x) => x.key === "options")?.value ?? null,
+        expiresBy: postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
         publishedOn: publishedOn,
       });
 

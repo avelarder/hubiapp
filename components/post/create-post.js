@@ -103,7 +103,7 @@ function CreatePost({
     data: [],
   });
 
-  const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }]);
+  const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }]);
   const [showSurvey, setShowSurvey] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
 
@@ -284,7 +284,7 @@ function CreatePost({
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
                         <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
-                        <PhotographIcon onClick={handleShowImages} className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1 rounded-sm cursor-pointer"></PhotographIcon>
+                        <PhotographIcon onClick={handleShowImages} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showImageUploader ? "border-purple-600" : "border-purple-50")}></PhotographIcon>
                         <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
                         <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
                         <LinkIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></LinkIcon>
