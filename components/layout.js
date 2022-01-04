@@ -9,7 +9,7 @@ function Layout(props) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !authUser) router.push("/");
+    if (!loading && !authUser) router.push("/login");
   }, [authUser, loading]);
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
