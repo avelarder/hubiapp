@@ -103,7 +103,7 @@ function CreatePost({
     data: [],
   });
 
-  const [postAttributes, setPostAttributes] = useState([]);
+  const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }]);
   const [showSurvey, setShowSurvey] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
 
