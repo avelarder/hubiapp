@@ -2,8 +2,11 @@ import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Transition from "../../utils/Transition";
 import Link from "next/link";
+import { useAuth } from "../../authUserProvider";
 
 function UserInfo({ user }) {
+  const { signOut } = useAuth();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef(null);
@@ -91,14 +94,18 @@ function UserInfo({ user }) {
               </Link>
             </li>
             <li>
-              <Link
+              <button
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                href="/"
-                passHref
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                // href="/login"
+                // passHref
+                onClick={async () => {
+                  console.log("logout");
+                  await signOut()
+                  setDropdownOpen(!dropdownOpen)
+                }}
               >
                 Sign Out
-              </Link>
+              </button>
             </li>
           </ul>
         </div>
