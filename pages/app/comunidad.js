@@ -81,12 +81,11 @@ function Comunidad() {
   }
 
   if (data) {
+
     var currentDocs = data.map((doc) => ({
       id: doc.id,
       title: doc.title,
-      publishedOn: moment(new Date(doc.publishedOn.seconds), true).format(
-        "DD/MM/YYYY"
-      ),
+      publishedOn: doc.publishedOn,
 
     }));
 
@@ -103,7 +102,7 @@ function Comunidad() {
 
 
     const documentId = v4();
-    const publishedOn = new Date();
+    const publishedOn = moment(new Date()).format("DD/MM/YYYY");
 
 
     db.collection("CommunityNews")

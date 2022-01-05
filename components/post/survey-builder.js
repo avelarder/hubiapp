@@ -76,7 +76,7 @@ function SurveyBuilder({ answerType, expirationDate, options, onAnswerTypeChange
                     className="text-sm text-gray-500 w-40 h-10 border-gray-200 rounded-lg p-2 border-2"
                     aria-multiline={true}
                     multiple={true}
-                    placeholder="DD-MM-YYYY"
+                    placeholder="DD/MM/YYYY"
                     value={
                         expirationDate
                     }
