@@ -167,9 +167,11 @@ function CreatePost({
     const toggleSurvey = !showSurvey;
     if (toggleSurvey) {
       handlePostTypeChange("survey");
+      handleAnswerTypeChange({ key: "SINGLE", name: "Opción simple" });
     }
     else {
       handlePostTypeChange("news");
+      handleAnswerTypeChange(null);
     }
     setShowSurvey(toggleSurvey)
 
