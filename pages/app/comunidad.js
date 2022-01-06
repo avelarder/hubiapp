@@ -27,6 +27,7 @@ const initCommunityNews = {
   headers: [
     { source: "title", columnName: "Título", isLink: true, path: "posts/" },
     { source: "publishedOn", columnName: "Publicado" },
+    { source: "expiresBy", columnName: "Expiración" },
   ],
   data: [],
 };
@@ -89,7 +90,7 @@ function Comunidad() {
       id: doc.id,
       title: doc.title,
       publishedOn: doc.publishedOn,
-
+      expiresBy: doc.expiresBy ?? "--"
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
