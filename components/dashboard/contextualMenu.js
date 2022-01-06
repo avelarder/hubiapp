@@ -1,4 +1,4 @@
-import { DotsHorizontalIcon } from "@heroicons/react/solid";
+import { DotsVerticalIcon } from "@heroicons/react/solid";
 import React, { useState, useRef, useEffect } from "react";
 import Transition from "../../utils/Transition";
 
@@ -13,8 +13,8 @@ function ContextualMenu({ children, ...rest }) {
     const clickHandler = ({ target }) => {
       if (
         !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
+        dropdown.current?.contains(target) ||
+        trigger.current?.contains(target)
       )
         return;
       setDropdownOpen(false);
@@ -37,15 +37,14 @@ function ContextualMenu({ children, ...rest }) {
     <div {...rest}>
       <button
         ref={trigger}
-        className={`text-gray-400 hover:text-gray-500 rounded-full ${
-          dropdownOpen && "bg-gray-100 text-gray-500"
-        }`}
+        className={`flex w-5 h-5 text-gray-400 hover:text-gray-500 rounded-full ${dropdownOpen && "bg-gray-100 text-gray-500"
+          }`}
         aria-haspopup="true"
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
         <span className="sr-only">Menu</span>
-        <DotsHorizontalIcon></DotsHorizontalIcon>
+        <DotsVerticalIcon></DotsVerticalIcon>
       </button>
       <Transition
         show={dropdownOpen}

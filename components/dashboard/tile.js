@@ -8,7 +8,7 @@ function Tile({ title, value, variant }) {
   return (
     <div className="flex flex-col col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm border border-gray-200">
       <div className="px-5 pt-5">
-        <header className="flex justify-between items-start mb-2">
+        <header className="flex justify-start items-start mb-2">
           {/* Icon */}
           <Image src="/hubi-logo.jpg" width="32" height="32" alt="Icon 01" />
           {/* Menu button */}

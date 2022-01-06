@@ -1,6 +1,6 @@
 import React from "react";
 
-function ViewPost({ post, onCancel }) {
+function ViewPost({ post, onCancel, onDelete }) {
   return (
     <div className=" min-h-screenpt-4 w-full px-4 pb-20 text-center sm:block sm:p-0"
       onKeyDownCapture={(e) => {
@@ -61,7 +61,7 @@ function ViewPost({ post, onCancel }) {
                       Visible a:
                       <br /><b>
                         {
-                          post.scope.text
+                          post.scope?.text
                         }
                       </b>
                     </span>
@@ -84,12 +84,20 @@ function ViewPost({ post, onCancel }) {
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
-              type="button"
+
+              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+              onClick={onDelete}
+            >
+              Eliminar
+            </button>
+            <button
+
               className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
               onClick={onCancel}
             >
               Cerrar
             </button>
+
           </div>
         </div>
       </div>

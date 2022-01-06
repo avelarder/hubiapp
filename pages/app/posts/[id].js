@@ -28,6 +28,7 @@ function ViewPostPage() {
   }
 
   if (data) {
+
     post = {
       id: data.id,
       title: data.title,
@@ -36,21 +37,24 @@ function ViewPostPage() {
       postType: data.postType,
       answerType: data.answerType,
       options: data.options,
-      publishedOn: moment(new Date(data.publishedOn.seconds), true).format(
-        "DD/MM/YYYY"
-      ),
+      publishedOn: data.publishedOn,
       expiresBy: data.expiresBy
     };
   }
 
   const handleBack = () => { router.back() }
+  const handleDelete = async () => {
+    await db.collection("CommunityNews").doc(id).delete();
+    router.push('/app/comunidad');
+  }
 
   return (
     <div className="flex bg-gray-300">
       <ArrowCircleLeftIcon className="flex  m-4 cursor-pointer w-10 h-10" onClick={handleBack}></ArrowCircleLeftIcon>
       <div className="flex align-middle justify-center w-full">
         <ViewPost post={post}
-          onCancel={handleBack}>
+          onCancel={handleBack}
+          onDelete={handleDelete}>
         </ViewPost>
       </div>
 

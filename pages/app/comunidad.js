@@ -8,6 +8,7 @@ import Firebase from "../../firebase";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 import { v4 } from "uuid";
 import moment from "moment";
+import { useRouter } from "next/router";
 
 const postOptions = [
   { key: "news", steps: 3 },
@@ -59,6 +60,8 @@ const products = {
 };
 
 function Comunidad() {
+  const router = useRouter();
+
   const db = Firebase.default.firestore();
   let communityNews = {};
   const [showCreatePost, setshowCreatePost] = useState(false);
@@ -148,6 +151,15 @@ function Comunidad() {
     setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: true, closeEnabled: true, publishEnabled: false });
   };
 
+  const handleViewClicked = (id) => {
+    router.push(`/app/posts/${id}`);
+  }
+
+  const handleEditClicked = (id) => { alert("Under construction!") }
+  const handleDeleteClicked = async (id) => {
+    await db.collection('CommunityNews').doc(id).delete();
+  }
+
   // getCommunityNews();
 
   return (
@@ -169,6 +181,9 @@ function Comunidad() {
                 <TableSection
                   sectionTitle="Avisos"
                   dataset={communityNews}
+                  onView={handleViewClicked}
+                  onEidt={handleEditClicked}
+                  onDelete={handleDeleteClicked}
                 ></TableSection>
               ) : (
                 <div>Loading...</div>

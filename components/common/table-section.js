@@ -1,8 +1,15 @@
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { NavLink } from "../navLink";
 import React from "react";
+import ContextualMenu
+  from "../dashboard/contextualMenu";
 
-function TableSection({ sectionTitle, dataset }) {
+function TableSection({ sectionTitle, dataset, onView, onEdit, onDelete }) {
+
+
+
+
+
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="flex px-5 py-4 border-b border-gray-100">
@@ -51,6 +58,19 @@ function TableSection({ sectionTitle, dataset }) {
                         </div>
                       </td>
                     ))}
+                    <td className="w-5">
+                      <ContextualMenu className="relative inline-flex">
+                        <li>
+                          <button className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100" onClick={() => onView(row["id"])}>Ver</button>
+                        </li>
+                        <li>
+                          <button className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100" onClick={() => onEdit(row["id"])}>Editar</button>
+                        </li>
+                        <li>
+                          <button className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100" onClick={() => onDelete(row["id"])}>Eliminar</button>
+                        </li>
+                      </ContextualMenu>
+                    </td>
                   </tr>
                 );
               })}
