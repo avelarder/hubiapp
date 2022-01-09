@@ -12,6 +12,7 @@ import {
 import PostActionBar from "./shared/post-action-bar";
 import SurveyBuilder from "./survey-builder";
 import ImageUploader from "./image-uploader";
+import TextEmoji from "../common/textEmoji";
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -316,10 +317,14 @@ function CreatePost({
                         <span className="block text-xs font-medium text-gray-700">
                           Título
                         </span>
-                        <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2">
+                        {/* <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2">
                           {postAttributes.find((x) => x.key === "title")
                             ?.value}
-                        </div>
+                        </div> */}
+                        <TextEmoji text={
+                          postAttributes.find((x) => x.key === "title")
+                            ?.value
+                        }></TextEmoji>
                       </div>
                       <div className="mt-2 ">
                         <span className="block text-xs font-medium text-gray-700">

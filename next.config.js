@@ -1,6 +1,6 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ['www.coe.int'],
+    domains: ['twemoji.maxcdn.com', 'www.coe.int'],
   },
 }
