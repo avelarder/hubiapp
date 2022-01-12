@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import classNames from "classnames";
-import TextareaAutosize from "react-textarea-autosize";
+import 'emoji-mart/css/emoji-mart.css'
+import { Picker } from 'emoji-mart'
 import Select from "../common/select";
 import {
   LinkIcon,
@@ -13,6 +14,12 @@ import PostActionBar from "./shared/post-action-bar";
 import SurveyBuilder from "./survey-builder";
 import ImageUploader from "./image-uploader";
 import TextEmoji from "../common/textEmoji";
+import TextInput from "../common/textInput";
+import {
+  VALIDATIONS
+} from "../../utils/UI-Constants";
+import ContextualMenu from "../dashboard/contextualMenu";
+
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -98,6 +105,8 @@ function CreatePost({
   onNext,
   onBack
 }) {
+
+  const [isFormValid, setIsFormValid] = useState(false);
   const [postData, setPostData] = useState({
     option: option,
     step: step,
@@ -106,9 +115,16 @@ function CreatePost({
 
   const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }]);
   const [showSurvey, setShowSurvey] = useState(false);
+  const [showEmoticons, setShowEmoticons] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
 
+  const addEmoji = (e) => {
 
+    let emoji = e.native;
+    const textWithEmoji = (postAttributes.find((x) => x.key === "title")?.value ?? "") + emoji;
+
+    handleTitleChange(textWithEmoji)
+  };
 
   const setAttributeValue = (fieldName, value) => {
     const field = postAttributes.find((x) => x.key === fieldName)
@@ -131,6 +147,7 @@ function CreatePost({
     setAttributeValue("options", options);
   };
   const handleExpiresChange = (expiration) => {
+
     setAttributeValue("expiresBy", expiration);
   };
   const handlePostTypeChange = (postType) => {
@@ -154,10 +171,23 @@ function CreatePost({
   };
 
   const handlePostDataChange = () => {
+    let isValid = true;
 
-    let latestPostData = { ...postData, data: postAttributes };
-    setPostData(latestPostData);
-    onPreview(latestPostData);
+    const postType = postAttributes.find((x) => x.key === "postType");
+    if (postType.value === "survey") {
+      isValid = isValid && postAttributes.find((x) => x.key === "answerType")?.value
+        && postAttributes.find((x) => x.key === "options")?.value.length > 0
+        && postAttributes.find((x) => x.key === "options")?.value.every(x => x?.text.length > 0)
+        && VALIDATIONS.DATE_AFTER(postAttributes.find((x) => x.key === "expiresBy")?.value);
+    }
+    isValid = isValid && postAttributes.find((x) => x.key === "title")?.value;
+
+    if (isValid) {
+      let latestPostData = { ...postData, data: postAttributes };
+      setPostData(latestPostData);
+      onPreview(latestPostData);
+    }
+    setIsFormValid(isValid);
   };
 
   const handlePostDataSubmit = () => {
@@ -168,7 +198,7 @@ function CreatePost({
     const toggleSurvey = !showSurvey;
     if (toggleSurvey) {
       handlePostTypeChange("survey");
-      handleAnswerTypeChange({ key: "SINGLE", name: "Opción simple" });
+      handleAnswerTypeChange({ id: "SINGLE", text: "Opción simple" });
     }
     else {
       handlePostTypeChange("news");
@@ -253,25 +283,37 @@ function CreatePost({
                         <span className="block text-sm font-medium text-gray-700">
                           Título
                         </span>
-                        <TextareaAutosize
-                          className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 border-2"
-                          aria-multiline={true}
-                          multiple={true}
-                          placeholder="Ingresa el título de tu aviso aquí."
-                          value={
-                            postAttributes.find((x) => x.key === "title")?.value
-                          }
-                          onChange={(e) =>
-                            handleTitleChange(e.currentTarget.value)
-                          }
-                        ></TextareaAutosize>
+                        <div className="flex items-center">
+                          <TextInput
+                            className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 border-2"
+                            validation={VALIDATIONS.REQUIRED_FREE_TEXT}
+                            invalidText={"Título es requerido"}
+                            aria-multiline={true}
+                            multiple={true}
+                            placeholder="Ingresa el título de tu aviso aquí."
+                            value={
+                              postAttributes.find((x) => x.key === "title")?.value
+                            }
+                            onChange={handleTitleChange}
+                          ></TextInput>
+
+                          <ContextualMenu className="relative inline-flex">
+                            <li>
+                              <Picker onSelect={addEmoji} />
+                            </li>
+
+                          </ContextualMenu>
+
+
+
+                        </div>
                       </div>
                       <div className="mt-2 ">
                         <span className="block text-sm font-medium text-gray-700">
                           Descripción
                         </span>
-                        <TextareaAutosize
-                          className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-2"
+                        <TextInput
+
                           rows={5}
                           minRows={3}
                           maxRows={10}
@@ -280,10 +322,8 @@ function CreatePost({
                             postAttributes.find((x) => x.key === "description")
                               ?.value
                           }
-                          onChange={(e) =>
-                            handleDescriptionChange(e.currentTarget.value)
-                          }
-                        ></TextareaAutosize>
+                          onChange={handleDescriptionChange}
+                        ></TextInput>
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
                         <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
@@ -375,7 +415,7 @@ function CreatePost({
               onCancel={onCancel}
               onNext={handlePostDataChange}
               onBack={onBack}
-
+              isNextDisabled={isFormValid}
               onPublish={handlePostDataSubmit}
             ></PostActionBar>
           </div>

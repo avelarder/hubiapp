@@ -1,4 +1,5 @@
 import React from "react";
+import TextEmoji from "../common/textEmoji";
 
 function ViewPost({ post, onCancel, onDelete }) {
   return (
@@ -22,7 +23,8 @@ function ViewPost({ post, onCancel, onDelete }) {
                   className="text-lg leading-6 font-medium text-gray-900 text-center mb-4"
                   id="modal-title"
                 >
-                  {post.title}
+                  <TextEmoji text={post.title}
+                  ></TextEmoji>
                 </h3>
                 <div>
                   <div className="mt-2 ">

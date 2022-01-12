@@ -1,8 +1,9 @@
 import { MinusIcon, PlusIcon } from '@heroicons/react/outline';
 import React, { useState } from 'react'
-import moment from 'moment';
-import TextareaAutosize from 'react-textarea-autosize';
-import Dropdown from '../common/dropdown';
+import { VALIDATIONS } from "../../utils/UI-Constants";
+import Select from "../common/select";
+
+import TextInput from '../common/textInput';
 
 function SurveyOptionItem({ text, optionKey, onAddOption, onUpdateOption, onRemoveOption }) {
 
@@ -15,18 +16,17 @@ function SurveyOptionItem({ text, optionKey, onAddOption, onUpdateOption, onRemo
 
     return (
         <div className="flex flex-row" key={optionKey}>
-            <div className='flex justify-start w-full items-center align-middle '> <TextareaAutosize
-                className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 border-2"
-                aria-multiline={true}
-                multiple={true}
-                placeholder="Escribe una opción"
-                value={
-                    text
-                }
-                onChange={(e) =>
-                    setOptionValue(e.currentTarget.value)
-                }
-            ></TextareaAutosize>
+            <div className='flex justify-start w-full items-center align-middle '>
+                <TextInput
+                    validation={VALIDATIONS.REQUIRED_FREE_TEXT}
+                    invalidText={'Este campo es obligatorio.'}
+                    className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 m-1 border-2"
+                    aria-multiline={true}
+                    multiple={true}
+                    placeholder="Ingresa una opción"
+                    value={text}
+                    onChange={setOptionValue}
+                ></TextInput>
             </div>
             <div className='flex'>
                 {optionKey !== 0 && <MinusIcon className='w-7 h-7 text-purple-600  border-2 border-purple-50 m-1 rounded-sm cursor-pointer' onClick={onRemoveOption} ></MinusIcon>}
@@ -40,7 +40,7 @@ function SurveyBuilder({ answerType, expirationDate, options, onAnswerTypeChange
 
     const [localOptions, setLocalOptions] = useState(options);
 
-    const surveyOptions = [{ key: "SINGLE", name: "Opción simple" }, { key: "MULTIPLE", name: "Opción múltiple" }];
+    const surveyOptions = [{ id: "SINGLE", text: "Opción simple" }, { id: "MULTIPLE", text: "Opción múltiple" }];
 
     const addOption = (index) => {
         localOptions.splice(index, 0, { key: index, text: '' });
@@ -65,24 +65,29 @@ function SurveyBuilder({ answerType, expirationDate, options, onAnswerTypeChange
             <div className="divide-red-50 mb-4"></div>
             <div className="flex flex-col">
                 <span className='w-full block text-sm font-medium text-gray-700'>Seleccione el tipo de encuesta </span>
-
-                <Dropdown keyValueOptions={surveyOptions} selected={answerType ?? surveyOptions[0]} onOptionChanged={onAnswerTypeChanged}></Dropdown>
+                <Select
+                    title={"Tu aviso será visible a:"}
+                    showTitle={true}
+                    options={surveyOptions}
+                    selectedOption={
+                        answerType ?? surveyOptions[0]
+                    }
+                    onOptionChanged={onAnswerTypeChanged}
+                ></Select>
+                {/* <Dropdown keyValueOptions={surveyOptions} selected={answerType ?? surveyOptions[0]} onOptionChanged={onAnswerTypeChanged}></Dropdown> */}
             </div>
             <div className="divide-red-50 mb-4"></div>
             <div className="flex flex-col">
                 <span className='w-full block text-sm font-medium text-gray-700'>Díganos, cuándo caduca esta encuesta? </span>
+                <TextInput
+                    placeholder="DD/MM/AAAA"
+                    value={expirationDate}
+                    mask={"99/99/9999"}
+                    invalidText={"La fecha ingresada no es correcta."}
+                    validation={VALIDATIONS.DATE_AFTER}
+                    onChange={onExpirationChanged}
 
-                <TextareaAutosize
-                    className="text-sm text-gray-500 w-40 h-10 border-gray-200 rounded-lg p-2 border-2"
-                    aria-multiline={true}
-                    multiple={true}
-                    placeholder="DD/MM/YYYY"
-                    value={
-                        expirationDate
-                    }
-                    onChange={(e) =>
-                        onExpirationChanged(e.currentTarget.value)}
-                ></TextareaAutosize>
+                ></TextInput>
             </div>
         </div >
     )
