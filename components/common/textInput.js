@@ -40,7 +40,7 @@ const TextInput = ({
                 ></InputMask>
             ) : (
                 <TextareaAutosize
-                    className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-2"
+                    // className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-2"
                     value={
                         value
                     }

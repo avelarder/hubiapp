@@ -4,6 +4,7 @@ import 'emoji-mart/css/emoji-mart.css'
 import { Picker } from 'emoji-mart'
 import Select from "../common/select";
 import {
+  EmojiHappyIcon,
   LinkIcon,
   PaperClipIcon,
   PhotographIcon,
@@ -283,29 +284,29 @@ function CreatePost({
                         <span className="block text-sm font-medium text-gray-700">
                           Título
                         </span>
+
                         <div className="flex items-center">
-                          <TextInput
-                            className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2 border-2"
-                            validation={VALIDATIONS.REQUIRED_FREE_TEXT}
-                            invalidText={"Título es requerido"}
-                            aria-multiline={true}
-                            multiple={true}
-                            placeholder="Ingresa el título de tu aviso aquí."
-                            value={
-                              postAttributes.find((x) => x.key === "title")?.value
-                            }
-                            onChange={handleTitleChange}
-                          ></TextInput>
-
-                          <ContextualMenu className="relative inline-flex">
-                            <li>
-                              <Picker onSelect={addEmoji} />
-                            </li>
-
-                          </ContextualMenu>
-
-
-
+                          <div className="relative text-gray-400 focus-within:text-gray-600 w-full ">
+                            <TextInput
+                              className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-2"
+                              validation={VALIDATIONS.REQUIRED_FREE_TEXT}
+                              invalidText={"Título es requerido"}
+                              aria-multiline={true}
+                              multiple={true}
+                              placeholder="Ingresa el título de tu aviso aquí."
+                              value={
+                                postAttributes.find((x) => x.key === "title")?.value
+                              }
+                              onChange={handleTitleChange}
+                            ></TextInput>
+                            <span className="absolute inset-y-0 right-0 flex items-center pr-2">
+                              <ContextualMenu className="relative inline-flex" icon={<EmojiHappyIcon width={20} height={20}></EmojiHappyIcon>}>
+                                <li>
+                                  <Picker onSelect={addEmoji} />
+                                </li>
+                              </ContextualMenu>
+                            </span>
+                          </div>
                         </div>
                       </div>
                       <div className="mt-2 ">
@@ -313,6 +314,7 @@ function CreatePost({
                           Descripción
                         </span>
                         <TextInput
+                          className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg border-2"
 
                           rows={5}
                           minRows={3}
@@ -342,7 +344,7 @@ function CreatePost({
                               ?.value}
                             expirationDate={postAttributes.find((x) => x.key === "expiresBy")
                               ?.value}
-                            options={postAttributes.find((x) => x.key === "options")
+                            options={postAttributes.find((x) => x.key === "options")?.value
                               ?? []}
                             onAnswerTypeChanged={handleAnswerTypeChange}
                             onExpirationChanged={handleExpiresChange}

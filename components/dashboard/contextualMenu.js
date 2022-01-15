@@ -2,7 +2,7 @@ import { DotsVerticalIcon } from "@heroicons/react/solid";
 import React, { useState, useRef, useEffect } from "react";
 import Transition from "../../utils/Transition";
 
-function ContextualMenu({ children, ...rest }) {
+function ContextualMenu({ icon, children, ...rest }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef(null);
@@ -44,7 +44,7 @@ function ContextualMenu({ children, ...rest }) {
         aria-expanded={dropdownOpen}
       >
         <span className="sr-only">Menu</span>
-        <DotsVerticalIcon></DotsVerticalIcon>
+        {icon ?? <DotsVerticalIcon></DotsVerticalIcon>}
       </button>
       <Transition
         show={dropdownOpen}
