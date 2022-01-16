@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Footer from "../../components/dashboard/footer";
 import Layout from "../../components/layout";
 import MainSection from "../../components/dashboard/mainSection";
-import Tile from "../../components/dashboard/tile";
 
 function Reports() {
   return (

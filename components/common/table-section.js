@@ -4,7 +4,7 @@ import React from "react";
 import ContextualMenu
   from "../dashboard/contextualMenu";
 
-function TableSection({ sectionTitle, dataset, onView, onEdit, onDelete }) {
+function TableSection({ sectionTitle, rowsPerPage, dataset, onView, onEdit, onDelete }) {
 
 
 

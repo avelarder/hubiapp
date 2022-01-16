@@ -164,61 +164,65 @@ function Comunidad() {
   // getCommunityNews();
 
   return (
-    <Layout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
-        <MainSection>
-          <div className="flex flex-col w-full">
-            <button
-              className="bg-purple-600 shadow-md h-8 rounded-full w-40  text-white font-medium"
-              onClick={() => {
-                handleCreatePostVisibility(true);
-              }}
-            >
-              Create a Post
-            </button>
+    <>
 
-            <div className="mt-4">
-              {communityNews.data ? (
+      <Layout>
+
+        <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
+          <MainSection>
+            <div className="flex flex-col w-full">
+              <button
+                className="bg-purple-600 shadow-md h-8 rounded-full w-40  text-white font-medium"
+                onClick={() => {
+                  handleCreatePostVisibility(true);
+                }}
+              >
+                Create a Post
+              </button>
+
+              <div className="mt-4">
+                {communityNews.data ? (
+                  <TableSection
+                    sectionTitle="Avisos"
+                    dataset={communityNews}
+                    onView={handleViewClicked}
+                    onEidt={handleEditClicked}
+                    onDelete={handleDeleteClicked}
+                  ></TableSection>
+                ) : (
+                  <div>Loading...</div>
+                )}
+                <div className="mt-4"></div>
                 <TableSection
-                  sectionTitle="Avisos"
-                  dataset={communityNews}
-                  onView={handleViewClicked}
-                  onEidt={handleEditClicked}
-                  onDelete={handleDeleteClicked}
+                  sectionTitle="Marketplace Venta/Compra"
+                  dataset={products}
                 ></TableSection>
-              ) : (
-                <div>Loading...</div>
-              )}
-              <div className="mt-4"></div>
-              <TableSection
-                sectionTitle="Marketplace Venta/Compra"
-                dataset={products}
-              ></TableSection>
+              </div>
             </div>
+          </MainSection>
+          <div></div>
+          <div>
+            <Footer></Footer>
           </div>
-        </MainSection>
-        <div></div>
-        <div>
-          <Footer></Footer>
+          {showCreatePost && (
+            <CreatePost
+              step={currentStep}
+              postActionBarStatus={postActionBarStatus}
+              onStepChanged={handleStepChange}
+              option={currentOption}
+              onOptionChanged={handleCurrentOptionChange}
+              postOptions={postOptions}
+              postScopeOptions={postScopeOptions}
+              onCancel={hideCreatePostModal}
+              onConfirm={handlePostCreated}
+              onPreview={handlePostPreview}
+              onBack={handleStepBack}
+              onNext={handleStepNext}
+            ></CreatePost>
+          )}
         </div>
-        {showCreatePost && (
-          <CreatePost
-            step={currentStep}
-            postActionBarStatus={postActionBarStatus}
-            onStepChanged={handleStepChange}
-            option={currentOption}
-            onOptionChanged={handleCurrentOptionChange}
-            postOptions={postOptions}
-            postScopeOptions={postScopeOptions}
-            onCancel={hideCreatePostModal}
-            onConfirm={handlePostCreated}
-            onPreview={handlePostPreview}
-            onBack={handleStepBack}
-            onNext={handleStepNext}
-          ></CreatePost>
-        )}
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }
 

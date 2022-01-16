@@ -2,7 +2,7 @@ import React from "react";
 import Notification from "./notification";
 import UserInfo from "./user-info";
 
-function Header({ user, sidebarOpen, setSidebarOpen }) {
+function HeaderApp({ user, sidebarOpen, setSidebarOpen }) {
   return (
     <header className="sticky top-0 bg-white  border-b border-gray-200 z-30">
       <div className="px-4 sm:px-6 lg:px-8">
@@ -44,4 +44,4 @@ function Header({ user, sidebarOpen, setSidebarOpen }) {
   );
 }
 
-export default Header;
+export default HeaderApp;
