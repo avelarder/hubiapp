@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@headlessui/react": "^1.4.0",
+    "@headlessui/react": "^1.4.3",
     "@heroicons/react": "^1.0.3",
     "@react-ui-org/react-ui": "^0.42.1",
     "@tailwindcss/forms": "^0.3.3",

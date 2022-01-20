@@ -114,7 +114,7 @@ function CreatePost({
     data: [],
   });
 
-  const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }]);
+  const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }, { key: "answerType", value: { id: "SINGLE", text: "Opción Simple" } }, { key: "allowAddOptions", value: false }]);
   const [showSurvey, setShowSurvey] = useState(false);
   const [showEmoticons, setShowEmoticons] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
@@ -213,6 +213,9 @@ function CreatePost({
     setShowImageUploader(!showImageUploader)
   }
 
+  const handleAllowAddOptionChange = (allowAddOption) => {
+    setAttributeValue("allowAddOption", allowAddOption);
+  }
 
   return (
     <div
@@ -342,13 +345,17 @@ function CreatePost({
                           <SurveyBuilder
                             answerType={postAttributes.find((x) => x.key === "answerType")
                               ?.value}
+                            allowAddOption={postAttributes.find((x) => x.key === "allowAddOption")
+                              ?.value}
                             expirationDate={postAttributes.find((x) => x.key === "expiresBy")
                               ?.value}
                             options={postAttributes.find((x) => x.key === "options")?.value
                               ?? []}
                             onAnswerTypeChanged={handleAnswerTypeChange}
                             onExpirationChanged={handleExpiresChange}
-                            onOptionChanged={handleOptionsChange}>
+                            onOptionChanged={handleOptionsChange}
+                            onAddOptionChanged={handleAllowAddOptionChange}
+                          >
                           </SurveyBuilder>}
                       </div>
                     </div>
@@ -382,7 +389,7 @@ function CreatePost({
                       {postAttributes.find((x) => x.key === "postType")?.value === "survey" && (
                         <div className="mt-2 ">
                           <span className="block text-xs font-medium text-gray-700 mb-2">
-                            Opciones de la Encuestas ({postAttributes.find((x) => x.key === "answerType")?.value.name}) y expira en {postAttributes.find((x) => x.key === "expiresBy")?.value}
+                            Opciones de la Encuestas ({postAttributes.find((x) => x.key === "answerType")?.value.text}) y expira en {postAttributes.find((x) => x.key === "expiresBy")?.value}
                           </span>
                           <ul className="block list-disc mb-2">
                             {postAttributes.find((x) => x.key === "options").value.map((option) => {
