@@ -9,6 +9,7 @@ import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 import { v4 } from "uuid";
 import moment from "moment";
 import { useRouter } from "next/router";
+import DeleteModal from "../../components/common/delete-modal";
 
 const postOptions = [
   { key: "news", steps: 3 },
@@ -66,6 +67,9 @@ function Comunidad() {
   const db = Firebase.default.firestore();
   let communityNews = {};
   const [showCreatePost, setshowCreatePost] = useState(false);
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [postToDelete, setPostToDelete] = useState(null);
 
   const defaultActioBarStatus = { backEnabled: false, nextEnabled: false, closeEnabled: true, publishEnabled: false };
 
@@ -157,11 +161,15 @@ function Comunidad() {
   }
 
   const handleEditClicked = (id) => { alert("Under construction!") }
-  const handleDeleteClicked = async (id) => {
-    await db.collection('CommunityNews').doc(id).delete();
-  }
 
-  // getCommunityNews();
+  const handleDeleteClicked = (id) => {
+    setShowDeleteModal(true);
+    setPostToDelete(id);
+  }
+  const handleDeleteConfirmation = async () => {
+    await db.collection('CommunityNews').doc(postToDelete).delete();
+    setShowDeleteModal(false);
+  }
 
   return (
     <>
@@ -220,6 +228,7 @@ function Comunidad() {
               onNext={handleStepNext}
             ></CreatePost>
           )}
+          {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
         </div>
       </Layout>
     </>

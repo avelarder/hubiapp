@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/router";
 import Firebase from "../../../firebase";
 import useFirestoreQuery from "../../../hooks/useFirestoreQuery";
-import moment from "moment";
+import DeleteModal from "../../../components/common/delete-modal";
 import { ArrowCircleLeftIcon } from "@heroicons/react/solid";
 import ViewPost from "../../../components/post/view-post";
 
 function ViewPostPage() {
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const router = useRouter();
   const { query } = router;
@@ -43,11 +44,14 @@ function ViewPostPage() {
   }
 
   const handleBack = () => { router.back() }
-  const handleDelete = async () => {
-    await db.collection("CommunityNews").doc(id).delete();
+  const handleDelete = () => {
+    setShowDeleteModal(true);
+  }
+  const handleDeleteConfirmation = async () => {
+    await db.collection('CommunityNews').doc(id).delete();
+    setShowDeleteModal(false);
     router.push('/app/comunidad');
   }
-
   return (
     <div className="flex bg-gray-300">
       <ArrowCircleLeftIcon className="flex  m-4 cursor-pointer w-10 h-10" onClick={handleBack}></ArrowCircleLeftIcon>
@@ -57,6 +61,7 @@ function ViewPostPage() {
           onDelete={handleDelete}>
         </ViewPost>
       </div>
+      {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
 
     </div >
   );

@@ -47,7 +47,7 @@ function TextEmoji({ text }) {
         let { delimiter, dict } = emojiWithEmoticons;
         let finalText =
             compact(
-                text.split(delimiter).map(function (word, index) {
+                text?.split(delimiter).map(function (word, index) {
                     let match = word.match(delimiter);
                     if (!!options.strict && word !== '' && match === null) throw new Error(`Could not find emoji: ${word}.`);
                     if (match) {
