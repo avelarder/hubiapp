@@ -1,15 +1,21 @@
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { NavLink } from "../navLink";
 import React from "react";
-import ContextualMenu
-  from "../dashboard/contextualMenu";
+import ContextualMenu from "../dashboard/contextualMenu";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 
-function TableSection({ sectionTitle, rowsPerPage, dataset, onView, onEdit, onDelete }) {
-
-
-
-
-
+function TableSection({
+  sectionTitle,
+  rowsPerPage,
+  orderBy,
+  orderDirectionDesc,
+  dataset,
+  onView,
+  onEdit,
+  onDelete,
+  onShowMore,
+  onFieldOrderChanged,
+}) {
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="flex px-5 py-4 border-b border-gray-100">
@@ -27,8 +33,28 @@ function TableSection({ sectionTitle, rowsPerPage, dataset, onView, onEdit, onDe
               <tr>
                 {dataset.headers.map((header) => (
                   <th key={header.source} className="p-2 whitespace-nowrap ">
-                    <div className="font-semibold text-left">
-                      {header.columnName}
+                    <div
+                      className="flex font-semibold text-left cursor-pointer items-center"
+                      onClick={() => onFieldOrderChanged(header.source)}
+                    >
+                      <span
+                        className={
+                          header.source === orderBy
+                            ? "text-purple-400 font-extrabold"
+                            : "text-black"
+                        }
+                      >
+                        {header.columnName}
+                      </span>
+                      {header.source === orderBy && (
+                        <>
+                          {orderDirectionDesc ? (
+                            <ChevronDownIcon className="text-purple-400 w-4 h-4"></ChevronDownIcon>
+                          ) : (
+                            <ChevronUpIcon className="text-purple-400 w-4 h-4"></ChevronUpIcon>
+                          )}
+                        </>
+                      )}
                     </div>
                   </th>
                 ))}
@@ -61,13 +87,28 @@ function TableSection({ sectionTitle, rowsPerPage, dataset, onView, onEdit, onDe
                     <td className="w-5">
                       <ContextualMenu className="relative inline-flex">
                         <li>
-                          <button className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100" onClick={() => onView(row["id"])}>Ver</button>
+                          <button
+                            className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
+                            onClick={() => onView(row["id"])}
+                          >
+                            Ver
+                          </button>
                         </li>
                         <li>
-                          <button className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100" onClick={() => onEdit(row["id"])}>Editar</button>
+                          <button
+                            className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
+                            onClick={() => onEdit(row["id"])}
+                          >
+                            Editar
+                          </button>
                         </li>
                         <li>
-                          <button className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100" onClick={() => onDelete(row["id"])}>Eliminar</button>
+                          <button
+                            className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100"
+                            onClick={() => onDelete(row["id"])}
+                          >
+                            Eliminar
+                          </button>
                         </li>
                       </ContextualMenu>
                     </td>
@@ -75,6 +116,14 @@ function TableSection({ sectionTitle, rowsPerPage, dataset, onView, onEdit, onDe
                 );
               })}
             </tbody>
+            <tfoot className="flex justify-center w-full">
+              <button
+                className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
+                onClick={onShowMore}
+              >
+                Show more
+              </button>
+            </tfoot>
           </table>
         </div>
       </div>

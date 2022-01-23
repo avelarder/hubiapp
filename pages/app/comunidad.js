@@ -66,20 +66,32 @@ function Comunidad() {
 
   const db = Firebase.default.firestore();
   let communityNews = {};
-  const [showCreatePost, setshowCreatePost] = useState(false);
+  const [showCreatePost, setShowCreatePost] = useState(false);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
-  const defaultActioBarStatus = { backEnabled: false, nextEnabled: false, closeEnabled: true, publishEnabled: false };
+  const defaultActioBarStatus = {
+    backEnabled: false,
+    nextEnabled: false,
+    closeEnabled: true,
+    publishEnabled: false,
+  };
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [postActionBarStatus, setPostActionBarStatus] = useState(defaultActioBarStatus);
-  const [currentOption, setCurrentOption] = useState(null);
-
-  const { data, status, error } = useFirestoreQuery(
-    db.collection("CommunityNews")
+  const [postActionBarStatus, setPostActionBarStatus] = useState(
+    defaultActioBarStatus
   );
+  const [currentOption, setCurrentOption] = useState(null);
+  const [pageSize, setpageSize] = useState(5);
+  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
+  const [orderField, setOrderField] = useState("publishedOn");
+
+  const query = isOrderDirectionDesc
+    ? db.collection("CommunityNews").orderBy(orderField, "desc")
+    : db.collection("CommunityNews").orderBy(orderField);
+
+  const { data, status, error } = useFirestoreQuery(query);
 
   if (status === "loading") {
     return "Loading...";
@@ -89,12 +101,11 @@ function Comunidad() {
   }
 
   if (data) {
-
     var currentDocs = data.map((doc) => ({
       id: doc.id,
       title: doc.title,
       publishedOn: doc.publishedOn,
-      expiresBy: doc.expiresBy ?? "--"
+      expiresBy: doc.expiresBy ?? "--",
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
@@ -103,15 +114,21 @@ function Comunidad() {
   const hideCreatePostModal = () => {
     setCurrentStep(1);
     setCurrentOption(null);
-    setshowCreatePost(false);
+    setShowCreatePost(false);
+  };
+
+  const handleOrderByFieldChanged = (field) => {
+    console.log(field);
+    if (field === orderField) setOrderDirection(!isOrderDirectionDesc);
+    else {
+      setOrderField(field);
+      setOrderDirection(false);
+    }
   };
 
   const handlePostCreated = (postData) => {
-
-
     const documentId = v4();
     const publishedOn = moment(new Date()).format("DD/MM/YYYY");
-
 
     db.collection("CommunityNews")
       .doc(documentId)
@@ -120,9 +137,11 @@ function Comunidad() {
         title: postData.data.find((x) => x.key === "title").value,
         scope: postData.data.find((x) => x.key === "scope").value,
         postType: postData.data.find((x) => x.key === "postType").value,
-        answerType: postData.data.find((x) => x.key === "answerType")?.value ?? null,
+        answerType:
+          postData.data.find((x) => x.key === "answerType")?.value ?? null,
         options: postData.data.find((x) => x.key === "options")?.value ?? null,
-        expiresBy: postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
+        expiresBy:
+          postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
         publishedOn: publishedOn,
       });
 
@@ -131,51 +150,85 @@ function Comunidad() {
 
   const handleCreatePostVisibility = (visible) => {
     setshowCreatePost(visible);
-    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: false, closeEnabled: true, publishEnabled: false });
-  }
+    setPostActionBarStatus({
+      ...postActionBarStatus,
+      backEnabled: false,
+      nextEnabled: false,
+      closeEnabled: true,
+      publishEnabled: false,
+    });
+  };
   const handlePostPreview = () => {
     handleStepNext();
-    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: true, nextEnabled: false, closeEnabled: true, publishEnabled: true });
+    setPostActionBarStatus({
+      ...postActionBarStatus,
+      backEnabled: true,
+      nextEnabled: false,
+      closeEnabled: true,
+      publishEnabled: true,
+    });
   };
 
   const handleStepChange = (newStep) => {
     setCurrentStep(newStep);
-
   };
   const handleStepBack = () => {
     setCurrentStep(currentStep - 1);
-    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: true, closeEnabled: true, publishEnabled: false });
+    setPostActionBarStatus({
+      ...postActionBarStatus,
+      backEnabled: false,
+      nextEnabled: true,
+      closeEnabled: true,
+      publishEnabled: false,
+    });
   };
   const handleStepNext = () => {
     setCurrentStep(currentStep + 1);
-    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: true, nextEnabled: false, closeEnabled: true, publishEnabled: false });
+    setPostActionBarStatus({
+      ...postActionBarStatus,
+      backEnabled: true,
+      nextEnabled: false,
+      closeEnabled: true,
+      publishEnabled: false,
+    });
   };
 
   const handleCurrentOptionChange = (type) => {
     setCurrentOption(type);
-    setPostActionBarStatus({ ...postActionBarStatus, backEnabled: false, nextEnabled: true, closeEnabled: true, publishEnabled: false });
+    setPostActionBarStatus({
+      ...postActionBarStatus,
+      backEnabled: false,
+      nextEnabled: true,
+      closeEnabled: true,
+      publishEnabled: false,
+    });
   };
 
   const handleViewClicked = (id) => {
     router.push(`/app/posts/${id}`);
-  }
+  };
 
-  const handleEditClicked = (id) => { alert("Under construction!") }
+  const handleEditClicked = (id) => {
+    alert("Under construction!");
+  };
 
   const handleDeleteClicked = (id) => {
     setShowDeleteModal(true);
     setPostToDelete(id);
-  }
+  };
   const handleDeleteConfirmation = async () => {
-    await db.collection('CommunityNews').doc(postToDelete).delete();
+    await db
+      .collection("CommunityNews")
+      .doc(postToDelete)
+      .delete();
     setShowDeleteModal(false);
-  }
+  };
+
+  const handleShowMoreNewsClicked = () => {};
 
   return (
     <>
-
       <Layout>
-
         <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
           <MainSection>
             <div className="flex flex-col w-full">
@@ -193,9 +246,13 @@ function Comunidad() {
                   <TableSection
                     sectionTitle="Avisos"
                     dataset={communityNews}
+                    orderBy={orderField}
+                    orderDirectionDesc={isOrderDirectionDesc}
                     onView={handleViewClicked}
                     onEidt={handleEditClicked}
                     onDelete={handleDeleteClicked}
+                    onShowMore={handleShowMoreNewsClicked}
+                    onFieldOrderChanged={handleOrderByFieldChanged}
                   ></TableSection>
                 ) : (
                   <div>Loading...</div>
@@ -228,7 +285,12 @@ function Comunidad() {
               onNext={handleStepNext}
             ></CreatePost>
           )}
-          {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
+          {showDeleteModal && (
+            <DeleteModal
+              onCancel={() => setShowDeleteModal(false)}
+              onConfirm={handleDeleteConfirmation}
+            ></DeleteModal>
+          )}
         </div>
       </Layout>
     </>
