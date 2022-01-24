@@ -149,7 +149,7 @@ function Comunidad() {
   };
 
   const handleCreatePostVisibility = (visible) => {
-    setshowCreatePost(visible);
+    setShowCreatePost(visible);
     setPostActionBarStatus({
       ...postActionBarStatus,
       backEnabled: false,
@@ -224,7 +224,7 @@ function Comunidad() {
     setShowDeleteModal(false);
   };
 
-  const handleShowMoreNewsClicked = () => {};
+  const handleShowMoreNewsClicked = () => { };
 
   return (
     <>
