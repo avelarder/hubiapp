@@ -126,15 +126,15 @@ function TableSection({
                 );
               })}
             </tbody>
-            <tfoot className="flex justify-center w-full">
-              <button
-                className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
-                onClick={onShowMore}
-              >
-                Show more
-              </button>
-            </tfoot>
           </table>
+          <div className="flex justify-center w-full">
+            <button
+              className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
+              onClick={onShowMore}
+            >
+              Show more
+            </button>
+          </div>
         </div>
       </div>
     </div>
