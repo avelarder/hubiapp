@@ -21,7 +21,7 @@ function ContextualMenu({ icon, children, ...rest }) {
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
-  });
+  }, [dropdownOpen, setDropdownOpen]);
 
   // close if the esc key is pressed
   useEffect(() => {
@@ -31,16 +31,18 @@ function ContextualMenu({ icon, children, ...rest }) {
     };
     document.addEventListener("keydown", keyHandler);
     return () => document.removeEventListener("keydown", keyHandler);
-  });
+  }, [dropdownOpen, setDropdownOpen]);
 
   return (
     <div {...rest}>
       <button
         ref={trigger}
-        className={`flex w-5 h-5 text-gray-400 hover:text-gray-500 rounded-full ${dropdownOpen && "bg-gray-100 text-gray-500"
-          }`}
+        className={`flex w-5 h-5 text-gray-400 hover:text-gray-500 rounded-full ${dropdownOpen &&
+          "bg-gray-100 text-gray-500"}`}
         aria-haspopup="true"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={() => {
+          setDropdownOpen(!dropdownOpen);
+        }}
         aria-expanded={dropdownOpen}
       >
         <span className="sr-only">Menu</span>
@@ -59,7 +61,9 @@ function ContextualMenu({ icon, children, ...rest }) {
       >
         <ul
           ref={dropdown}
-          onFocus={() => setDropdownOpen(true)}
+          onFocus={() => {
+            setDropdownOpen(true);
+          }}
           onBlur={() => setDropdownOpen(false)}
         >
           {children}

@@ -85,11 +85,16 @@ function TableSection({
                       </td>
                     ))}
                     <td className="w-5">
-                      <ContextualMenu className="relative inline-flex">
+                      <ContextualMenu
+                        key={row.id}
+                        className="relative inline-flex"
+                      >
                         <li>
                           <button
                             className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
-                            onClick={() => onView(row["id"])}
+                            onClick={() => {
+                              onView(row["id"]);
+                            }}
                           >
                             Ver
                           </button>
@@ -97,7 +102,9 @@ function TableSection({
                         <li>
                           <button
                             className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
-                            onClick={() => onEdit(row["id"])}
+                            onClick={() => {
+                              onEdit(row["id"]);
+                            }}
                           >
                             Editar
                           </button>
@@ -105,7 +112,10 @@ function TableSection({
                         <li>
                           <button
                             className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100"
-                            onClick={() => onDelete(row["id"])}
+                            onClick={(e) => {
+                              onDelete(row["id"]);
+                              e.currentTarget.blur();
+                            }}
                           >
                             Eliminar
                           </button>

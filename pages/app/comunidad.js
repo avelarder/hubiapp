@@ -118,7 +118,6 @@ function Comunidad() {
   };
 
   const handleOrderByFieldChanged = (field) => {
-    console.log(field);
     if (field === orderField) setOrderDirection(!isOrderDirectionDesc);
     else {
       setOrderField(field);
@@ -224,7 +223,7 @@ function Comunidad() {
     setShowDeleteModal(false);
   };
 
-  const handleShowMoreNewsClicked = () => { };
+  const handleShowMoreNewsClicked = () => {};
 
   return (
     <>
