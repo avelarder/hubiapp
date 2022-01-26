@@ -5,6 +5,7 @@ import Firebase from "../../firebase";
 import TableSection from "../common/table-section";
 import DeleteModal from "../common/delete-modal";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
+import TextInput from "../common/textInput";
 
 const initCommunityNews = {
   headers: [
@@ -24,6 +25,7 @@ function NewsContainer() {
   const [orderField, setOrderField] = useState("publishedOn");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+
 
   const query = isOrderDirectionDesc
     ? db.collection("CommunityNews").orderBy(orderField, "desc")
@@ -73,7 +75,9 @@ function NewsContainer() {
       .delete();
     setShowDeleteModal(false);
   };
-  const handleShowMoreNewsClicked = () => {};
+
+  const handleShowMoreNewsClicked = () => { };
+
   const handleOrderByFieldChanged = (field) => {
     if (field === orderField) setOrderDirection(!isOrderDirectionDesc);
     else {
@@ -81,20 +85,23 @@ function NewsContainer() {
       setOrderDirection(false);
     }
   };
+
   return (
     <div>
       {communityNews.data && (
-        <TableSection
-          sectionTitle="Avisos"
-          dataset={communityNews}
-          orderBy={orderField}
-          orderDirectionDesc={isOrderDirectionDesc}
-          onView={handleViewClicked}
-          onEidt={handleEditClicked}
-          onDelete={handleDeleteClicked}
-          onShowMore={handleShowMoreNewsClicked}
-          onFieldOrderChanged={handleOrderByFieldChanged}
-        ></TableSection>
+        <div>
+          <TableSection
+            sectionTitle="Avisos"
+            dataset={communityNews}
+            orderBy={orderField}
+            orderDirectionDesc={isOrderDirectionDesc}
+            onView={handleViewClicked}
+            onEidt={handleEditClicked}
+            onDelete={handleDeleteClicked}
+            onShowMore={handleShowMoreNewsClicked}
+            onFieldOrderChanged={handleOrderByFieldChanged}
+          ></TableSection>
+        </div>
       )}
       {showDeleteModal && (
         <DeleteModal

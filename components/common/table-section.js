@@ -1,8 +1,9 @@
 import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { NavLink } from "../navLink";
-import React from "react";
+import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
+import TextInput from "./textInput";
 
 function TableSection({
   sectionTitle,
@@ -16,13 +17,36 @@ function TableSection({
   onShowMore,
   onFieldOrderChanged,
 }) {
+
+  // const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
+  const [filterPost, setFilterPost] = useState("")
+
+  const handleOnFilterChanged = (value) => {
+
+    // if (!value) {
+    //   setFilteredDataSet(dataset.data);
+    // } else {
+    //   setFilteredDataSet(
+    //     dataset.data.filter(post => post.title.toLowerCase().includes(value.toLowerCase()) ||
+    //       post.publishedOn.toLowerCase().includes(value.toLowerCase()) ||
+    //       post.expiresBy.toLowerCase().includes(value.toLowerCase())));
+    // }
+    setFilterPost(value);
+  }
+
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
-      <header className="flex px-5 py-4 border-b border-gray-100">
-        <h2 className="flex font-semibold text-gray-800">{sectionTitle}</h2>
-        <div className="flex items-end text-xs">
-          <DotsVerticalIcon></DotsVerticalIcon>
-        </div>
+      <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center">
+        <h2 className="flex font-semibold text-gray-800 w-full">{sectionTitle}</h2>
+        <TextInput
+          className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-2 mx-4"
+          aria-multiline={true}
+          multiple={true}
+          placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
+          value={filterPost}
+          onChange={handleOnFilterChanged}
+        ></TextInput>
+
       </header>
       <div className="p-3 flex">
         {/* Table */}
@@ -132,7 +156,7 @@ function TableSection({
               className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
               onClick={onShowMore}
             >
-              Show more
+              Mostrar mas
             </button>
           </div>
         </div>
