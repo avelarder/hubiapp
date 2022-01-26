@@ -57,6 +57,7 @@ function Comunidad() {
   const router = useRouter();
 
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [disclosureOpen, setDisclosureOpen] = useState(postOptions[0].key);
 
   const defaultActioBarStatus = {
     backEnabled: false,
@@ -173,7 +174,7 @@ function Comunidad() {
               </button>
 
               <div className="mt-4">
-                <Disclosure>
+                <Disclosure defaultOpen="open">
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">

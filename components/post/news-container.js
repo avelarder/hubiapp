@@ -5,7 +5,6 @@ import Firebase from "../../firebase";
 import TableSection from "../common/table-section";
 import DeleteModal from "../common/delete-modal";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
-import TextInput from "../common/textInput";
 
 const initCommunityNews = {
   headers: [
@@ -21,15 +20,13 @@ function NewsContainer() {
   const db = Firebase.default.firestore();
   let communityNews = {};
 
-  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("publishedOn");
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
 
-  const query = isOrderDirectionDesc
-    ? db.collection("CommunityNews").orderBy(orderField, "desc")
-    : db.collection("CommunityNews").orderBy(orderField);
+
+  const query = db.collection("CommunityNews");
 
   const { data, status, error } = useFirestoreQuery(query);
 
@@ -78,13 +75,6 @@ function NewsContainer() {
 
   const handleShowMoreNewsClicked = () => { };
 
-  const handleOrderByFieldChanged = (field) => {
-    if (field === orderField) setOrderDirection(!isOrderDirectionDesc);
-    else {
-      setOrderField(field);
-      setOrderDirection(false);
-    }
-  };
 
   return (
     <div>
@@ -94,13 +84,12 @@ function NewsContainer() {
             key={new Date().getTime()}
             sectionTitle="Avisos"
             dataset={communityNews}
-            orderBy={orderField}
-            orderDirectionDesc={isOrderDirectionDesc}
+
             onView={handleViewClicked}
             onEidt={handleEditClicked}
             onDelete={handleDeleteClicked}
             onShowMore={handleShowMoreNewsClicked}
-            onFieldOrderChanged={handleOrderByFieldChanged}
+
           ></TableSection>
         </div>
       )}

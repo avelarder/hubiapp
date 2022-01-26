@@ -8,18 +8,43 @@ import TextInput from "./textInput";
 function TableSection({
   sectionTitle,
   rowsPerPage,
-  orderBy,
-  orderDirectionDesc,
   dataset,
   onView,
   onEdit,
   onDelete,
   onShowMore,
-  onFieldOrderChanged,
 }) {
 
   const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
+  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
+  const [orderField, setOrderField] = useState("publishedOn");
   const [filterPost, setFilterPost] = useState("")
+
+  const handleOrderByFieldChanged = (field) => {
+    let localDirection;
+    if (field === orderField) localDirection = (!isOrderDirectionDesc);
+    else {
+      setOrderField(field);
+      localDirection = (false);
+    }
+
+    filteredDataSet
+      .sort((a, b) => {
+        let fa = isOrderDirectionDesc ? a[field].toLowerCase() : b[field].toLowerCase(),
+          fb = isOrderDirectionDesc ? b[field].toLowerCase() : a[field].toLowerCase();
+
+        if (fa < fb) {
+          return -1;
+        }
+        if (fa > fb) {
+          return 1;
+        }
+        return 0;
+      })
+
+
+    setOrderDirection(localDirection);
+  };
 
   const handleOnFilterChanged = (value) => {
 
@@ -59,20 +84,20 @@ function TableSection({
                   <th key={header.source} className="p-2 whitespace-nowrap ">
                     <div
                       className="flex font-semibold text-left cursor-pointer items-center"
-                      onClick={() => onFieldOrderChanged(header.source)}
+                      onClick={() => handleOrderByFieldChanged(header.source)}
                     >
                       <span
                         className={
-                          header.source === orderBy
+                          header.source === orderField
                             ? "text-purple-400 font-extrabold"
                             : "text-black"
                         }
                       >
                         {header.columnName}
                       </span>
-                      {header.source === orderBy && (
+                      {header.source === orderField && (
                         <>
-                          {orderDirectionDesc ? (
+                          {isOrderDirectionDesc ? (
                             <ChevronDownIcon className="text-purple-400 w-4 h-4"></ChevronDownIcon>
                           ) : (
                             <ChevronUpIcon className="text-purple-400 w-4 h-4"></ChevronUpIcon>
