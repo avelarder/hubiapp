@@ -91,6 +91,7 @@ function NewsContainer() {
       {communityNews.data && (
         <div>
           <TableSection
+            key={new Date().getTime()}
             sectionTitle="Avisos"
             dataset={communityNews}
             orderBy={orderField}

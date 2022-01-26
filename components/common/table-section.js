@@ -18,19 +18,19 @@ function TableSection({
   onFieldOrderChanged,
 }) {
 
-  // const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
+  const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
   const [filterPost, setFilterPost] = useState("")
 
   const handleOnFilterChanged = (value) => {
 
-    // if (!value) {
-    //   setFilteredDataSet(dataset.data);
-    // } else {
-    //   setFilteredDataSet(
-    //     dataset.data.filter(post => post.title.toLowerCase().includes(value.toLowerCase()) ||
-    //       post.publishedOn.toLowerCase().includes(value.toLowerCase()) ||
-    //       post.expiresBy.toLowerCase().includes(value.toLowerCase())));
-    // }
+    if (!value) {
+      setFilteredDataSet(dataset.data);
+    } else {
+      setFilteredDataSet(
+        dataset.data.filter(post => post.title.toLowerCase().includes(value.toLowerCase()) ||
+          post.publishedOn.toLowerCase().includes(value.toLowerCase()) ||
+          post.expiresBy.toLowerCase().includes(value.toLowerCase())));
+    }
     setFilterPost(value);
   }
 
@@ -86,7 +86,7 @@ function TableSection({
             </thead>
             {/* Table body */}
             <tbody className="text-sm divide-y divide-gray-100">
-              {dataset.data.map((row) => {
+              {filteredDataSet.map((row) => {
                 return (
                   <tr key={row.id}>
                     {dataset.headers.map((header) => (
