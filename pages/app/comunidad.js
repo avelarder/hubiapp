@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Layout from "../../components/layout";
 import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
-import TableSection from "../../components/common/table-section";
 import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
 import { useRouter } from "next/router";
@@ -25,39 +24,12 @@ const postScopeOptions = [
   { id: "A", text: "La Floresta" },
 ];
 
-const products = {
-  headers: [
-    { source: "title", columnName: "Título" },
-    { source: "publishedOn", columnName: "Publicado" },
-    { source: "expiresBy", columnName: "Expiración" },
-  ],
-  data: [
-    {
-      id: 1,
-      title: "Vendo Ropero nuevo de MDF",
-      description:
-        "El ropero mide 2 mts de alto x 2 mts de ancho y 75 cm de profundidad en color blanco con espejos.",
-      publishedOn: "21/01/2021 5:00pm",
-      expiresOn: "21/01/2022 5:00pm",
-      status: "Activo",
-    },
-    {
-      id: 2,
-      title: "Oportunidad - Alquilo cochera con techo",
-      description:
-        "Buenas, estoy alquilando una cochera subterránea con box para guardar cosas.",
-      publishedOn: "21/01/2021 5:00pm",
-      expiresOn: "21/01/2022 5:00pm",
-      status: "Pausado",
-    },
-  ],
-};
+
 
 function Comunidad() {
   const router = useRouter();
 
   const [showCreatePost, setShowCreatePost] = useState(false);
-  const [disclosureOpen, setDisclosureOpen] = useState(postOptions[0].key);
 
   const defaultActioBarStatus = {
     backEnabled: false,
@@ -71,7 +43,6 @@ function Comunidad() {
     defaultActioBarStatus
   );
   const [currentOption, setCurrentOption] = useState(null);
-  const [pageSize, setpageSize] = useState(5);
 
   const hideCreatePostModal = () => {
     setCurrentStep(1);
@@ -191,27 +162,6 @@ function Comunidad() {
                   )}
                 </Disclosure>
 
-                <div className="mt-4"></div>
-
-                <Disclosure>
-                  {({ open }) => (
-                    <>
-                      <Disclosure.Button className="flex justify-between w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                        <span>Marketplace Venta/Compra</span>
-                        <ChevronUpIcon
-                          className={`${open ? 'transform rotate-180' : ''
-                            } w-5 h-5 text-purple-500`}
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                        <TableSection
-                          sectionTitle="Marketplace Venta/Compra"
-                          dataset={products}
-                        ></TableSection>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
 
               </div>
             </div>
