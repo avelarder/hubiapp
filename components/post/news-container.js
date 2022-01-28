@@ -6,6 +6,8 @@ import TableSection from "../common/table-section";
 import DeleteModal from "../common/delete-modal";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 
+const DEFAULT_LIMIT = 5;
+
 const initCommunityNews = {
   headers: [
     { source: "title", columnName: "Título", isLink: true, path: "posts/" },
@@ -23,10 +25,10 @@ function NewsContainer() {
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
 
 
-
-  const query = db.collection("CommunityNews");
+  const query = db.collection("CommunityNews").limit(currentLimit);
 
   const { data, status, error } = useFirestoreQuery(query);
 
@@ -73,8 +75,9 @@ function NewsContainer() {
     setShowDeleteModal(false);
   };
 
-  const handleShowMoreNewsClicked = () => { };
-
+  const handleShowMoreNewsClicked = () => {
+    setCurrentLimit(currentLimit + DEFAULT_LIMIT);
+  };
 
   return (
     <div>

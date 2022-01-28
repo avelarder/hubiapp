@@ -181,7 +181,7 @@ function TableSection({
               className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
               onClick={onShowMore}
             >
-              Mostrar mas
+              Mostrar más
             </button>
           </div>
         </div>
