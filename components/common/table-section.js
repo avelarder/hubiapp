@@ -1,9 +1,9 @@
-import { DotsVerticalIcon } from "@heroicons/react/outline";
 import { NavLink } from "../navLink";
 import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import TextInput from "./textInput";
+import Select from "./select";
 
 function TableSection({
   sectionTitle,
@@ -13,7 +13,16 @@ function TableSection({
   onEdit,
   onDelete,
   onShowMore,
+  onChangeLimit
 }) {
+
+  const limitOptions = [
+    { id: "5", text: "  5" },
+    { id: "10", text: " 10" },
+    { id: "20", text: " 20" },
+    { id: "50", text: " 50" },
+    { id: "100", text: "100" }
+  ];
 
   const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
@@ -176,6 +185,23 @@ function TableSection({
               })}
             </tbody>
           </table>
+          <div className="flex justify-center w-full my-2">
+            <div className="w-32">
+              <Select
+                title={"Cantidad de registros por página"}
+                showTitle={false}
+                options={limitOptions}
+                selectedOption={
+                  limitOptions.find(
+                    (x) =>
+                      x.id ==
+                      rowsPerPage
+                  )
+                }
+                onOptionChanged={(option) => onChangeLimit(option.id)}
+              ></Select>
+            </div>
+          </div>
           <div className="flex justify-center w-full">
             <button
               className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
@@ -186,8 +212,9 @@ function TableSection({
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
 export default TableSection;
+

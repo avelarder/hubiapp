@@ -6,7 +6,7 @@ import TableSection from "../common/table-section";
 import DeleteModal from "../common/delete-modal";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 
-const DEFAULT_LIMIT = 5;
+const DEFAULT_LIMIT = 10;
 
 const initCommunityNews = {
   headers: [
@@ -79,6 +79,10 @@ function NewsContainer() {
     setCurrentLimit(currentLimit + DEFAULT_LIMIT);
   };
 
+  const handleChangeLimit = (limit) => {
+    setCurrentLimit(limit);
+  };
+
   return (
     <div>
       {communityNews.data && (
@@ -87,12 +91,12 @@ function NewsContainer() {
             key={new Date().getTime()}
             sectionTitle="Avisos"
             dataset={communityNews}
-
+            rowsPerPage={currentLimit}
             onView={handleViewClicked}
             onEidt={handleEditClicked}
             onDelete={handleDeleteClicked}
             onShowMore={handleShowMoreNewsClicked}
-
+            onChangeLimit={handleChangeLimit}
           ></TableSection>
         </div>
       )}
