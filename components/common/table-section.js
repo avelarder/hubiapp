@@ -2,12 +2,11 @@ import { NavLink } from "../navLink";
 import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
-import TextInput from "./textInput";
 import Select from "./select";
 
 function TableSection({
   sectionTitle,
-  rowsPerPage,
+  currentLimit,
   dataset,
   onView,
   onEdit,
@@ -17,17 +16,18 @@ function TableSection({
 }) {
 
   const limitOptions = [
-    { id: "5", text: "  5" },
-    { id: "10", text: " 10" },
-    { id: "20", text: " 20" },
-    { id: "50", text: " 50" },
-    { id: "100", text: "100" }
+    { id: 5, text: "  5" },
+    { id: 10, text: " 10" },
+    { id: 20, text: " 20" },
+    { id: 50, text: " 50" },
+    { id: 100, text: "100" }
   ];
 
   const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
   const [orderField, setOrderField] = useState("publishedOn");
   const [filterPost, setFilterPost] = useState("")
+
 
   const handleOrderByFieldChanged = (field) => {
     let localDirection;
@@ -56,7 +56,6 @@ function TableSection({
   };
 
   const handleOnFilterChanged = (value) => {
-
     if (!value) {
       setFilteredDataSet(dataset.data);
     } else {
@@ -72,15 +71,14 @@ function TableSection({
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center">
         <h2 className="flex font-semibold text-gray-800 w-full">{sectionTitle}</h2>
-        <TextInput
+        <input
+          type={"text"}
           className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-2 mx-4"
           aria-multiline={true}
-          multiple={true}
           placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
           value={filterPost}
-          onChange={handleOnFilterChanged}
-        ></TextInput>
-
+          onChange={(e) => handleOnFilterChanged(e.currentTarget.value)}
+        ></input>
       </header>
       <div className="p-3 flex">
         {/* Table */}
@@ -194,8 +192,8 @@ function TableSection({
                 selectedOption={
                   limitOptions.find(
                     (x) =>
-                      x.id ==
-                      rowsPerPage
+                      x.id ===
+                      currentLimit
                   )
                 }
                 onOptionChanged={(option) => onChangeLimit(option.id)}

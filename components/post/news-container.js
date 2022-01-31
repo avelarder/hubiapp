@@ -26,9 +26,10 @@ function NewsContainer() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
 
 
-  const query = db.collection("CommunityNews").limit(currentLimit);
+  const query = db.collection("CommunityNews").limit(rowsPerPage);
 
   const { data, status, error } = useFirestoreQuery(query);
 
@@ -76,11 +77,12 @@ function NewsContainer() {
   };
 
   const handleShowMoreNewsClicked = () => {
-    setCurrentLimit(currentLimit + DEFAULT_LIMIT);
+    setRowsPerPage((prev) => prev + currentLimit);
   };
 
   const handleChangeLimit = (limit) => {
     setCurrentLimit(limit);
+    setRowsPerPage(limit);
   };
 
   return (
@@ -91,7 +93,7 @@ function NewsContainer() {
             key={new Date().getTime()}
             sectionTitle="Avisos"
             dataset={communityNews}
-            rowsPerPage={currentLimit}
+            currentLimit={currentLimit}
             onView={handleViewClicked}
             onEidt={handleEditClicked}
             onDelete={handleDeleteClicked}
