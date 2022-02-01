@@ -53,17 +53,16 @@ function ViewPostPage() {
     router.push('/app/comunidad');
   }
   return (
-    <div className="flex bg-gray-300">
-      <ArrowCircleLeftIcon className="flex  m-4 cursor-pointer w-10 h-10" onClick={handleBack}></ArrowCircleLeftIcon>
-      <div className="flex align-middle justify-center w-full">
+    <div className="bg-gray-200 flex flex-col h-screen">
+      <ArrowCircleLeftIcon className="absolute text-purple-600 z-10 ml-2 mt-2 cursor-pointer w-7 h-7" onClick={handleBack}></ArrowCircleLeftIcon>
+      <div className="flex-1 mt-4 mb-4 w-11/12  mx-4 p-4 text-lg h-full shadow-lg drop-shadow-lg bg-gray-100 rounded-md">
         <ViewPost post={post}
           onCancel={handleBack}
           onDelete={handleDelete}>
         </ViewPost>
       </div>
-      {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
+    </div>
 
-    </div >
   );
 }
 

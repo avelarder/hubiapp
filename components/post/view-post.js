@@ -1,107 +1,100 @@
+import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/solid";
 import React from "react";
 import TextEmoji from "../common/textEmoji";
 
+
+function NestedContainer({ title, children }) {
+  return (
+    <div className="mt-2 border-2 border-gray-100 shadow-lg rounded-md sm:text-center p-5">
+      <span className="block sm:text-lg text-sm font-bold text-purple-700 mb-2 border-b-2 border-purple-700">
+        {title}
+      </span>
+      <span className="block text-xs text-gray-600 h-full">
+        {children}
+      </span>
+    </div>
+  )
+}
+
 function ViewPost({ post, onCancel, onDelete }) {
   return (
-    <div className=" min-h-screenpt-4 w-full px-4 pb-20 text-center sm:block sm:p-0"
-      onKeyDownCapture={(e) => {
-        if (e.key === "Escape") onCancel();
-      }}
-    >
-      <div>
-        <span
-          className="hidden sm:inline-block sm:align-middle sm:h-screen"
-          aria-hidden="true"
+    <div>
+      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+        <h1
+          className="text-2xl font-bold text-gray-900 text-center mb-4 align-middle"
         >
-          &#8203;
-        </span>
-        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div className="sm:flex sm:items-center">
-              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                <h3
-                  className="text-lg leading-6 font-medium text-gray-900 text-center mb-4"
-                  id="modal-title"
-                >
-                  <TextEmoji text={post.title}
-                  ></TextEmoji>
-                </h3>
-                <div>
-                  <div className="mt-2 ">
-                    <span className="block text-xs font-medium text-gray-700">
-                      Descripción
-                    </span>
-                    <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2">
-                      {
-                        post.description
-                      }
-                    </div>
-                  </div>
-                  {post.postType === "survey" && (
-                    <div className="mt-2 flex flex-col ">
-                      <span className="text-xs">
-                        Detalles de la Encuesta ({post.answerType.name}):
-                      </span>
-                      <ul className="block list-disc">
-                        {post.options.map((option) => {
-                          return (<li className=" mt-2 text-sm text-gray-500 w-full " key={option.key}>{option.text}</li>)
-                        })}
-                      </ul>
-                      <div className="mt-2 ">
-                        <span className="text-xs">
-                          Expira:
-                          <br /> <b>
-                            {
-                              post.expiresBy
-                            }
-                          </b>
-                        </span>
-                      </div>
-                    </div>)}
-                  <div className="mt-2 ">
-                    <span className="text-xs">
-                      Visible a:
-                      <br /><b>
-                        {
-                          post.scope?.text
-                        }
-                      </b>
-                    </span>
-                  </div>
-                  <div className="mt-2 ">
-                    <span className="text-xs">
-                      Publicado:
-                      <br /><b>
-                        {
-                          post.publishedOn
-                        }
-                      </b>
-                    </span>
-                  </div>
+          <TextEmoji text={post.title} className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2 align-middle items-center justify-start"></TextEmoji>
+        </h1>
+        <div className="md:mr-10">
 
-                </div>
-
+          <NestedContainer title={"Descripción"}>
+            <span>
+              {post.description}
+            </span>
+          </NestedContainer>
+          {post.postType === "survey" && (
+            <NestedContainer title={"detalles de la encuesta:"}>
+              <div className="flex flex-col">
+                <span className="font-medium">
+                  {post.answerType.name}
+                </span>
+                <span className="text-gray-600 mb-4">{post.answerType.id === "SINGLE" ?
+                  "El usuario podrá seleccionar solamente una de las opciones al responder la encuesta." : "El usuario podrá seleccionar más una de las opciones al responder la encuesta."}
+                </span>
+                <span className="font-medium">
+                  {"Opciones:"}
+                </span>
+                <span>
+                  <ul>
+                    {post.options.map((option) => {
+                      return (<li className="text-sm" key={option.key}>{option.text}</li>)
+                    })}
+                  </ul>
+                </span>
+                <br></br>
+                <span className="font-medium text-gray-700">
+                  Expira:
+                </span>
+                <span className=" text-gray-600">
+                  {
+                    post.expiresBy
+                  }
+                </span>
               </div>
+            </NestedContainer>
+          )}
+
+          <NestedContainer title={"Este anuncio es visible a:"}>
+            <div className="flex flex-col">
+              <span className="mb-4">
+                {post.scope.text}
+              </span>
+              <span className="font-medium text-gray-700">
+                Expira:
+              </span>
+              <span className="block text-xs text-gray-600 ">{
+                post.publishedOn
+              }
+              </span>
             </div>
-          </div>
-          <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-            <button
-
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onDelete}
-            >
-              Eliminar
-            </button>
-            <button
-
-              className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
-              onClick={onCancel}
-            >
-              Cerrar
-            </button>
-
-          </div>
+          </NestedContainer>
         </div>
+      </div>
+
+      <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+        <button
+          className="w-full inline-flex justify-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+          onClick={onDelete}
+        >
+          <TrashIcon className="w-5 h-5 mr-2"></TrashIcon> Eliminar
+        </button>
+        <button
+          className="w-full inline-flex justify-center items-center rounded-lg border  px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+          onClick={onCancel}
+        >
+          <ArrowLeftIcon className="w-5 h-5 mr-2"></ArrowLeftIcon>Regresar
+        </button>
+
       </div>
     </div >
   );

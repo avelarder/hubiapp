@@ -75,7 +75,7 @@ function TextEmoji({ text }) {
         return hash;
     };
     return (
-        <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2 align-middle items-center justify-start" >
+        <div  >
             <span>{emojifyText(text, buildOptions({}))}</span>
         </div>
     )

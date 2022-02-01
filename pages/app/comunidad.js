@@ -9,7 +9,7 @@ import { Disclosure } from "@headlessui/react";
 import { v4 } from "uuid";
 import moment from "moment";
 import NewsContainer from "../../components/post/news-container";
-import { ChevronUpIcon } from "@heroicons/react/solid";
+import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
 
 const postOptions = [
   { key: "news", steps: 3 },
@@ -136,12 +136,12 @@ function Comunidad() {
           <MainSection>
             <div className="flex flex-col w-full">
               <button
-                className="bg-purple-600 shadow-md h-8 rounded-full  text-white font-medium"
+                className="flex bg-purple-600 shadow-md h-8 rounded-full  text-white font-medium justify-center items-center"
                 onClick={() => {
                   handleCreatePostVisibility(true);
                 }}
               >
-                Crear un nuevo post
+                <PlusIcon className="w-5 h-5 mr-2"></PlusIcon>Crear un nuevo post
               </button>
 
               <div className="mt-4">
