@@ -83,13 +83,13 @@ function ViewPost({ post, onCancel, onDelete }) {
 
       <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
         <button
-          className="w-full inline-flex justify-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+          className="w-full inline-flex justify-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:ml-3 sm:w-auto sm:text-sm"
           onClick={onDelete}
         >
           <TrashIcon className="w-5 h-5 mr-2"></TrashIcon> Eliminar
         </button>
         <button
-          className="w-full inline-flex justify-center items-center rounded-lg border  px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-600 sm:ml-3 sm:w-auto sm:text-sm"
+          className="w-full inline-flex justify-center items-center rounded-lg border  px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:ml-3 sm:w-auto sm:text-sm"
           onClick={onCancel}
         >
           <ArrowLeftIcon className="w-5 h-5 mr-2"></ArrowLeftIcon>Regresar
