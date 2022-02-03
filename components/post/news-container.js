@@ -89,11 +89,6 @@ function NewsContainer() {
     setRowsPerPage(limit);
   };
 
-  const handleOnFilterChanged = (value) => {
-
-    setFilterPost(value);
-  }
-
   const handleOrderByFieldChanged = (field) => {
     let localDirection;
     if (field === orderField) localDirection = (!isOrderDirectionDesc);
@@ -110,7 +105,6 @@ function NewsContainer() {
       {communityNews.data && (
         <div>
           <TableSection
-            key={new Date().getTime()}
             sectionTitle="Avisos"
             dataset={communityNews}
             currentLimit={currentLimit}
@@ -123,7 +117,7 @@ function NewsContainer() {
             onShowMore={handleShowMoreNewsClicked}
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
-            onFilterPostChanged={handleOnFilterChanged}
+            onFilterPostChanged={setFilterPost}
           ></TableSection>
         </div>
       )}

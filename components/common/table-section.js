@@ -61,7 +61,10 @@ function TableSection({
           aria-multiline={true}
           placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
           value={filterPost}
-          onBlur={(e) => onFilterPostChanged(e.currentTarget.value)}
+          onChange={(e) => {
+            onFilterPostChanged(e.currentTarget.value)
+          }
+          }
         ></input>
       </header>
       <div className="p-3 flex">
