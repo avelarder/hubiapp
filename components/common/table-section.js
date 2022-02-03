@@ -29,7 +29,6 @@ function TableSection({
   ];
 
   const handleSortAndFilter = () => {
-    console.log(filterPost)
     dataset.data = dataset.data.filter(post => filterPost === "" || (post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
       post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
       post.expiresBy.toLowerCase().includes(filterPost.toLowerCase()))).sort((a, b) => {
@@ -44,9 +43,6 @@ function TableSection({
         }
         return 0;
       }).map(x => x)
-
-
-
   }
 
   handleSortAndFilter(orderField, filterPost);
