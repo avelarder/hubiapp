@@ -7,12 +7,17 @@ import Select from "./select";
 function TableSection({
   sectionTitle,
   currentLimit,
+  isOrderDesc,
+  orderField,
   dataset,
+  filterPost,
   onView,
   onEdit,
   onDelete,
   onShowMore,
-  onChangeLimit
+  onChangeLimit,
+  onOrderByFieldChanged,
+  onFilterPostChanged,
 }) {
 
   const limitOptions = [
@@ -23,24 +28,13 @@ function TableSection({
     { id: 100, text: "100" }
   ];
 
-  const [filteredDataSet, setFilteredDataSet] = useState(dataset.data);
-  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("publishedOn");
-  const [filterPost, setFilterPost] = useState("")
-
-
-  const handleOrderByFieldChanged = (field) => {
-    let localDirection;
-    if (field === orderField) localDirection = (!isOrderDirectionDesc);
-    else {
-      setOrderField(field);
-      localDirection = (false);
-    }
-
-    filteredDataSet
-      .sort((a, b) => {
-        let fa = isOrderDirectionDesc ? a[field].toLowerCase() : b[field].toLowerCase(),
-          fb = isOrderDirectionDesc ? b[field].toLowerCase() : a[field].toLowerCase();
+  const handleSortAndFilter = () => {
+    console.log(filterPost)
+    dataset.data = dataset.data.filter(post => filterPost === "" || (post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
+      post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
+      post.expiresBy.toLowerCase().includes(filterPost.toLowerCase()))).sort((a, b) => {
+        let fa = isOrderDesc ? a[orderField].toLowerCase() : b[orderField].toLowerCase(),
+          fb = isOrderDesc ? b[orderField].toLowerCase() : a[orderField].toLowerCase();
 
         if (fa < fb) {
           return -1;
@@ -49,23 +43,13 @@ function TableSection({
           return 1;
         }
         return 0;
-      })
+      }).map(x => x)
 
 
-    setOrderDirection(localDirection);
-  };
 
-  const handleOnFilterChanged = (value) => {
-    if (!value) {
-      setFilteredDataSet(dataset.data);
-    } else {
-      setFilteredDataSet(
-        dataset.data.filter(post => post.title.toLowerCase().includes(value.toLowerCase()) ||
-          post.publishedOn.toLowerCase().includes(value.toLowerCase()) ||
-          post.expiresBy.toLowerCase().includes(value.toLowerCase())));
-    }
-    setFilterPost(value);
   }
+
+  handleSortAndFilter(orderField, filterPost);
 
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
@@ -77,7 +61,7 @@ function TableSection({
           aria-multiline={true}
           placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
           value={filterPost}
-          onChange={(e) => handleOnFilterChanged(e.currentTarget.value)}
+          onBlur={(e) => onFilterPostChanged(e.currentTarget.value)}
         ></input>
       </header>
       <div className="p-3 flex">
@@ -91,7 +75,7 @@ function TableSection({
                   <th key={header.source} className="p-2 whitespace-nowrap ">
                     <div
                       className="flex font-semibold text-left cursor-pointer items-center"
-                      onClick={() => handleOrderByFieldChanged(header.source)}
+                      onClick={() => onOrderByFieldChanged(header.source)}
                     >
                       <span
                         className={
@@ -104,7 +88,7 @@ function TableSection({
                       </span>
                       {header.source === orderField && (
                         <>
-                          {isOrderDirectionDesc ? (
+                          {isOrderDesc ? (
                             <ChevronDownIcon className="text-purple-400 w-4 h-4"></ChevronDownIcon>
                           ) : (
                             <ChevronUpIcon className="text-purple-400 w-4 h-4"></ChevronUpIcon>
@@ -118,7 +102,7 @@ function TableSection({
             </thead>
             {/* Table body */}
             <tbody className="text-sm divide-y divide-gray-100">
-              {filteredDataSet.map((row) => {
+              {dataset.data.map((row) => {
                 return (
                   <tr key={row.id}>
                     {dataset.headers.map((header) => (

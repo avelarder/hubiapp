@@ -27,7 +27,10 @@ function NewsContainer() {
   const [postToDelete, setPostToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
+  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
+  const [orderField, setOrderField] = useState("publishedOn");
 
+  const [filterPost, setFilterPost] = useState("")
 
   const query = db.collection("CommunityNews").limit(rowsPerPage);
 
@@ -53,6 +56,7 @@ function NewsContainer() {
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
+
   }
 
   const handleViewClicked = (id) => {
@@ -85,6 +89,22 @@ function NewsContainer() {
     setRowsPerPage(limit);
   };
 
+  const handleOnFilterChanged = (value) => {
+
+    setFilterPost(value);
+  }
+
+  const handleOrderByFieldChanged = (field) => {
+    let localDirection;
+    if (field === orderField) localDirection = (!isOrderDirectionDesc);
+    else {
+      setOrderField(field);
+      localDirection = (false);
+    }
+    setOrderDirection(localDirection);
+  };
+
+
   return (
     <div>
       {communityNews.data && (
@@ -94,11 +114,16 @@ function NewsContainer() {
             sectionTitle="Avisos"
             dataset={communityNews}
             currentLimit={currentLimit}
+            isOrderDesc={isOrderDirectionDesc}
+            orderField={orderField}
+            filterPost={filterPost}
             onView={handleViewClicked}
             onEidt={handleEditClicked}
             onDelete={handleDeleteClicked}
             onShowMore={handleShowMoreNewsClicked}
             onChangeLimit={handleChangeLimit}
+            onOrderByFieldChanged={handleOrderByFieldChanged}
+            onFilterPostChanged={handleOnFilterChanged}
           ></TableSection>
         </div>
       )}
