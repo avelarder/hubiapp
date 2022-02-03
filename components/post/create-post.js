@@ -20,6 +20,7 @@ import {
   VALIDATIONS
 } from "../../utils/UI-Constants";
 import ContextualMenu from "../dashboard/contextualMenu";
+import moment from "moment";
 
 
 function PostIndicator({ currentStep, totalSteps }) {
@@ -116,7 +117,6 @@ function CreatePost({
 
   const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }, { key: "answerType", value: { id: "SINGLE", text: "Opción Simple" } }, { key: "allowAddOptions", value: false }]);
   const [showSurvey, setShowSurvey] = useState(false);
-  const [showEmoticons, setShowEmoticons] = useState(false);
   const [showImageUploader, setShowImageUploader] = useState(false);
 
   const addEmoji = (e) => {
@@ -148,7 +148,6 @@ function CreatePost({
     setAttributeValue("options", options);
   };
   const handleExpiresChange = (expiration) => {
-
     setAttributeValue("expiresBy", expiration);
   };
   const handlePostTypeChange = (postType) => {
