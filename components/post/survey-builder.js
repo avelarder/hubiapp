@@ -44,8 +44,6 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
     const [answerTypeEnabled, setAnswerTypeEnabled] = useState(answerType.id === 'MULTIPLE');
     const [addOptionEnabled, setAddOptionEnabled] = useState(allowAddOption);
 
-    const surveyOptions = [{ id: "SINGLE", text: "Opción simple" }, { id: "MULTIPLE", text: "Opción múltiple" }];
-
     const addOption = (index) => {
         localOptions.splice(index, 0, { key: index, text: '' });
         onOptionChanged(localOptions);
@@ -122,19 +120,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
                     </ContextualMenu></div>
             </div>
             <div className="divide-red-50 mb-4"></div>
-            <div className="flex flex-col">
 
-                {/* <Select
-                    title={"Tipo de respuesta"}
-                    showTitle={true}
-                    options={surveyOptions}
-                    selectedOption={
-                        answerType ?? surveyOptions[0]
-                    }
-                    onOptionChanged={onAnswerTypeChanged}
-                ></Select> */}
-
-            </div>
             <div className="divide-red-50 mb-4"></div>
             <div className="flex flex-col">
                 <span className='w-full block text-sm font-medium text-gray-700'>Díganos, cuándo caduca esta encuesta? </span>

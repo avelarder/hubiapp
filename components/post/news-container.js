@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-
 import Firebase from "../../firebase";
 import TableSection from "../common/table-section";
 import DeleteModal from "../common/delete-modal";
@@ -11,8 +10,8 @@ const DEFAULT_LIMIT = 10;
 const initCommunityNews = {
   headers: [
     { source: "title", columnName: "Título", isLink: true, path: "posts/" },
-    { source: "publishedOn", columnName: "Publicado" },
-    { source: "expiresBy", columnName: "Expiración" },
+    { source: "publishedOn", columnName: "Publicado", isDate: true, format: "DD/MM/YYYY" },
+    { source: "expiresBy", columnName: "Expiración", isDate: true, format: "DD/MM/YYYY" },
   ],
   data: [],
 };
@@ -98,7 +97,6 @@ function NewsContainer() {
     }
     setOrderDirection(localDirection);
   };
-
 
   return (
     <div>

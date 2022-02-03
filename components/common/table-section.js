@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import Select from "./select";
+import moment from "moment";
 
 function TableSection({
   sectionTitle,
@@ -29,19 +30,31 @@ function TableSection({
   ];
 
   const handleSortAndFilter = () => {
-    dataset.data = dataset.data.filter(post => filterPost === "" || (post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
-      post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
-      post.expiresBy.toLowerCase().includes(filterPost.toLowerCase()))).sort((a, b) => {
-        let fa = isOrderDesc ? a[orderField].toLowerCase() : b[orderField].toLowerCase(),
-          fb = isOrderDesc ? b[orderField].toLowerCase() : a[orderField].toLowerCase();
+    const header = dataset.headers.find(x => x.source === orderField);
+    dataset.data = dataset.data
+      .filter(
+        post => filterPost === "" || (post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
+          post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
+          post.expiresBy.toLowerCase().includes(filterPost.toLowerCase()))
+      )
+      .sort((a, b) => {
+        if (header.isDate) {
+          let fa = isOrderDesc ?
+            (a[orderField] ? moment(a[orderField], header.format).format("YYYY-MM-DD") : "--")
+            : (b[orderField] ? moment(b[orderField], header.format).format("YYYY-MM-DD") : "--"),
 
-        if (fa < fb) {
-          return -1;
+            fb = isOrderDesc ?
+              (b[orderField] ? moment(b[orderField], header.format).format("YYYY-MM-DD") : "--")
+              : (a[orderField] ? moment(a[orderField], header.format).format("YYYY-MM-DD") : "--");
+
+          return fa > fb ? 1 : fa < fb ? -1 : 0;
         }
-        if (fa > fb) {
-          return 1;
+        else {
+          let fa = isOrderDesc ? a[orderField].toLowerCase() : b[orderField].toLowerCase(),
+            fb = isOrderDesc ? b[orderField].toLowerCase() : a[orderField].toLowerCase();
+
+          return fa > fb ? 1 : fa < fb ? -1 : 0;
         }
-        return 0;
       }).map(x => x)
   }
 
