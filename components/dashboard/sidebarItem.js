@@ -19,16 +19,14 @@ function SidebarItem({
 
   return (
     <li
-      className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${
-        page === "" && "bg-gray-900"
-      }`}
+      className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${page === "" && "bg-gray-900"
+        }`}
       onClick={handleNestedContainerCollapsed}
     >
       <NavLink
         href={path}
-        className={`block text-gray-200 hover:text-white transition duration-150 ${
-          page === "" && "hover:text-gray-200"
-        }`}
+        className={`block text-gray-200 hover:text-white transition duration-150 ${page === "" && "hover:text-gray-200"
+          }`}
       >
         <div className="flex flex-grow">
           {icon && (
@@ -41,7 +39,7 @@ function SidebarItem({
       </NavLink>
 
       {nestedItems && nestedItemCollapsed && (
-        <div className="bg-purple-800 rounded-lg border-2 border-purple-500 mt-4 ">
+        <div className="bg-purple-800 rounded-lg border-1 border-purple-500 mt-4 ">
           <ul>
             {nestedItems.map((nestedItem) => (
               <SidebarItem

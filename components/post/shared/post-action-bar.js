@@ -8,7 +8,7 @@ function PostActionBar({ state, onPublish, onCancel, onNext, onBack }) {
             {state.publishEnabled &&
                 <button
                     type="button"
-                    className="w-full inline-flex justify-center items-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700   sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+                    className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700   sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
                     onClick={onPublish}
                     autoFocus
                 >
@@ -18,7 +18,7 @@ function PostActionBar({ state, onPublish, onCancel, onNext, onBack }) {
             {state.nextEnabled &&
                 <button
                     type="button"
-                    className="w-full inline-flex justify-center items-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+                    className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
                     onClick={onNext}
                     autoFocus
                 >
@@ -27,7 +27,7 @@ function PostActionBar({ state, onPublish, onCancel, onNext, onBack }) {
             {state.backEnabled &&
                 <button
                     type="button"
-                    className="w-full inline-flex justify-center items-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+                    className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
                     onClick={onBack}
                     autoFocus
                 >
@@ -37,7 +37,7 @@ function PostActionBar({ state, onPublish, onCancel, onNext, onBack }) {
                 <button
                     autoFocus
                     type="button"
-                    className="w-full inline-flex justify-center items-center rounded-lg border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+                    className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
                     onClick={onCancel}
                 >
                     <XIcon className="w-5 h-5 mr-2"></XIcon>Cerrar

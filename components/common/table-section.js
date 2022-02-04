@@ -66,7 +66,7 @@ function TableSection({
         <h2 className="flex font-semibold text-gray-800 w-full">{sectionTitle}</h2>
         <input
           type={"text"}
-          className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-2 mx-4"
+          className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-1 mx-4"
           aria-multiline={true}
           placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
           value={filterPost}
@@ -198,7 +198,7 @@ function TableSection({
           </div>
           <div className="flex justify-center w-full">
             <button
-              className="bg-white  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
+              className="bg-gray-50  shadow-md h-8 rounded-full w-40  text-black text-xs font-medium "
               onClick={onShowMore}
             >
               Mostrar más

@@ -20,8 +20,17 @@ import {
   VALIDATIONS
 } from "../../utils/UI-Constants";
 import ContextualMenu from "../dashboard/contextualMenu";
-import moment from "moment";
 
+
+
+function FieldContainer({ title, children }) {
+  return (<div className="mt-2 border-1 border-gray-100 rounded-xl p-2">
+    <span className="block text-xs font-semibold text-gray-400">
+      {title}
+    </span>
+    {children}
+  </div>)
+}
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
@@ -48,7 +57,7 @@ function PostIndicator({ currentStep, totalSteps }) {
 function PostTile({ title, type, onClick }) {
   return (
     <button
-      className="mt-2 border-2 rounded-md border-purple-600 bg-purple-700 text-white w-40 h-40 text-lg font-medium"
+      className="mt-2 border-1 rounded-xl border-purple-800 bg-purple-700 text-white w-40 h-40 text-lg font-medium"
       onClick={() => onClick(type)}
     >
       {title}
@@ -286,11 +295,10 @@ function CreatePost({
                         <span className="block text-sm font-medium text-gray-700">
                           Título
                         </span>
-
                         <div className="flex items-center">
                           <div className="relative text-gray-400 focus-within:text-gray-600 w-full ">
                             <TextInput
-                              className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-2"
+                              className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1"
                               validation={VALIDATIONS.REQUIRED_FREE_TEXT}
                               invalidText={"Título es requerido"}
                               aria-multiline={true}
@@ -316,7 +324,7 @@ function CreatePost({
                           Descripción
                         </span>
                         <TextInput
-                          className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg border-2"
+                          className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg border-1"
 
                           rows={5}
                           minRows={3}
@@ -330,11 +338,11 @@ function CreatePost({
                         ></TextInput>
                       </div>
                       <div className="mt-2 flex flex-row-reverse">
-                        <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
-                        <PhotographIcon onClick={handleShowImages} className={"flex text-purple-600 w-9 h-8 border-2  m-1 rounded-sm cursor-pointer " + (showImageUploader ? "border-purple-600" : "border-purple-50")}></PhotographIcon>
-                        <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
-                        <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
-                        <LinkIcon className="flex text-purple-600 w-9 h-8 border-2 border-purple-50 m-1  rounded-sm cursor-pointer"></LinkIcon>
+                        <QuestionMarkCircleIcon onClick={handleShowSurvey} className={"flex text-purple-600 w-9 h-8 border-1  m-1 rounded-sm cursor-pointer " + (showSurvey ? "border-purple-600" : "border-purple-50")}></QuestionMarkCircleIcon>
+                        <PhotographIcon onClick={handleShowImages} className={"flex text-purple-600 w-9 h-8 border-1  m-1 rounded-sm cursor-pointer " + (showImageUploader ? "border-purple-600" : "border-purple-50")}></PhotographIcon>
+                        <VideoCameraIcon className="flex text-purple-600 w-9 h-8 border-1 border-purple-50 m-1  rounded-sm cursor-pointer"></VideoCameraIcon>
+                        <PaperClipIcon className="flex text-purple-600 w-9 h-8 border-1 border-purple-50 m-1  rounded-sm cursor-pointer"></PaperClipIcon>
+                        <LinkIcon className="flex text-purple-600 w-9 h-8 border-1 border-purple-50 m-1  rounded-sm cursor-pointer"></LinkIcon>
                       </div>
                       <div className="mt-2 ">
                         {showImageUploader && <ImageUploader></ImageUploader>}
@@ -361,58 +369,36 @@ function CreatePost({
                   )}
                   {step === option?.steps && (
                     <div>
-                      <div className="mt-2 ">
-                        <span className="block text-xs font-medium text-gray-700">
-                          Título
-                        </span>
-                        {/* <div className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2">
-                          {postAttributes.find((x) => x.key === "title")
-                            ?.value}
-                        </div> */}
-                        <TextEmoji text={
-                          postAttributes.find((x) => x.key === "title")
-                            ?.value
-                        }></TextEmoji>
-                      </div>
-                      <div className="mt-2 ">
-                        <span className="block text-xs font-medium text-gray-700">
-                          Descripción
-                        </span>
-                        <div className="text-sm text-gray-500 w-full h-40 border-gray-50 rounded-lg p-2 border-2">
-                          {
-                            postAttributes.find((x) => x.key === "description")
-                              ?.value
-                          }
+                      <FieldContainer title={"Título"}>
+                        <TextEmoji text={postAttributes.find((x) => x.key === "title")?.value}></TextEmoji>
+                      </FieldContainer>
+                      <FieldContainer title={"Descripción"}>
+                        <div className="w-full">
+                          {postAttributes.find((x) => x.key === "description")?.value}
                         </div>
-                      </div>
+                      </FieldContainer>
                       {postAttributes.find((x) => x.key === "postType")?.value === "survey" && (
-                        <div className="mt-2 ">
-                          <span className="block text-xs font-medium text-gray-700 mb-2">
-                            Opciones de la Encuestas ({postAttributes.find((x) => x.key === "answerType")?.value.text}) y expira en {postAttributes.find((x) => x.key === "expiresBy")?.value}
-                          </span>
-                          <ul className="block list-disc mb-2">
-                            {postAttributes.find((x) => x.key === "options").value.map((option) => {
-                              return (<li className=" text-sm text-gray-500 w-full " key={option.key}>
-                                {
-                                  option.text
-                                }
-                              </li>)
-                            })}
-                          </ul>
-
-                        </div>
+                        <FieldContainer title={"Opciones de la Encuesta"}>
+                          {postAttributes.find((x) => x.key === "answerType")?.value.text}
+                          <br></br>
+                          <div className="ml-5">
+                            <ul className="block list-disc">
+                              {postAttributes.find((x) => x.key === "options").value.map((option) => {
+                                return (<li className="w-full" key={option.key}>
+                                  {
+                                    option.text
+                                  }
+                                </li>)
+                              })}
+                            </ul>
+                          </div>
+                          <br></br>
+                          {"Expira en " + postAttributes.find((x) => x.key === "expiresBy")?.value}
+                        </FieldContainer>
                       )}
-                      <div className="mt-2 ">
-                        <span className="block text-xs font-medium text-gray-700 mb-2">
-                          Visible a:&nbsp;
-                          <b>
-                            {
-                              postAttributes.find((x) => x.key === "scope")
-                                ?.value.text
-                            }
-                          </b>
-                        </span>
-                      </div>
+                      <FieldContainer title={"Visiable a:"}>
+                        {postAttributes.find((x) => x.key === "scope")?.value.text}
+                      </FieldContainer>
                     </div>
                   )}
                 </div>

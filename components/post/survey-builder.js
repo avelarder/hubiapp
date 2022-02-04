@@ -21,7 +21,7 @@ function SurveyOptionItem({ text, optionKey, onUpdateOption, onRemoveOption }) {
                 <TextInput
                     validation={VALIDATIONS.REQUIRED_FREE_TEXT}
                     invalidText={'Este campo es obligatorio.'}
-                    className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2  border-2"
+                    className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg p-2  border-1"
                     aria-multiline={true}
                     multiple={true}
                     placeholder="Ingresa una opción"
@@ -74,7 +74,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
             <div className="flex flex-col">
                 {localOptions.length > 0 && localOptions.map((option) => <SurveyOptionItem onUpdateOption={updateOption} onRemoveOption={() => removeOption(option.key)} text={option.text} optionKey={option.key} key={option.key} />)}
                 <div className='flex items-center'>
-                    <button className='flex text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg 2 border-2 items-center justify-center' onClick={() => addOption(localOptions.length)}><PlusIcon className='flex w-7 h-7 text-purple-600 text-center'></PlusIcon></button>
+                    <button className='flex text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg 2 border-1 items-center justify-center' onClick={() => addOption(localOptions.length)}><PlusIcon className='flex w-7 h-7 text-purple-600 text-center'></PlusIcon></button>
                     <ContextualMenu className="relative inline-flex pl-2" icon={<CogIcon width={20} height={20}></CogIcon>}>
                         <li>
                             <div className='w-80 px-2'><span className="text-gray-900 text-sm">Tipo de Respuesta</span>
@@ -84,7 +84,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
                                         checked={answerTypeEnabled}
                                         onChange={handleAnswerTypeChanged}
                                         className={`${answerTypeEnabled ? 'bg-purple-900' : 'bg-purple-200'}
-          relative inline-flex flex-shrink-0 h-5 w-10 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+          relative inline-flex flex-shrink-0 h-5 w-10 border-1 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
                                     >
 
                                         <span
@@ -104,7 +104,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
                                     checked={addOptionEnabled}
                                     onChange={handleAllowAddOptionChanged}
                                     className={`${addOptionEnabled ? 'bg-purple-900' : 'bg-purple-200'}
-          relative inline-flex flex-shrink-0 h-5 w-10 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+          relative inline-flex flex-shrink-0 h-5 w-10 border-1 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
                                 >
 
                                     <span

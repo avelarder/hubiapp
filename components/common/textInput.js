@@ -17,7 +17,7 @@ const TextInput = ({
 
     const inputClassNames = classnames(
 
-        "text-sm text-gray-500 w-40 h-10 border-gray-200 rounded-lg p-2 border-2",
+        "text-sm text-gray-500 w-40 h-10 border-gray-200 rounded-lg p-2 border-1",
         { "border-red-500": !validInput, }
     );
 
@@ -40,7 +40,7 @@ const TextInput = ({
                 ></InputMask>
             ) : (
                 <TextareaAutosize
-                    // className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-2"
+                    // className="text-sm text-gray-500 w-full h-full border-gray-200 rounded-lg p-2 border-1"
                     value={
                         value
                     }

@@ -136,15 +136,15 @@ function Comunidad() {
           <MainSection>
             <div className="flex flex-col w-full">
               <button
-                className="flex bg-purple-600 shadow-md h-8 rounded-full  text-white font-medium justify-center items-center"
+                className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm sm:mb-3 md:mx-1 sm:w-40 shadow-sm"
                 onClick={() => {
                   handleCreatePostVisibility(true);
                 }}
               >
-                <PlusIcon className="w-5 h-5 mr-2"></PlusIcon>Crear un nuevo post
+                <PlusIcon className="w-5 h-5 mr-2"></PlusIcon>Crear Aviso
               </button>
 
-              <div className="mt-4">
+              <div className="mt-2">
                 <Disclosure defaultOpen="open">
                   {({ open }) => (
                     <>

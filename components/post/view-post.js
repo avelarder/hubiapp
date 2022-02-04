@@ -5,11 +5,11 @@ import TextEmoji from "../common/textEmoji";
 
 function NestedContainer({ title, children }) {
   return (
-    <div className="mt-2 border-2 border-gray-100 shadow-lg rounded-md sm:text-center p-5">
-      <span className="block sm:text-lg text-sm font-bold text-purple-700 mb-2 border-b-2 border-purple-700">
+    <div className="mt-2 border-1 border-gray-100 shadow-lg rounded-md sm:text-center p-5">
+      <span className="block sm:text-md text-sm font-bold text-gray-500 mb-2 border-b-1 border-gray-200">
         {title}
       </span>
-      <span className="block text-xs text-gray-600 h-full">
+      <span className="block text-gray-600 h-full">
         {children}
       </span>
     </div>
@@ -23,7 +23,7 @@ function ViewPost({ post, onCancel, onDelete }) {
         <h1
           className="text-2xl font-bold text-gray-900 text-center mb-4 align-middle"
         >
-          <TextEmoji text={post.title} className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-2 align-middle items-center justify-start"></TextEmoji>
+          <TextEmoji text={post.title} className="text-sm text-gray-500 w-full h-20 border-gray-50 rounded-lg p-2 border-1 align-middle items-center justify-start"></TextEmoji>
         </h1>
         <div className="md:mr-10">
 

@@ -5,7 +5,7 @@ import { CheckIcon, SelectorIcon } from '@heroicons/react/solid'
 export default function Dropdown({ keyValueOptions, selected, onOptionChanged }) {
 
   return (
-    <div className="w-72 text-sm text-gray-500 h-10 border-gray-200 rounded-lg p-2 border-2">
+    <div className="w-72 text-sm text-gray-500 h-10 border-gray-200 rounded-lg p-2 border-1">
       <Listbox value={selected} onChange={onOptionChanged}>
         <div className='relative' >
           <Listbox.Button className="relative w-full  pl-3 pr-10 text-left bg-white  cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm">

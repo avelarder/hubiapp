@@ -27,7 +27,7 @@ function ImageUploader() {
   return (
     <div>
       <input
-        className="flex flex-col border-2 border-dashed border-purple-300 justify-center items-center"
+        className="flex flex-col border-1 border-dashed border-purple-300 justify-center items-center"
         onChange={uploadPhoto}
         type="file"
         accept="image/png, image/jpeg"
