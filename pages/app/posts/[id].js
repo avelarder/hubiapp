@@ -5,6 +5,9 @@ import useFirestoreQuery from "../../../hooks/useFirestoreQuery";
 import ViewPost from "../../../components/post/view-post";
 import Layout from "../../../components/layout";
 import MainSection from "../../../components/dashboard/mainSection";
+import DeleteModal from "../../../components/common/delete-modal";
+
+
 function ViewPostPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -62,10 +65,11 @@ function ViewPostPage() {
                 onDelete={handleDelete}>
               </ViewPost>
             </div>
-          </div></MainSection></div>
+            {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
+          </div>
+        </MainSection>
+      </div>
     </Layout>
-
-
   );
 }
 
