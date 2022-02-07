@@ -31,7 +31,7 @@ function NewsContainer() {
 
   const [filterPost, setFilterPost] = useState("")
 
-  const query = db.collection("CommunityNews").limit(rowsPerPage);
+  const query = db.collection("CommunityNews").orderBy(orderField, "desc").limit(rowsPerPage);
 
   const { data, status, error } = useFirestoreQuery(query);
 

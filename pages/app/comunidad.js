@@ -68,6 +68,7 @@ function Comunidad() {
         expiresBy:
           postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
         publishedOn: publishedOn,
+        createdOnUTC: new Date().toISOString(),
       });
 
     hideCreatePostModal();
