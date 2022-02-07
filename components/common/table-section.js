@@ -84,9 +84,9 @@ function TableSection({
             <thead className="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
               <tr>
                 {dataset.headers.map((header) => (
-                  <th key={header.source} className="p-2 whitespace-nowrap ">
+                  <th key={header.source} className="whitespace-nowrap ">
                     <div
-                      className="flex font-semibold text-left cursor-pointer items-center"
+                      className="p-2 flex font-semibold text-left cursor-pointer items-center hover:bg-purple-100 h-full"
                       onClick={() => onOrderByFieldChanged(header.source)}
                     >
                       <span
