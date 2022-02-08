@@ -67,6 +67,7 @@ function Comunidad() {
         options: postData.data.find((x) => x.key === "options")?.value ?? null,
         expiresBy:
           postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
+        allowAddOption: postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
         publishedOn: publishedOn,
         createdOnUTC: new Date().toISOString(),
       });

@@ -39,6 +39,7 @@ function ViewPostPage() {
       scope: data.scope,
       postType: data.postType,
       answerType: data.answerType,
+      allowAddOption: data.allowAddOption,
       options: data.options,
       publishedOn: data.publishedOn,
       expiresBy: data.expiresBy

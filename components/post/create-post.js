@@ -381,6 +381,8 @@ function CreatePost({
                         <FieldContainer title={"Opciones de la Encuesta"}>
                           {postAttributes.find((x) => x.key === "answerType")?.value.text}
                           <br></br>
+                          Permitir al usuario agregar opciones a la encuesta? {postAttributes.find((x) => x.key === "allowAddOption")?.value.text}
+                          <br></br>
                           <div className="ml-5">
                             <ul className="block list-disc">
                               {postAttributes.find((x) => x.key === "options").value.map((option) => {

@@ -66,7 +66,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
 
     const handleAllowAddOptionChanged = (status) => {
         setAddOptionEnabled(status);
-        onAddOptionChanged(status);
+        onAddOptionChanged({ id: status ? 'ENABLED' : 'DISABLED', text: status ? 'Si' : 'No' });
     }
 
     return (

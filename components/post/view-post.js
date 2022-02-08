@@ -41,6 +41,9 @@ function ViewPost({ post, onCancel, onDelete }) {
                 <span className="text-gray-600 mb-4">{post.answerType.id === "SINGLE" ?
                   "El usuario podrá seleccionar solamente una de las opciones al responder la encuesta." : "El usuario podrá seleccionar más una de las opciones al responder la encuesta."}
                 </span>
+                <span className="text-gray-600 mb-4">{post.allowAddOption.id === "ENABLED" ?
+                  "El usuario podrá agregar opciones." : "Agregar opciones no está disponible."}
+                </span>
                 <span className="font-medium">
                   {"Opciones:"}
                 </span>
