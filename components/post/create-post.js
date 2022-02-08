@@ -398,7 +398,7 @@ function CreatePost({
                           {"Expira en " + postAttributes.find((x) => x.key === "expiresBy")?.value}
                         </FieldContainer>
                       )}
-                      <FieldContainer title={"Visiable a:"}>
+                      <FieldContainer title={"Visible a:"}>
                         {postAttributes.find((x) => x.key === "scope")?.value.text}
                       </FieldContainer>
                     </div>
