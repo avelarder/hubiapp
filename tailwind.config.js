@@ -16,15 +16,17 @@ module.exports = {
         xl: "0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.01)",
       },
       colors: {
-        gray: colors.blueGray,
-        "light-blue": colors.lightBlue,
+        gray: colors.gray,
+        "light-blue": colors.sky,
         red: colors.rose,
       },
       outline: {
         blue: "2px solid rgba(0, 112, 244, 0.5)",
       },
       fontFamily: {
+        sans: ["Monsetrrat", "sans-serif"],
         inter: ["Inter", "sans-serif"],
+        monse: ["Montserrat", "serif"],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1.5" }],

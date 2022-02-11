@@ -1,4 +1,5 @@
 import { ArrowLeftIcon, TrashIcon } from "@heroicons/react/solid";
+import moment from "moment";
 import React from "react";
 import TextEmoji from "../common/textEmoji";
 
@@ -78,6 +79,14 @@ function ViewPost({ post, onCancel, onDelete }) {
               <span className="block text-xs text-gray-600 ">{
                 post.publishedOn
               }
+              </span>
+            </div>
+          </NestedContainer>
+
+          <NestedContainer title={"Programación:"}>
+            <div className="flex flex-col">
+              <span className="mb-4">
+                {post.schedule ? `${moment(post.schedule).format("DD/MM/YYYY HH:mm")} hrs.` : "---"}
               </span>
             </div>
           </NestedContainer>

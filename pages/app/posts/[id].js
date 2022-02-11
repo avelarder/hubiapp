@@ -41,6 +41,7 @@ function ViewPostPage() {
       answerType: data.answerType,
       allowAddOption: data.allowAddOption,
       options: data.options,
+      schedule: data.schedule,
       publishedOn: data.publishedOn,
       expiresBy: data.expiresBy
     };
@@ -59,15 +60,15 @@ function ViewPostPage() {
     <Layout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
         <MainSection>
-          <div className="flex flex-col h-screen">
-            <div >
-              <ViewPost post={post}
-                onCancel={handleBack}
-                onDelete={handleDelete}>
-              </ViewPost>
-            </div>
-            {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
+          <div className="flex flex-col h-screen w-2/4">
+
+            <ViewPost post={post}
+              onCancel={handleBack}
+              onDelete={handleDelete}>
+            </ViewPost>
           </div>
+          {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}
+
         </MainSection>
       </div>
     </Layout>

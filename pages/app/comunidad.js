@@ -11,6 +11,8 @@ import moment from "moment";
 import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
 
+
+
 const postOptions = [
   { key: "news", steps: 3 },
   { key: "marketplace", steps: 4 },
@@ -24,10 +26,7 @@ const postScopeOptions = [
   { id: "A", text: "La Floresta" },
 ];
 
-
-
 function Comunidad() {
-  const router = useRouter();
 
   const [showCreatePost, setShowCreatePost] = useState(false);
 
@@ -68,6 +67,7 @@ function Comunidad() {
         expiresBy:
           postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
         allowAddOption: postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
+        schedule: postData.data.find((x) => x.key === "schedule")?.value ?? null,
         publishedOn: publishedOn,
         createdOnUTC: new Date().toISOString(),
       });
@@ -143,7 +143,7 @@ function Comunidad() {
                   handleCreatePostVisibility(true);
                 }}
               >
-                <PlusIcon className="w-5 h-5 mr-2"></PlusIcon>Crear Aviso
+                <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>Crear Aviso
               </button>
 
               <div className="mt-2">
@@ -180,6 +180,7 @@ function Comunidad() {
               onOptionChanged={handleCurrentOptionChange}
               postOptions={postOptions}
               postScopeOptions={postScopeOptions}
+
               onCancel={hideCreatePostModal}
               onConfirm={handlePostCreated}
               onPreview={handlePostPreview}

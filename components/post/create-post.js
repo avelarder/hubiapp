@@ -20,8 +20,8 @@ import {
   VALIDATIONS
 } from "../../utils/UI-Constants";
 import ContextualMenu from "../dashboard/contextualMenu";
-
-
+import Scheduler from "./shared/schedule";
+import moment from "moment";
 
 function FieldContainer({ title, children }) {
   return (<div className="mt-2 border-1 border-gray-100 rounded-xl p-2">
@@ -110,6 +110,7 @@ function CreatePost({
   postOptions,
   postScopeOptions,
   postActionBarStatus,
+
   onCancel,
   onConfirm,
   onPreview,
@@ -118,6 +119,7 @@ function CreatePost({
 }) {
 
   const [isFormValid, setIsFormValid] = useState(false);
+  const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const [postData, setPostData] = useState({
     option: option,
     step: step,
@@ -223,6 +225,11 @@ function CreatePost({
 
   const handleAllowAddOptionChange = (allowAddOption) => {
     setAttributeValue("allowAddOption", allowAddOption);
+  }
+
+  const handleScheduleChanged = (schedule) => {
+    const scheduleDate = moment(`${schedule.year.id}-${schedule.month.id}-${schedule.day.id} ${schedule.hour.id}-${schedule.minute.id}`, "YYYY-MM-DD HH:mm");
+    setAttributeValue("schedule", scheduleDate.toISOString());
   }
 
   return (
@@ -365,6 +372,10 @@ function CreatePost({
                           >
                           </SurveyBuilder>}
                       </div>
+                      <div className="mt-2">
+                        <Scheduler enabled={scheduleEnabled} setEnabled={setScheduleEnabled} schedule={postAttributes.find((x) => x.key === "schedule")
+                          ?.value} onScheduleChanged={handleScheduleChanged}></Scheduler>
+                      </div>
                     </div>
                   )}
                   {step === option?.steps && (
@@ -401,11 +412,15 @@ function CreatePost({
                       <FieldContainer title={"Visible a:"}>
                         {postAttributes.find((x) => x.key === "scope")?.value.text}
                       </FieldContainer>
+                      <FieldContainer title={"Programación:"}>
+                        {postAttributes.find((x) => x.key === "schedule")?.value ? `${moment(postAttributes.find((x) => x.key === "schedule")?.value).format("DD/MM/YYYY HH:mm")} hrs.` : "Sin programación"}
+                      </FieldContainer>
                     </div>
                   )}
                 </div>
               </div>
             </div>
+
             <PostActionBar
               state={postActionBarStatus}
               onCancel={onCancel}
