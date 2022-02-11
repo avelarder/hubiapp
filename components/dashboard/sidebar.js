@@ -4,16 +4,17 @@ import { useRouter } from "next/router";
 import { NavLink } from "../navLink";
 import SidebarItem from "./sidebarItem";
 import {
-  BellIcon,
-  ClipboardCheckIcon,
+  ClipboardListIcon,
   CogIcon,
   GlobeAltIcon,
+  KeyIcon,
   LinkIcon,
-  OfficeBuildingIcon,
-  PresentationChartBarIcon,
+  QuestionMarkCircleIcon,
+  ShieldCheckIcon,
   SupportIcon,
   TemplateIcon,
-} from "@heroicons/react/solid";
+  UserGroupIcon,
+} from "@heroicons/react/outline";
 import Image from "next/image";
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
@@ -104,9 +105,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     <div className="lg:w-64">
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0 bg-purple-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${
-          sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-purple-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
         aria-hidden="true"
       ></div>
 
@@ -114,9 +114,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-900 p-4 transition-transform duration-200 ease-in-out ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-64"
-        }`}
+        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-900 p-4 transition-transform duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
+          }`}
       >
         {/* Sidebar header */}
         <div className="flex justify-between mb-10 pr-3 sm:px-2">
@@ -172,22 +171,22 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               }
             ></SidebarItem>
             <SidebarItem
-              icon={<ClipboardCheckIcon></ClipboardCheckIcon>}
+              icon={<UserGroupIcon></UserGroupIcon>}
               path="/app/employees"
               text="Empleados"
             ></SidebarItem>
             <SidebarItem
-              icon={<BellIcon></BellIcon>}
+              icon={<ShieldCheckIcon></ShieldCheckIcon>}
               path="/app/seguridad"
               text="Seguridad"
             ></SidebarItem>
             <SidebarItem
-              icon={<OfficeBuildingIcon></OfficeBuildingIcon>}
+              icon={<KeyIcon></KeyIcon>}
               path="/app/servicios"
               text="Servicios"
             ></SidebarItem>
             <SidebarItem
-              icon={<PresentationChartBarIcon></PresentationChartBarIcon>}
+              icon={<ClipboardListIcon></ClipboardListIcon>}
               path="/app/informes"
               text="Informes"
             ></SidebarItem>
@@ -202,7 +201,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               text="Configuración"
             ></SidebarItem>
             <SidebarItem
-              icon={<SupportIcon></SupportIcon>}
+              icon={<QuestionMarkCircleIcon></QuestionMarkCircleIcon>}
               path="/app/ayuda"
               text="Ayuda"
             ></SidebarItem>
