@@ -180,21 +180,21 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               path="/app/seguridad"
               text="Seguridad"
             ></SidebarItem>
-            <SidebarItem
+            {/* <SidebarItem
               icon={<KeyIcon></KeyIcon>}
               path="/app/servicios"
               text="Servicios"
-            ></SidebarItem>
+            ></SidebarItem> */}
             <SidebarItem
               icon={<ClipboardListIcon></ClipboardListIcon>}
               path="/app/informes"
               text="Informes"
             ></SidebarItem>
-            <SidebarItem
+            {/* <SidebarItem
               icon={<LinkIcon></LinkIcon>}
               path="/app/integraciones"
               text="Integraciones"
-            ></SidebarItem>
+            ></SidebarItem> */}
             <SidebarItem
               icon={<CogIcon></CogIcon>}
               path="/app/configuracion"
