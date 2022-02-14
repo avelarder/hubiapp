@@ -128,6 +128,7 @@ function CreatePost({
 
   const [postAttributes, setPostAttributes] = useState([{ key: "scope", value: postScopeOptions[0] }, { key: "postType", value: "news" }, { key: "answerType", value: { id: "SINGLE", text: "Opción Simple" } }, { key: "allowAddOptions", value: false }]);
   const [showSurvey, setShowSurvey] = useState(false);
+
   const [showImageUploader, setShowImageUploader] = useState(false);
 
   const addEmoji = (e) => {
@@ -193,6 +194,10 @@ function CreatePost({
     }
     isValid = isValid && postAttributes.find((x) => x.key === "title")?.value;
 
+    if (scheduleEnabled && postAttributes.find((x) => x.key === "schedule")) {
+      isValid = isValid && VALIDATIONS.DATETIME_AFTER(postAttributes.find((x) => x.key === "schedule")?.value);
+    }
+
     if (isValid) {
       let latestPostData = { ...postData, data: postAttributes };
       setPostData(latestPostData);
@@ -228,9 +233,56 @@ function CreatePost({
   }
 
   const handleScheduleChanged = (schedule) => {
-    const scheduleDate = moment(`${schedule.year.id}-${schedule.month.id}-${schedule.day.id} ${schedule.hour.id}-${schedule.minute.id}`, "YYYY-MM-DD HH:mm");
-    setAttributeValue("schedule", scheduleDate.toISOString());
+    const scheduleDate = moment(`${schedule.year}-${schedule.month}-${schedule.day} ${schedule.hour}:${schedule.minute}`, "YYYY-M-D H:m", true);
+    setAttributeValue("schedule", scheduleDate);
   }
+
+
+  const getScheduleMonths = () => [
+    { id: 1, text: "Enero" },
+    { id: 2, text: "Febrero" },
+    { id: 3, text: "Marzo" },
+    { id: 4, text: "Abril" },
+    { id: 5, text: "Mayo" },
+    { id: 6, text: "Junio" },
+    { id: 7, text: "Julio" },
+    { id: 8, text: "Agosto" },
+    { id: 9, text: "Setiembre" },
+    { id: 10, text: "Octubre" },
+    { id: 11, text: "Noviembre" },
+    { id: 12, text: "Diciembre" },
+  ];
+
+
+  const getScheduleYears = () => {
+    const years = [];
+    const initYear = (new Date()).getFullYear()
+
+    for (let i = initYear; i < initYear + 20; i++) {
+      years.push({ id: i, text: i });
+    }
+    return years;
+  }
+  const getScheduleDays = () => {
+    const days = [];
+    for (let i = 1; i <= 31; i++) {
+      days.push({ id: i, text: i });
+    }
+    return days;
+  }
+  const getScheduleHours = () => {
+    const hours = [];
+    for (let i = 0; i < 24; i++) {
+      hours.push({ id: i, text: i });
+    }
+    return hours;
+  }
+  const getScheduleMinutes = () => [
+    { id: 0, text: "00" },
+    { id: 15, text: "15" },
+    { id: 30, text: "30" },
+    { id: 45, text: "45" },
+  ];
 
   return (
     <div
@@ -373,8 +425,18 @@ function CreatePost({
                           </SurveyBuilder>}
                       </div>
                       <div className="mt-2">
-                        <Scheduler enabled={scheduleEnabled} setEnabled={setScheduleEnabled} schedule={postAttributes.find((x) => x.key === "schedule")
-                          ?.value} onScheduleChanged={handleScheduleChanged}></Scheduler>
+                        <Scheduler
+                          enabled={scheduleEnabled}
+                          setEnabled={setScheduleEnabled}
+                          schedule={(postAttributes.find((x) => x.key === "schedule") ? moment(postAttributes.find((x) => x.key === "schedule")?.value, true) : moment(new Date(), true))}
+                          onScheduleChanged={handleScheduleChanged}
+                          years={getScheduleYears()}
+                          months={getScheduleMonths()}
+                          days={getScheduleDays()}
+                          hours={getScheduleHours()}
+                          minutes={getScheduleMinutes()}
+                        >
+                        </Scheduler>
                       </div>
                     </div>
                   )}
