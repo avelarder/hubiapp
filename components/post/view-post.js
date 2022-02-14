@@ -18,6 +18,7 @@ function NestedContainer({ title, children }) {
 }
 
 function ViewPost({ post, onCancel, onDelete }) {
+
   return (
     <div>
       <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -86,7 +87,7 @@ function ViewPost({ post, onCancel, onDelete }) {
           <NestedContainer title={"Programación:"}>
             <div className="flex flex-col">
               <span className="mb-4">
-                {post.schedule ? `${moment(post.schedule).format("DD/MM/YYYY HH:mm")} hrs.` : "---"}
+                {post.schedule ? `${moment(post.schedule).format("DD/MM/YYYY H:mm")} hrs.` : "---"}
               </span>
             </div>
           </NestedContainer>

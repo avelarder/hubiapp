@@ -1,96 +1,55 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Switch } from '@headlessui/react'
 import Select from '../../common/select'
-import { SwitchHorizontalIcon } from '@heroicons/react/solid';
+import moment from 'moment';
+import { VALIDATIONS } from '../../../utils/UI-Constants';
 
-const getScheduleMonths = () => [
-    { id: "01", text: "Enero" },
-    { id: "02", text: "Febrero" },
-    { id: "03", text: "Marzo" },
-    { id: "04", text: "Abril" },
-    { id: "05", text: "Mayo" },
-    { id: "06", text: "Junio" },
-    { id: "07", text: "Julio" },
-    { id: "08", text: "Agosto" },
-    { id: "09", text: "Setiembre" },
-    { id: "10", text: "Octubre" },
-    { id: "11", text: "Noviembre" },
-    { id: "12", text: "Diciembre" },
-];
+function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, years, days, hours, minutes }) {
 
-
-const getScheduleYears = () => {
-    const years = [];
-    const initYear = (new Date()).getFullYear()
-
-    for (let i = initYear; i < initYear + 20; i++) {
-        years.push({ id: i, text: i });
+    const getMinutes = () => {
+        const minutes = schedule?.get("minute")
+        if (minutes == 0) return 0;
+        if (minutes <= 15) return 15;
+        if (minutes <= 30) return 30;
+        if (minutes <= 45) return 45;
+        return 0
     }
-    return years;
-}
-const getScheduleDays = () => {
-    const days = [];
-    for (let i = 1; i <= 31; i++) {
-        days.push({ id: i, text: i });
-    }
-    return days;
-}
-const getScheduleHours = () => {
-    const hours = [];
-    for (let i = 0; i < 24; i++) {
-        hours.push({ id: i, text: i });
-    }
-    return hours;
-}
-const getScheduleMinutes = () => [
-    { id: "00", text: "00" },
-    { id: "15", text: "15" },
-    { id: "30", text: "30" },
-    { id: "45", text: "45" },
-];
 
-function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
-
-    const months = getScheduleMonths()
-    const years = getScheduleYears()
-    const days = getScheduleDays()
-    const hours = getScheduleHours()
-    const minutes = getScheduleMinutes()
-
-    const [scheduleYear, setScheduleYear] = useState(schedule?.year ?? years[0]);
-    const [scheduleMonth, setScheduleMonth] = useState(schedule?.month ?? months[0]);
-    const [scheduleDay, setScheduleDay] = useState(schedule?.day ?? days[0]);
-    const [scheduleHour, setScheduleHour] = useState(schedule?.hour ?? hours[0]);
-    const [scheduleMinute, setScheduleMinute] = useState(schedule?.minute ?? minutes[0]);
+    const scheduleYear = schedule.get("year");
+    const scheduleMonth = schedule.get("month") + 1;
+    const scheduleDay = schedule.get("date");
+    const scheduleHour = schedule.get("hour");
+    const scheduleMinute = getMinutes();
 
 
     const getScheduleDate = () => {
-        if (scheduleYear && scheduleMonth && scheduleDay && scheduleHour && scheduleMinute) {
 
-            return `${scheduleMonth.text} ${scheduleDay.text} del ${scheduleYear.text} a las ${scheduleHour.text}:${scheduleMinute.text} hrs.`;
+        const scheduleDate = moment(`${scheduleYear}-${scheduleMonth}-${scheduleDay} ${scheduleHour}:${scheduleMinute}`, "YYYY-MM-DD H:m");
+        const isValid = VALIDATIONS.DATETIME_AFTER(scheduleDate);
+        if (isValid) {
+            return (<span className='ml-2 text-lg font-medium'>{`${scheduleDay}/${scheduleMonth}/${scheduleYear} a las ${scheduleHour}:${scheduleMinute} hrs.`}</span>);
         }
-        return "--"
+        return (<span className='ml-2 text-lg font-medium text-red-700'>{`${scheduleDay}/${scheduleMonth}/${scheduleYear} a las ${scheduleHour}:${scheduleMinute} hrs.`}</span>);
     }
 
     const setSchedule = (dateElement, option) => {
         switch (dateElement) {
             case "year":
-                setScheduleYear(option);
+                onScheduleChanged({ year: option.id, month: scheduleMonth, day: scheduleDay, hour: scheduleHour, minute: scheduleMinute });
                 break;
             case "month":
-                setScheduleMonth(option);
+                onScheduleChanged({ year: scheduleYear, month: option.id, day: scheduleDay, hour: scheduleHour, minute: scheduleMinute });
                 break;
             case "day":
-                setScheduleDay(option);
+                onScheduleChanged({ year: scheduleYear, month: scheduleMonth, day: option.id, hour: scheduleHour, minute: scheduleMinute });
                 break;
             case "hour":
-                setScheduleHour(option);
+                onScheduleChanged({ year: scheduleYear, month: scheduleMonth, day: scheduleDay, hour: option.id, minute: scheduleMinute });
                 break;
             case "minute":
-                setScheduleMinute(option);
+                onScheduleChanged({ year: scheduleYear, month: scheduleMonth, day: scheduleDay, hour: scheduleHour, minute: option.id });
                 break;
         }
-        onScheduleChanged({ year: scheduleYear, month: scheduleMonth, day: scheduleDay, hour: scheduleHour, minute: scheduleMinute });
     }
 
     return (
@@ -119,7 +78,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                                 showTitle={true}
                                 options={months}
                                 selectedOption={
-                                    scheduleMonth
+                                    months.find(m => m.id === scheduleMonth)
                                 }
                                 onOptionChanged={(e) => { setSchedule("month", e) }}
                             ></Select>
@@ -130,7 +89,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                                 showTitle={true}
                                 options={days}
                                 selectedOption={
-                                    scheduleDay
+                                    days.find(d => d.id === scheduleDay)
                                 }
                                 onOptionChanged={(e) => { setSchedule("day", e) }}
                             ></Select>
@@ -141,7 +100,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                                 showTitle={true}
                                 options={years}
                                 selectedOption={
-                                    scheduleYear
+                                    years.find(y => y.id === scheduleYear)
                                 }
                                 onOptionChanged={(e) => { setSchedule("year", e) }}
                             ></Select>
@@ -154,7 +113,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                                 showTitle={true}
                                 options={hours}
                                 selectedOption={
-                                    scheduleHour
+                                    hours.find(h => h.id == scheduleHour)
                                 }
                                 onOptionChanged={(e) => { setSchedule("hour", e) }}
                             ></Select>
@@ -165,7 +124,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                                 showTitle={true}
                                 options={minutes}
                                 selectedOption={
-                                    scheduleMinute
+                                    minutes.find(m => m.id === scheduleMinute)
                                 }
                                 onOptionChanged={(e) => { setSchedule("minute", e) }}
                             ></Select>
@@ -173,7 +132,7 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged }) {
                         <br></br>
                     </div>
                     <span className="ml-2 text-sm">{`Esta publicación quedará disponible el día:`}</span>
-                    <span className="ml-2 text-lg font-medium">{`${getScheduleDate()}`}</span>
+                    {getScheduleDate()}
                     <span className="ml-2 text-sm font-medium">(-03:00) Zona horaria de Perú</span>
                 </div>)
             }

@@ -18,6 +18,9 @@ export const VALIDATIONS = {
     DATE_AFTER: (input) => {
         return moment(input, "DD/MM/YYYY", true).isValid() && moment(input, "DD/MM/YYYY", true).isAfter(moment())
     },
+    DATETIME_AFTER: (input) => {
+        return moment(input).isValid() && moment(input).isAfter(moment())
+    },
 };
 
 export const INVALID_TEXTS = {
