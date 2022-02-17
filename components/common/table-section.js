@@ -125,7 +125,7 @@ function TableSection({
                               <NavLink
                                 className={`block underline
                                  text-purple-600 hover:text-purple-400 transition duration-150 hover:text-gray-200"}`}
-                                href={header.path + row["id"]}
+                                href={header.path(row["id"])}
                               >
                                 {row[header.source]}
                               </NavLink>

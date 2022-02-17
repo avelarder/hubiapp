@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Firebase from "../../../firebase";
-import useFirestoreQuery from "../../../hooks/useFirestoreQuery";
-import ViewPost from "../../../components/post/view-post";
-import Layout from "../../../components/layout";
-import MainSection from "../../../components/dashboard/mainSection";
-import DeleteModal from "../../../components/common/delete-modal";
+import Firebase from "../../../../firebase";
+import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
+import ViewPost from "../../../../components/post/view-post";
+import Layout from "../../../../components/layout";
+import MainSection from "../../../../components/dashboard/mainSection";
+import DeleteModal from "../../../../components/common/delete-modal";
 
 
 function ViewPostPage() {

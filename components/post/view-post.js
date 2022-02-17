@@ -75,7 +75,7 @@ function ViewPost({ post, onCancel, onDelete }) {
                 {post.scope.text}
               </span>
               <span className="font-medium text-gray-700">
-                Expira:
+                Publicado:
               </span>
               <span className="block text-xs text-gray-600 ">{
                 post.publishedOn

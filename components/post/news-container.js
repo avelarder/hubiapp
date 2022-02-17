@@ -9,7 +9,7 @@ const DEFAULT_LIMIT = 10;
 
 const initCommunityNews = {
   headers: [
-    { source: "title", columnName: "Título", isLink: true, path: "posts/" },
+    { source: "title", columnName: "Título", isLink: true, path: (id) => `posts/${id}/detalle` },
     { source: "publishedOn", columnName: "Publicado", isDate: true, format: "DD/MM/YYYY" },
     { source: "expiresBy", columnName: "Expiración", isDate: true, format: "DD/MM/YYYY" },
   ],
