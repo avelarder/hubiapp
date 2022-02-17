@@ -1,25 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Switch } from '@headlessui/react'
 import Select from '../../common/select'
 import moment from 'moment';
-import { VALIDATIONS } from '../../../utils/UI-Constants';
+import { VALIDATIONS, getMinutes } from '../../../utils/UI-Constants';
 
 function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, years, days, hours, minutes }) {
 
-    const getMinutes = () => {
-        const minutes = schedule?.get("minute")
-        if (minutes == 0) return 0;
-        if (minutes <= 15) return 15;
-        if (minutes <= 30) return 30;
-        if (minutes <= 45) return 45;
-        return 0
-    }
+
 
     const scheduleYear = schedule.get("year");
     const scheduleMonth = schedule.get("month") + 1;
     const scheduleDay = schedule.get("date");
     const scheduleHour = schedule.get("hour");
-    const scheduleMinute = getMinutes();
+    const scheduleMinute = getMinutes(schedule.get("minute"));
 
 
     const getScheduleDate = () => {

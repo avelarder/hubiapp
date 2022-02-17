@@ -22,6 +22,8 @@ import {
 import ContextualMenu from "../dashboard/contextualMenu";
 import Scheduler from "./shared/schedule";
 import moment from "moment";
+import { getScheduleHours, getScheduleMinutes, getScheduleYears, getScheduleMonths, getScheduleDays } from "../../utils/UI-Constants";
+
 
 function FieldContainer({ title, children }) {
   return (<div className="mt-2 border-1 border-gray-100 rounded-xl p-2">
@@ -238,51 +240,6 @@ function CreatePost({
   }
 
 
-  const getScheduleMonths = () => [
-    { id: 1, text: "Enero" },
-    { id: 2, text: "Febrero" },
-    { id: 3, text: "Marzo" },
-    { id: 4, text: "Abril" },
-    { id: 5, text: "Mayo" },
-    { id: 6, text: "Junio" },
-    { id: 7, text: "Julio" },
-    { id: 8, text: "Agosto" },
-    { id: 9, text: "Setiembre" },
-    { id: 10, text: "Octubre" },
-    { id: 11, text: "Noviembre" },
-    { id: 12, text: "Diciembre" },
-  ];
-
-
-  const getScheduleYears = () => {
-    const years = [];
-    const initYear = (new Date()).getFullYear()
-
-    for (let i = initYear; i < initYear + 20; i++) {
-      years.push({ id: i, text: i });
-    }
-    return years;
-  }
-  const getScheduleDays = () => {
-    const days = [];
-    for (let i = 1; i <= 31; i++) {
-      days.push({ id: i, text: i });
-    }
-    return days;
-  }
-  const getScheduleHours = () => {
-    const hours = [];
-    for (let i = 0; i < 24; i++) {
-      hours.push({ id: i, text: i });
-    }
-    return hours;
-  }
-  const getScheduleMinutes = () => [
-    { id: 0, text: "00" },
-    { id: 15, text: "15" },
-    { id: 30, text: "30" },
-    { id: 45, text: "45" },
-  ];
 
   return (
     <div
@@ -488,6 +445,7 @@ function CreatePost({
               onCancel={onCancel}
               onNext={handlePostDataChange}
               onBack={onBack}
+              isScheduled={scheduleEnabled}
               isNextDisabled={isFormValid}
               onPublish={handlePostDataSubmit}
             ></PostActionBar>

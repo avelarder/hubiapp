@@ -63,7 +63,7 @@ function NewsContainer() {
   };
 
   const handleEditClicked = (id) => {
-    alert("Under construction!");
+    router.push(`/app/posts/${id}/editar`);
   };
 
   const handleDeleteClicked = (id) => {
@@ -110,7 +110,7 @@ function NewsContainer() {
             orderField={orderField}
             filterPost={filterPost}
             onView={handleViewClicked}
-            onEidt={handleEditClicked}
+            onEdit={handleEditClicked}
             onDelete={handleDeleteClicked}
             onShowMore={handleShowMoreNewsClicked}
             onChangeLimit={handleChangeLimit}

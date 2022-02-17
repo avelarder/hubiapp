@@ -4,27 +4,13 @@ import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
 import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
-import { useRouter } from "next/router";
 import { Disclosure } from "@headlessui/react";
 import { v4 } from "uuid";
 import moment from "moment";
 import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
 
-
-
-const postOptions = [
-  { key: "news", steps: 3 },
-  { key: "marketplace", steps: 4 },
-  { key: "survey", steps: 4 },
-  { key: "rent", steps: 4 },
-  { key: "report", steps: 3 },
-];
-
-const postScopeOptions = [
-  { id: "PUBLIC", text: "Público" },
-  { id: "A", text: "La Floresta" },
-];
+import { postOptions, postScopeOptions } from "../../utils/UI-Constants";
 
 function Comunidad() {
 
