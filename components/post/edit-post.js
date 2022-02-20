@@ -4,14 +4,19 @@ import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import NestedContainer from "./shared/nested-container";
 import TextInput from "../common/textInput";
-import { VALIDATIONS } from "../../utils/UI-Constants";
+import { VALIDATIONS, postScopeOptions, getScheduleHours, getScheduleDays, getScheduleMinutes, getScheduleMonths, getScheduleYears, get } from "../../utils/UI-Constants";
 import { Picker } from "emoji-mart";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
+import Select from "../common/select";
+import Scheduler from "./shared/schedule";
 
 function EditPost({ post, onCancel, onDelete, onSave }) {
 
   const [description, setDescription] = useState(post.description);
   const [title, setTitle] = useState(post.title);
+  const [scope, setScope] = useState(post.scope);
+  const [scheduleEnabled, setScheduleEnabled] = useState(post.schedule ? true : false);
+  const [schedule, setSchedule] = useState(post.schedule ? post.schedule : null);
 
   const addEmoji = (e) => {
 
@@ -20,6 +25,11 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
 
     setTitle(textWithEmoji)
   };
+
+  const handleScheduleChanged = (schedule) => {
+    const scheduleDate = moment(`${schedule.year}-${schedule.month}-${schedule.day} ${schedule.hour}:${schedule.minute}`, "YYYY-M-D H:m", true);
+    setSchedule(scheduleDate);
+  }
 
   return (
     <div>
@@ -102,26 +112,40 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
 
           <NestedContainer title={"Este anuncio es visible a:"}>
             <div className="flex flex-col">
-              <span className="mb-4">
-                {post.scope.text}
-              </span>
+              <Select
+                title={"Tu aviso será visible a:"}
+                showTitle={true}
+                options={postScopeOptions}
+                selectedOption={scope}
+                onOptionChanged={setScope}
+              ></Select>
+              <br></br>
               <span className="font-medium text-gray-700">
-                Publicado:
+                Fecha de Publicación:
               </span>
-              <span className="block text-xs text-gray-600 ">{
+              <span className="block text-md text-gray-600 ">{
                 post.publishedOn
               }
               </span>
             </div>
           </NestedContainer>
 
-          <NestedContainer title={"Programación:"}>
-            <div className="flex flex-col">
-              <span className="mb-4">
-                {post.schedule ? `${moment(post.schedule).format("DD/MM/YYYY H:mm")} hrs.` : "---"}
-              </span>
+          {post.schedule && <NestedContainer title={"Programación:"}>
+            <div className="flex flex-col items-center ">
+              <Scheduler
+                enabled={scheduleEnabled}
+                setEnabled={setScheduleEnabled}
+                schedule={(schedule ? moment(schedule, true) : moment(new Date(), true))}
+                onScheduleChanged={handleScheduleChanged}
+                years={getScheduleYears()}
+                months={getScheduleMonths()}
+                days={getScheduleDays()}
+                hours={getScheduleHours()}
+                minutes={getScheduleMinutes()}
+              >
+              </Scheduler>
             </div>
-          </NestedContainer>
+          </NestedContainer>}
         </div>
       </div>
 

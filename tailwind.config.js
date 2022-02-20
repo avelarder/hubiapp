@@ -19,12 +19,15 @@ module.exports = {
         gray: colors.gray,
         "light-blue": colors.sky,
         red: colors.rose,
+        hubi_light_blue: "#40A9FF",
+        hubi_lime_green: "#73D13D",
+        hubi_gold: "#FFC069",
       },
       outline: {
         blue: "2px solid rgba(0, 112, 244, 0.5)",
       },
       fontFamily: {
-        sans: ["Monsetrrat", "sans-serif"],
+        sans: ["Monsetrrat", "Roboto", "sans-serif"],
         inter: ["Inter", "sans-serif"],
         monse: ["Montserrat", "serif"],
       },

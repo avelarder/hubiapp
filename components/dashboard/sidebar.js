@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useRouter } from "next/router";
 
 import { NavLink } from "../navLink";
 import SidebarItem from "./sidebarItem";
@@ -7,70 +6,19 @@ import {
   ClipboardListIcon,
   CogIcon,
   GlobeAltIcon,
-  KeyIcon,
-  LinkIcon,
-  QuestionMarkCircleIcon,
+
   ShieldCheckIcon,
-  SupportIcon,
-  TemplateIcon,
+  HomeIcon,
   UserGroupIcon,
 } from "@heroicons/react/outline";
 import Image from "next/image";
+import { IdentificationIcon } from "@heroicons/react/solid";
+
 
 function Sidebar({ sidebarOpen, setSidebarOpen }) {
   const trigger = useRef(null);
   const sidebar = useRef(null);
 
-  const [isNestedContainerCollapsed, setIsNestedContainerCollapsed] =
-    useState(false);
-
-  const optionsForComunidad = [
-    {
-      key: "avisos",
-      text: "Publicaciones de Avisos para Comunidad",
-      path: "#avisos",
-    },
-    {
-      key: "productos",
-      text: "Publicación de productos para vender y comprar.",
-      path: "#productos",
-    },
-    {
-      key: "publicaciones",
-      text: "Publicación de Reuniones y Eventos.",
-      path: "#publicaciones",
-    },
-    {
-      key: "notificaciones",
-      text: "Notificaciones de Reuniones y Eventos.",
-      path: "#notificaciones",
-    },
-    {
-      key: "constancias",
-      text: "Envío de Constancias de Pago.",
-      path: "#constancias",
-    },
-    {
-      key: "reportes",
-      text: "Reportes financieros a nivel Comunidad.",
-      path: "#reportes",
-    },
-    {
-      key: "consultas",
-      text: "Consulta de documentos e informes.",
-      path: "#consultas",
-    },
-    {
-      key: "solicitudes",
-      text: "Solicitudes a la Administración.",
-      path: "#solicitudes",
-    },
-    {
-      key: "encuestas",
-      text: "Encuentas y Votaciones.",
-      path: "#encuentas",
-    },
-  ];
 
   // close on click outside
   useEffect(() => {
@@ -98,14 +46,13 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
     return () => document.removeEventListener("keydown", keyHandler);
   });
 
-  const router = useRouter();
-  const page = router.pathname;
+
 
   return (
-    <div className="lg:w-64">
+    <div className="lg:w-28">
       {/* Sidebar backdrop (mobile only) */}
       <div
-        className={`fixed inset-0 bg-purple-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        className={`fixed inset-0 bg-gray-900 bg-opacity-30 z-40 lg:hidden lg:z-auto transition-opacity duration-200 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
         aria-hidden="true"
       ></div>
@@ -114,11 +61,11 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         id="sidebar"
         ref={sidebar}
-        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-64 flex-shrink-0 bg-purple-900 p-4 transition-transform duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
+        className={`absolute z-40 left-0 top-0 lg:static lg:left-auto lg:top-auto lg:translate-x-0 transform h-screen overflow-y-scroll lg:overflow-y-auto no-scrollbar w-28 flex-shrink-0 bg-gray-50 p-4 transition-transform duration-200 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-64"
           }`}
       >
         {/* Sidebar header */}
-        <div className="flex justify-between mb-10 pr-3 sm:px-2">
+        <div className="flex justify-center mb-10 pr-3 sm:px-2">
           {/* Close button */}
           <button
             ref={trigger}
@@ -150,43 +97,47 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
 
         {/* Links */}
         <div>
-          <h3 className="text-sm uppercase text-gray-200 font-semibold pl-3">
-            ACCESOS
-          </h3>
-          <ul className="mt-3">
+          <ul className="mt-3 items-center ">
             {/* Dashboard */}
             <SidebarItem
-              icon={<TemplateIcon></TemplateIcon>}
+              icon={<HomeIcon className="text-white"></HomeIcon>}
+              backgroundColor="bg-hubi_light_blue"
               path="/app/dashboard"
-              text="Panel de Control"
+              text="Inicio"
             ></SidebarItem>
             <SidebarItem
-              icon={<GlobeAltIcon></GlobeAltIcon>}
+              icon={<GlobeAltIcon className="text-white"></GlobeAltIcon>}
+              backgroundColor="bg-purple-400"
               path="/app/comunidad"
               text="Comunidad"
-              nestedItems={optionsForComunidad}
-              nestedItemCollapsed={isNestedContainerCollapsed}
-              setItemCollapsed={() =>
-                setIsNestedContainerCollapsed(!isNestedContainerCollapsed)
-              }
             ></SidebarItem>
             <SidebarItem
-              icon={<UserGroupIcon></UserGroupIcon>}
-              path="/app/employees"
-              text="Empleados"
-            ></SidebarItem>
-            <SidebarItem
-              icon={<ShieldCheckIcon></ShieldCheckIcon>}
+              icon={<ShieldCheckIcon className="text-white"></ShieldCheckIcon>}
+              backgroundColor="bg-red-500"
               path="/app/seguridad"
               text="Seguridad"
             ></SidebarItem>
+            <SidebarItem
+              icon={<IdentificationIcon className="text-white"></IdentificationIcon>}
+              backgroundColor="bg-hubi_light_blue"
+              path="/app/residentes"
+              text="Residentes"
+            ></SidebarItem>
+            <SidebarItem
+              icon={<UserGroupIcon className="text-white"></UserGroupIcon>}
+              backgroundColor="bg-hubi_gold"
+              path="/app/employees"
+              text="Equipo"
+            ></SidebarItem>
+
             {/* <SidebarItem
               icon={<KeyIcon></KeyIcon>}
               path="/app/servicios"
               text="Servicios"
             ></SidebarItem> */}
             <SidebarItem
-              icon={<ClipboardListIcon></ClipboardListIcon>}
+              icon={<ClipboardListIcon className="text-white"></ClipboardListIcon>}
+              backgroundColor="bg-purple-400"
               path="/app/informes"
               text="Informes"
             ></SidebarItem>
@@ -196,15 +147,12 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               text="Integraciones"
             ></SidebarItem> */}
             <SidebarItem
-              icon={<CogIcon></CogIcon>}
+              icon={<CogIcon className="text-white"></CogIcon>}
+              backgroundColor="bg-hubi_lime_green"
               path="/app/configuracion"
               text="Configuración"
             ></SidebarItem>
-            <SidebarItem
-              icon={<QuestionMarkCircleIcon></QuestionMarkCircleIcon>}
-              path="/app/ayuda"
-              text="Ayuda"
-            ></SidebarItem>
+
           </ul>
         </div>
       </div>

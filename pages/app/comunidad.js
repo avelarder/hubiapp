@@ -53,7 +53,7 @@ function Comunidad() {
         expiresBy:
           postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
         allowAddOption: postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
-        schedule: postData.data.find((x) => x.key === "schedule")?.value.toLocaleString() ?? null,
+        schedule: postData.data.find((x) => x.key === "schedule")?.value.toISOString() ?? null,
         publishedOn: publishedOn,
         createdOnUTC: new Date().toISOString(),
       });

@@ -4,16 +4,13 @@ import Select from '../../common/select'
 import moment from 'moment';
 import { VALIDATIONS, getMinutes } from '../../../utils/UI-Constants';
 
-function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, years, days, hours, minutes }) {
-
-
+function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, years, days, hours, minutes, showTitle }) {
 
     const scheduleYear = schedule.get("year");
     const scheduleMonth = schedule.get("month") + 1;
     const scheduleDay = schedule.get("date");
     const scheduleHour = schedule.get("hour");
     const scheduleMinute = getMinutes(schedule.get("minute"));
-
 
     const getScheduleDate = () => {
 
@@ -46,8 +43,9 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, y
     }
 
     return (
-        <div >
-            <span className="flex text-center text-sm font-medium">Deseas programar esta publicación?</span>
+        <div>
+            <span className="text-center text-sm font-medium">Deseas programar esta publicación?</span>
+            <br></br>
             <Switch
                 checked={enabled}
                 onChange={(e) => setEnabled(e)}
@@ -61,9 +59,10 @@ function Scheduler({ enabled, setEnabled, schedule, onScheduleChanged, months, y
                 />
             </Switch >
 
+
             {
                 enabled && (<div className="flex flex-col border-1 border-gray-100 rounded-lg p-4 transition ease-in-out delay-200 ">
-                    <span className="flex justify-center font-medium uppercase mb-4">Programación</span>
+                    {showTitle && <span className="flex justify-center font-medium uppercase mb-4">Programación</span>}
                     <div className="flex flex-row justify-start flex-wrap">
                         <div className="w-40 m-1">
                             <Select

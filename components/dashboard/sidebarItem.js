@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 function SidebarItem({
   icon,
+  backgroundColor,
   path,
   text,
   nestedItems,
@@ -19,7 +20,7 @@ function SidebarItem({
 
   return (
     <li
-      className={`px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${page === "" && "bg-gray-900"
+      className={`flex flex-col items-center align-middle text-center item px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${page === "" && "bg-gray-900"
         }`}
       onClick={handleNestedContainerCollapsed}
     >
@@ -28,13 +29,15 @@ function SidebarItem({
         className={`block text-gray-200 hover:text-white transition duration-150 ${page === "" && "hover:text-gray-200"
           }`}
       >
-        <div className="flex flex-grow">
+        <div className="flex flex-col text-center">
           {icon && (
-            <div className="text-sm font-medium text-purple-200 mr-2 w-5">
-              {icon}
+            <div className={`flex justify-center items-center self-center rounded-lg text-sm text-purple-200 h-14 w-14 ${backgroundColor ?? "bg-transparent"}`}>
+              <div className="w-8 h-8" >
+                {icon}
+              </div>
             </div>
           )}
-          <span className="text-sm font-medium text-white">{text}</span>
+          <span className="text-xs text-center text-gray-800">{text}</span>
         </div>
       </NavLink>
 
