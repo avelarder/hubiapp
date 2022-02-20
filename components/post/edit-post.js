@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import NestedContainer from "./shared/nested-container";
 import TextInput from "../common/textInput";
-import { VALIDATIONS, postScopeOptions } from "../../utils/UI-Constants";
+import { VALIDATIONS, postScopeOptions, getScheduleHours, getScheduleDays, getScheduleMinutes, getScheduleMonths, getScheduleYears, get } from "../../utils/UI-Constants";
 import { Picker } from "emoji-mart";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
 import Select from "../common/select";
@@ -16,8 +16,7 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
   const [title, setTitle] = useState(post.title);
   const [scope, setScope] = useState(post.scope);
   const [scheduleEnabled, setScheduleEnabled] = useState(post.schedule ? true : false);
-
-  console.log(post.scope)
+  const [schedule, setSchedule] = useState(post.schedule ? post.schedule : null);
 
   const addEmoji = (e) => {
 
@@ -26,6 +25,11 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
 
     setTitle(textWithEmoji)
   };
+
+  const handleScheduleChanged = (schedule) => {
+    const scheduleDate = moment(`${schedule.year}-${schedule.month}-${schedule.day} ${schedule.hour}:${schedule.minute}`, "YYYY-M-D H:m", true);
+    setSchedule(scheduleDate);
+  }
 
   return (
     <div>
@@ -126,26 +130,24 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
             </div>
           </NestedContainer>
 
-          <NestedContainer title={"Programación:"}>
-            <div className="flex flex-col">
-              <span className="mb-4">
-                {post.schedule && (<Scheduler
-                  enabled={scheduleEnabled}
-                  setEnabled={setScheduleEnabled}
-                  schedule={(post.schedule ? moment(post.schedule, true) : moment(new Date(), true))}
-                  onScheduleChanged={handleScheduleChanged}
-                  years={getScheduleYears()}
-                  months={getScheduleMonths()}
-                  days={getScheduleDays()}
-                  hours={getScheduleHours()}
-                  minutes={getScheduleMinutes()}
-                >
-                </Scheduler>)}
-              </span>
+          {post.schedule && <NestedContainer title={"Programación:"}>
+            <div className="flex flex-col items-center ">
+              <Scheduler
+                enabled={scheduleEnabled}
+                setEnabled={setScheduleEnabled}
+                schedule={(schedule ? moment(schedule, true) : moment(new Date(), true))}
+                onScheduleChanged={handleScheduleChanged}
+                years={getScheduleYears()}
+                months={getScheduleMonths()}
+                days={getScheduleDays()}
+                hours={getScheduleHours()}
+                minutes={getScheduleMinutes()}
+              >
+              </Scheduler>
             </div>
-          </NestedContainer>
+          </NestedContainer>}
         </div>
-      </div >
+      </div>
 
       <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
         <button

@@ -33,7 +33,7 @@ function HeaderApp({ user, sidebarOpen, setSidebarOpen }) {
 
           {/* Header: Right side */}
 
-          <div className="flex flex-row ">
+          <div className="flex flex-row justify-end w-full">
             <Notification />
             <hr className="w-px h-6 bg-gray-200 mx-3" />
             <UserInfo user={user} />
