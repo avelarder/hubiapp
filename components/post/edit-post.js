@@ -4,14 +4,20 @@ import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import NestedContainer from "./shared/nested-container";
 import TextInput from "../common/textInput";
-import { VALIDATIONS } from "../../utils/UI-Constants";
+import { VALIDATIONS, postScopeOptions } from "../../utils/UI-Constants";
 import { Picker } from "emoji-mart";
 import { EmojiHappyIcon } from "@heroicons/react/solid";
+import Select from "../common/select";
+import Scheduler from "./shared/schedule";
 
 function EditPost({ post, onCancel, onDelete, onSave }) {
 
   const [description, setDescription] = useState(post.description);
   const [title, setTitle] = useState(post.title);
+  const [scope, setScope] = useState(post.scope);
+  const [scheduleEnabled, setScheduleEnabled] = useState(post.schedule ? true : false);
+
+  console.log(post.scope)
 
   const addEmoji = (e) => {
 
@@ -102,13 +108,18 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
 
           <NestedContainer title={"Este anuncio es visible a:"}>
             <div className="flex flex-col">
-              <span className="mb-4">
-                {post.scope.text}
-              </span>
+              <Select
+                title={"Tu aviso será visible a:"}
+                showTitle={true}
+                options={postScopeOptions}
+                selectedOption={scope}
+                onOptionChanged={setScope}
+              ></Select>
+              <br></br>
               <span className="font-medium text-gray-700">
-                Publicado:
+                Fecha de Publicación:
               </span>
-              <span className="block text-xs text-gray-600 ">{
+              <span className="block text-md text-gray-600 ">{
                 post.publishedOn
               }
               </span>
@@ -118,12 +129,23 @@ function EditPost({ post, onCancel, onDelete, onSave }) {
           <NestedContainer title={"Programación:"}>
             <div className="flex flex-col">
               <span className="mb-4">
-                {post.schedule ? `${moment(post.schedule).format("DD/MM/YYYY H:mm")} hrs.` : "---"}
+                {post.schedule && (<Scheduler
+                  enabled={scheduleEnabled}
+                  setEnabled={setScheduleEnabled}
+                  schedule={(post.schedule ? moment(post.schedule, true) : moment(new Date(), true))}
+                  onScheduleChanged={handleScheduleChanged}
+                  years={getScheduleYears()}
+                  months={getScheduleMonths()}
+                  days={getScheduleDays()}
+                  hours={getScheduleHours()}
+                  minutes={getScheduleMinutes()}
+                >
+                </Scheduler>)}
               </span>
             </div>
           </NestedContainer>
         </div>
-      </div>
+      </div >
 
       <div className="px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
         <button
