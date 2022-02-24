@@ -8,11 +8,9 @@ import TextInput from '../common/textInput';
 
 function SurveyOptionItem({ text, optionKey, onUpdateOption, onRemoveOption }) {
 
+    const setOptionValue = (value, key) => {
 
-
-    const setOptionValue = (value) => {
-
-        onUpdateOption(optionKey, value);
+        onUpdateOption(key, value);
     };
 
     return (
@@ -26,14 +24,14 @@ function SurveyOptionItem({ text, optionKey, onUpdateOption, onRemoveOption }) {
                     multiple={true}
                     placeholder="Ingresa una opción"
                     value={text}
-                    onChange={setOptionValue}
+                    onChange={(value) => setOptionValue(value, optionKey)}
                 ></TextInput>
             </div>
             <div className='flex'>
                 {optionKey !== 0 && <MinusIcon className='w-7 h-7 pl-2 text-purple-600 m-1 cursor-pointer self-center' onClick={onRemoveOption} ></MinusIcon>}
 
             </div>
-        </div>
+        </div >
     )
 }
 
@@ -72,7 +70,7 @@ function SurveyBuilder({ answerType, allowAddOption, expirationDate, options, on
     return (
         <div>
             <div className="flex flex-col">
-                {localOptions.length > 0 && localOptions.map((option) => <SurveyOptionItem onUpdateOption={updateOption} onRemoveOption={() => removeOption(option.key)} text={option.text} optionKey={option.key} key={option.key} />)}
+                {localOptions.length > 0 && localOptions.map((option, index) => <SurveyOptionItem onUpdateOption={updateOption} onRemoveOption={() => removeOption(option.key)} text={option.text} optionKey={option.key} key={index} />)}
                 <div className='flex items-center'>
                     <button className='flex text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg 2 border-1 items-center justify-center' onClick={() => addOption(localOptions.length)}><PlusIcon className='flex w-7 h-7 text-purple-600 text-center'></PlusIcon></button>
                     <ContextualMenu className="relative inline-flex pl-2" icon={<CogIcon width={20} height={20}></CogIcon>}>

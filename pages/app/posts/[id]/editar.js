@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
@@ -16,7 +16,6 @@ function EditPostPage() {
     const id = query.id;
 
     const db = Firebase.default.firestore();
-    let post = {};
 
     const { data, status, error } = useFirestoreQuery(
         db.collection("CommunityNews").doc(id)
@@ -28,22 +27,9 @@ function EditPostPage() {
     if (status === "error") {
         return `Error: ${error.message}`;
     }
-
-    if (data) {
-
-        post = {
-            id: data.id,
-            title: data.title,
-            description: data.description,
-            scope: data.scope,
-            postType: data.postType,
-            answerType: data.answerType,
-            allowAddOption: data.allowAddOption,
-            options: data.options,
-            schedule: data.schedule,
-            publishedOn: data.publishedOn,
-            expiresBy: data.expiresBy
-        };
+    const handleSave = async (post) => {
+        await db.collection('CommunityNews').doc(id).update(post);
+        router.push('/app/comunidad');
     }
 
     const handleBack = () => { router.back() }
@@ -61,9 +47,10 @@ function EditPostPage() {
                 <MainSection>
                     <div className="flex flex-col h-screen w-2/4">
 
-                        <EditPost post={post}
+                        <EditPost post={data}
                             onCancel={handleBack}
-                            onDelete={handleDelete}>
+                            onDelete={handleDelete}
+                            onSave={handleSave}>
                         </EditPost>
                     </div>
                     {showDeleteModal && (<DeleteModal onCancel={() => setShowDeleteModal(false)} onConfirm={handleDeleteConfirmation}></DeleteModal>)}

@@ -31,7 +31,7 @@ function SidebarItem({
       >
         <div className="flex flex-col text-center">
           {icon && (
-            <div className={`flex justify-center items-center self-center rounded-lg text-sm text-purple-200 h-14 w-14 ${backgroundColor ?? "bg-transparent"}`}>
+            <div className={`flex justify-center items-center self-center rounded-lg text-sm text-purple-200 h-12 w-12 ${backgroundColor ?? "bg-transparent"}`}>
               <div className="w-8 h-8" >
                 {icon}
               </div>

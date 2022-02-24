@@ -59,7 +59,7 @@ function NewsContainer() {
   }
 
   const handleViewClicked = (id) => {
-    router.push(`/app/posts/${id}`);
+    router.push(`/app/posts/${id}/detalle`);
   };
 
   const handleEditClicked = (id) => {
