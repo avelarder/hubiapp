@@ -6,8 +6,10 @@ import Layout from "../../../../components/layout";
 import MainSection from "../../../../components/dashboard/mainSection";
 import DeleteModal from "../../../../components/common/delete-modal";
 import EditPost from "../../../../components/post/edit-post";
+import Loader from "../../../../components/common/loader";
 
 function EditPostPage() {
+
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const router = useRouter();
@@ -22,10 +24,13 @@ function EditPostPage() {
     );
 
     if (status === "loading") {
-        return "Loading...";
+        return <Loader></Loader>;
     }
     if (status === "error") {
         return `Error: ${error.message}`;
+    }
+    if (data === null) {
+        return <Loader></Loader>;
     }
     const handleSave = async (post) => {
         await db.collection('CommunityNews').doc(id).update(post);

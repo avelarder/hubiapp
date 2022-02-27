@@ -6,7 +6,7 @@ import ViewPost from "../../../../components/post/view-post";
 import Layout from "../../../../components/layout";
 import MainSection from "../../../../components/dashboard/mainSection";
 import DeleteModal from "../../../../components/common/delete-modal";
-
+import Loader from "../../../../components/common/loader";
 
 function ViewPostPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -24,12 +24,14 @@ function ViewPostPage() {
   );
 
   if (status === "loading") {
-    return "Loading...";
+    return <Loader></Loader>;
   }
   if (status === "error") {
     return `Error: ${error.message}`;
   }
-
+  if (data === null) {
+    return <Loader></Loader>;
+  }
   if (data) {
 
     post = {

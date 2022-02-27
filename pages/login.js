@@ -10,7 +10,7 @@ export default function Login() {
   const router = useRouter();
   const { signInWithEmailAndPassword } = useAuth();
 
-  const onSubmit = (event) => {
+  const handleOnSubmitClicked = (event) => {
     setError(null);
     signInWithEmailAndPassword(email, password)
       .then((authUser) => {
@@ -22,6 +22,9 @@ export default function Login() {
     event.preventDefault();
   };
 
+  const handleOnRegisterClicked = () => {
+    router.push("/register/");
+  }
   return (
     <div className="flex flex-col justify-center h-screen">
       <div className="flex flex-row justify-evenly">
@@ -47,7 +50,7 @@ export default function Login() {
             </div>
             <div className="box-content text-center font-sans pt-5 pb-5">
               <button
-                onClick={onSubmit}
+                onClick={handleOnSubmitClicked}
                 className="h-10 w-max rounded-full px-20 bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"
               >
                 Ingresar
@@ -56,10 +59,10 @@ export default function Login() {
             <div className="box-content text-center font-sans pt-5 pb-5">
               <div>No te has registrado aún?</div>
               <button
-                onClick={onSubmit}
+                onClick={handleOnRegisterClicked}
                 className="h-10 w-max  px-20 bg-opacity-100 text-purple-600 hover:text-purple-800"
               >
-                <Link href="/">Puedes hacerlo desde aquí.</Link>
+                Puedes hacerlo desde aquí.
               </button>
             </div>
           </div>
