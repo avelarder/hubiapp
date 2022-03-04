@@ -37,11 +37,12 @@ export const getScheduleMonths = () => [
 ];
 
 
-export const getScheduleYears = () => {
+export const getScheduleYears = (start, end) => {
     const years = [];
-    const initYear = (new Date()).getFullYear()
+    const initYear = start ?? (new Date()).getFullYear()
+    const endYear = end ?? initYear + 20
 
-    for (let i = initYear; i < initYear + 20; i++) {
+    for (let i = initYear; i < endYear; i++) {
         years.push({ id: i, text: i });
     }
     return years;
