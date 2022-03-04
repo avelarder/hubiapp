@@ -23,16 +23,7 @@ import ContextualMenu from "../dashboard/contextualMenu";
 import Scheduler from "./shared/schedule";
 import moment from "moment";
 import { getScheduleHours, getScheduleMinutes, getScheduleYears, getScheduleMonths, getScheduleDays } from "../../utils/UI-Constants";
-
-
-function FieldContainer({ title, children }) {
-  return (<div className="mt-2 border-1 border-gray-100 rounded-xl p-2">
-    <span className="block text-xs font-semibold text-gray-400">
-      {title}
-    </span>
-    {children}
-  </div>)
-}
+import FieldContainer from "../common/field-container";
 
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
