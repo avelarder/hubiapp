@@ -271,12 +271,12 @@ function RegistroPage() {
     const months = getScheduleMonths()
     const years = getScheduleYears(1900, (new Date()).getFullYear())
 
-    const [firstName, setFirstName] = useState(null)
-    const [lastName, setLastName] = useState(null)
-    const [phone, setPhone] = useState(null)
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [phone, setPhone] = useState("")
     const [phoneArea, setPhoneArea] = useState(phoneAreaOptions.find(x => x.id === 'PE/PER'))
-    const [password, setPassword] = useState(null)
-    const [confirmPassword, setConfirmPassword] = useState(null)
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
     const [gender, setGender] = useState(genderOptions[0])
     const [dobDay, setDobDay] = useState(days[0])
     const [dobMonth, setDobMonth] = useState(months[0])
@@ -285,17 +285,17 @@ function RegistroPage() {
     const [accessType, setAccessType] = useState(accessTypeOptions[0])
 
     return (
-        <div>
-            <section>
-                <h1>Hola, un gusto verte</h1>
+        <div className='flex flex-col mx-64  items-left  align-middle mt-10'>
+            <section className=''>
+                <h1 className='text-gray-900 text-3xl font-bold'>Hola, un gusto verte</h1>
                 <h3>Ingresa tus datos, es rápido y fácil.</h3>
             </section>
-            <section>
+            <section className=''>
                 <FieldContainer title={"Nombres"}>
-                    <TextInput className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1" value={firstName} onChange={setFirstName}></TextInput>
+                    <TextInput className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-lg pr-10 border-1" value={firstName} onChange={setFirstName}></TextInput>
                 </FieldContainer>
                 <FieldContainer title={"Apellidos"}>
-                    <TextInput className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1" value={lastName} onChange={setLastName}></TextInput>
+                    <TextInput className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-lg pr-10 border-1" value={lastName} onChange={setLastName}></TextInput>
                 </FieldContainer>
                 <FieldContainer title={"Teléfono Móvil"}>
                     <div className="flex flex-wrap m-1 align-bottom items-start">
@@ -309,15 +309,15 @@ function RegistroPage() {
                             ></Select>
                         </div>
                         <div className="flex flex-col w-40 h-full m-1">
-                            <TextInput className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1" value={phone} onChange={setPhone}></TextInput>
+                            <TextInput className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-lg pr-10 border-1" value={phone} onChange={setPhone}></TextInput>
                         </div>
                     </div>
                 </FieldContainer>
                 <FieldContainer title={"Contraseña"}>
-                    <TextInput className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1" value={password} onChange={setPassword}></TextInput>
+                    <TextInput className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-lg pr-10 border-1" value={password} onChange={setPassword}></TextInput>
                 </FieldContainer>
                 <FieldContainer title={"Confirmar Contraseña"}>
-                    <TextInput className="text-sm text-gray-500 w-full h-10 border-gray-200 rounded-lg pr-10 border-1" value={confirmPassword} onChange={setConfirmPassword}></TextInput>
+                    <TextInput className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-lg pr-10 border-1" value={confirmPassword} onChange={setConfirmPassword}></TextInput>
                 </FieldContainer>
                 <FieldContainer title={"Fecha de Nacimiento"}>
                     <div className="flex flex-wrap m-1">
