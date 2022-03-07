@@ -302,7 +302,7 @@ function RegistroPage() {
   const [accessType, setAccessType] = useState(accessTypeOptions[0]);
 
   return (
-    <div className="flex ">
+    <div className="flex items-center h-screen">
       <div className="flex w-2/6"></div>
       <div className="flex flex-col w-2/6 items-left  align-middle mt-10">
         <section className="">
