@@ -420,7 +420,7 @@ function RegistroPage() {
           </FieldContainer>
           <FieldContainer>
             <p className="text-xs text-gray-600 text-justify">
-              Al hacer click en "Continuar", aceptas nuestras{" "}
+              Al hacer click en &quot;Continuar&quot;, aceptas nuestras{" "}
               <a className="text-purple-600" href="#">
                 Condiciones
               </a>
