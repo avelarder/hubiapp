@@ -81,12 +81,12 @@ export default function Select({
       {({ open }) => (
         <>
           {showTitle && (
-            <Listbox.Label className="block text-xs text-gray-400 font-semibold ">
+            <Listbox.Label className="block ml-4 text-xs text-gray-400 font-semibold ">
               {title}
             </Listbox.Label>
           )}
           <div className="mt-1 relative">
-            <Listbox.Button className="relative w-full bg-white border border-gray-200 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+            <Listbox.Button className="relative w-full bg-white border border-purple-300 rounded-full shadow-md pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs font-semibold text-gray-500">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">
                   {selectedOption.text}

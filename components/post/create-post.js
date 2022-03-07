@@ -25,7 +25,6 @@ import moment from "moment";
 import { getScheduleHours, getScheduleMinutes, getScheduleYears, getScheduleMonths, getScheduleDays } from "../../utils/UI-Constants";
 import FieldContainer from "../common/field-container";
 
-
 function PostIndicator({ currentStep, totalSteps }) {
   const items = [];
 
