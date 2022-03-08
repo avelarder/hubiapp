@@ -11,7 +11,6 @@ import {
   genderOptions
 } from "../../utils/UI-Constants";
 import { ToastContainer, toast } from 'react-toastify';
-import Validate from "react-validate-form"
 
 function RoundedInputText({ value, onChange, placeholder, type, props }) {
   return (

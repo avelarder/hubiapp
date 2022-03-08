@@ -1,6 +1,7 @@
 import "tailwindcss/tailwind.css";
 import { AuthUserProvider } from "../authUserProvider";
 import Head from "next/head";
+import 'react-toastify/dist/ReactToastify.css';
 
 function MyApp({ Component, pageProps }) {
   return (
