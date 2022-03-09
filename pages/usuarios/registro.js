@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import FieldContainer from "../../components/common/field-container";
 import Select from "../../components/common/select";
+
+
 import {
   getScheduleYears,
   getScheduleMonths,
@@ -8,20 +10,30 @@ import {
   phoneAreaOptions,
   accessTypeOptions,
   statusOptions,
-  genderOptions
+  genderOptions,
+  VALIDATIONS
 } from "../../utils/UI-Constants";
 import { ToastContainer, toast } from 'react-toastify';
+import classNames from "classnames";
 
-function RoundedInputText({ value, onChange, placeholder, type, props }) {
+function RoundedInputText({ value, onChange, placeholder, type, validator, props }) {
+
+  const [hasError, setHasError] = useState(null);
+
   return (
-    <input
-      className="text-xs font-semibold text-gray-500 w-full h-9 border-purple-300 rounded-full pr-10 pl-4 border-1 focus:border-purple-900 "
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      type={type}
-      {...props}
-    ></input>
+    <div>
+      <input
+        className={classNames("text-xs text-gray-500 font-semibold  w-full h-9 border-purple-300 rounded-full pr-10 pl-4 border-1 focus:border-purple-900", { "text-black bg-red-200": hasError })}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        onBlur={(e) => {
+          validator && setHasError(!validator.validate(e.currentTarget.value))
+        }}
+        {...props}
+      ></input>
+    </div >
   );
 }
 
@@ -34,7 +46,7 @@ function RegistroPage() {
 
   const days = getScheduleDays();
   const months = getScheduleMonths();
-  const years = getScheduleYears(1900, new Date().getFullYear());
+  const years = getScheduleYears(1900, new Date().getFullYear() - 18);
   const [canContinue, setCanContinue] = useState(false);
 
   const [firstName, setFirstName] = useState("");
@@ -49,9 +61,10 @@ function RegistroPage() {
   const [gender, setGender] = useState(genderOptions[0]);
   const [dobDay, setDobDay] = useState(days[0]);
   const [dobMonth, setDobMonth] = useState(months[0]);
-  const [dobYear, setDobYear] = useState(years[0]);
+  const [dobYear, setDobYear] = useState(years[years.length - 1]);
   const [status, setStatus] = useState(statusOptions[0]);
   const [accessType, setAccessType] = useState(accessTypeOptions[0]);
+
 
   return (
     <div className="flex items-center h-screen">
@@ -66,6 +79,12 @@ function RegistroPage() {
         <section className="">
           <FieldContainer>
             <RoundedInputText
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                },
+                message: "Nombre es requerido."
+              }}
               value={firstName}
               onChange={(e) => setFirstName(e.currentTarget.value)}
               placeholder="Nombres"
@@ -73,7 +92,12 @@ function RegistroPage() {
           </FieldContainer>
           <FieldContainer>
             <RoundedInputText
-              className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-full pr-10 border-1"
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                },
+                message: "Apellidos son requeridos."
+              }}
               value={lastName}
               onChange={(e) => setLastName(e.currentTarget.value)}
               placeholder="Apellidos"
@@ -90,15 +114,27 @@ function RegistroPage() {
               </div>
               <div className="w-2/4 ml-2">
                 <RoundedInputText
+                  validator={{
+                    validate: (content) => {
+                      return VALIDATIONS.ONLY_NUMBERS(content)
+                    },
+                    message: "El número de celular es requerido."
+                  }}
                   value={phone}
                   onChange={(e) => setPhone(e.currentTarget.value)}
-                  placeholder="Teléfono"
+                  placeholder="Teléfono Móvil"
                 ></RoundedInputText>
               </div>
             </div>
           </FieldContainer>
           <FieldContainer>
             <RoundedInputText
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.EMAIL(content)
+                },
+                message: "Nombre es requerido."
+              }}
               value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
               placeholder="Ingresa tu correo electónico"
@@ -106,6 +142,12 @@ function RegistroPage() {
           </FieldContainer>
           <FieldContainer>
             <RoundedInputText
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                },
+                message: "Ingrese su contraseña."
+              }}
               value={password}
               onChange={(e) => setPassword(e.currentTarget.value)}
               placeholder="Ingresa nueva contraseña"
@@ -114,7 +156,12 @@ function RegistroPage() {
           </FieldContainer>
           <FieldContainer>
             <RoundedInputText
-              className="text-sm text-gray-500 w-full h-10 border-purple-300 rounded-full pr-10 border-1"
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content) && password === confirmPassword
+                },
+                message: "Reingrese su contraseña."
+              }}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.currentTarget.value)}
               placeholder="Confirma nueva Contraseña"
@@ -182,11 +229,13 @@ function RegistroPage() {
               Continuar
             </button>
           </div>
+
         </section>
+
       </div>
       <div className="flex w-2/6"></div>
       <ToastContainer />
-    </div>
+    </div >
   );
 }
 export default RegistroPage;

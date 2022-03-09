@@ -14,9 +14,11 @@ export const statusOptions = [
 ];
 export const accessTypeOptions = [
     { id: "ADMINISTRATOR", text: "Administrador" },
+    { id: "CONCIERGE", text: "Conserje" },
+    { id: "CLEANNING", text: "Limpieza" },
     { id: "OWNER", text: "Propietario" },
     { id: "TENAT", text: "Inquilino" },
-    { id: "GUEST", text: "Ocupante" },
+    { id: "GUEST", text: "Familiar" },
 ];
 export const phoneAreaOptions = [
     { id: "AF/AFG", text: "Afghanistan (+93)" },
