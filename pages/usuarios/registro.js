@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import FieldContainer from "../../components/common/field-container";
 import Select from "../../components/common/select";
-
+import { useAuth } from "../../authUserProvider";
+import Firebase from "../../firebase";
 
 import {
     getScheduleYears,
@@ -25,7 +27,7 @@ function RoundedInputText({ value, onChange, placeholder, type, validator, props
         <div className="flex">
             <div className="relative items-center w-full">
                 <input
-                    className={classNames("  text-xs text-gray-500 font-semibold  w-full h-9 border-purple-300 rounded-full pr-10 pl-4 border-1 ", { "text-black border-red-600 bg-red-200": hasError })}
+                    className={classNames("text-xs text-gray-500 font-semibold w-full h-10 border-purple-300 rounded-full pr-10 pl-4 border-1 ", { "text-black border-red-600 bg-red-200": hasError })}
                     value={value}
                     onChange={onChange}
                     placeholder={placeholder}
@@ -36,7 +38,7 @@ function RoundedInputText({ value, onChange, placeholder, type, validator, props
                     {...props}
                 ></input>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2">
-                    {hasError ? <XIcon className="text-red-500" width={20} height={20} /> : <CheckIcon className="text-purple-500" width={20} height={20}></CheckIcon>}
+                    {hasError === null ? <CheckIcon className="text-gray-100 h-5 w-5" /> : hasError ? <XIcon className="text-red-500" width={20} height={20} /> : <CheckIcon className="text-purple-500" width={20} height={20}></CheckIcon>}
 
                 </span>
             </div>
@@ -45,6 +47,9 @@ function RoundedInputText({ value, onChange, placeholder, type, validator, props
 }
 
 function RegistroPage() {
+    const router = useRouter();
+    const { createUserWithEmailAndPassword } = useAuth();
+
     const validatorConfig = {
         firstName: {
             validate: (content) => {
@@ -85,7 +90,7 @@ function RegistroPage() {
     }
 
 
-    const handleContinueClicked = () => {
+    const handleContinueClicked = (event) => {
         if (!validatorConfig.firstName.validate(firstName) ||
             !validatorConfig.lastName.validate(lastName) ||
             !validatorConfig.phone.validate(phone) ||
@@ -94,7 +99,51 @@ function RegistroPage() {
             !validatorConfig.confirmPassword.validate(confirmPassword)) {
             toast.warning("Por favor complete el formulario.");
         }
+
+
+        //check if passwords match. If they do, create user in Firebase
+        // and redirect to your logged in page.
+
+        createUserWithEmailAndPassword(email, password)
+            .then((authUser) => {
+                handlePostCreated(authUser.user.uuid);
+                toast.success("Usuario creado con éxito.");
+
+                router.push("/login");
+            })
+            .catch((error) => {
+                // An error occurred. Set error message to be displayed to user
+                toast.warning("No se pudo completar la operación, intente nuevamente.");
+            });
+
+        event.preventDefault();
+
     };
+
+
+    const handlePostCreated = (userId) => {
+
+        const db = Firebase.default.firestore();
+        db.collection("Profiles")
+            .doc(userId)
+            .set({
+                firstName: firstName,
+                lastName: lastName,
+                phoneArea: phoneArea,
+                phone: phone,
+                email: email,
+                dobYear: dobYear,
+                dobMonth: dobMonth,
+                dobDay: dobDay,
+                gender: gender,
+                status: status,
+                accessType: accessType,
+                createdOnUTC: new Date().toISOString(),
+            });
+
+
+    };
+
 
     const days = getScheduleDays();
     const months = getScheduleMonths();
@@ -122,7 +171,7 @@ function RegistroPage() {
     return (
         <div className="flex items-center h-screen">
             <div className="flex w-2/6"></div>
-            <div className="flex flex-col w-2/6 items-left  align-middle mt-10">
+            <div className="flex flex-col w-2/6 items-left align-middle mt-10">
                 <section className="">
                     <h1 className="text-gray-900 text-3xl font-bold">
                         Hola, un gusto verte
