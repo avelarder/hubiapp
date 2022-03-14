@@ -90,7 +90,7 @@ export default function Crear() {
               >
                 Crear cuenta
               </button>
-              <p className="w-96 text-sm mt-4">Al hacer click en "Crear Cuenta" aceptas nuestras <Link href="/politica/condiciones" passHref><span className="text-purple-700 font-semibold cursor-pointer">Condiciones</span></Link>, <Link href="/politica/datos" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Datos</span></Link> y <Link href="/politica/cookies" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Cookies</span></Link>. Es posible que te enviemos notificaciones por SMS que puedes desactivar cuando quieras.</p>
+              <p className="w-96 text-sm mt-4">Al hacer click en &quotCrear Cuenta&quot aceptas nuestras <Link href="/politica/condiciones" passHref><span className="text-purple-700 font-semibold cursor-pointer">Condiciones</span></Link>, <Link href="/politica/datos" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Datos</span></Link> y <Link href="/politica/cookies" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Cookies</span></Link>. Es posible que te enviemos notificaciones por SMS que puedes desactivar cuando quieras.</p>
             </div>
             <div className="box-content flex flex-col pt-5 pb-5 items-center">
               <span className="mt-2 text-sm">Ya eres usuario? <Link href="/login" passHref><span className="text-purple-700 font-semibold cursor-pointer">Inicia sesión</span></Link></span>
