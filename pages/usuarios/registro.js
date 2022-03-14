@@ -14,34 +14,14 @@ import {
   VALIDATIONS
 } from "../../utils/UI-Constants";
 import { ToastContainer, toast } from 'react-toastify';
-import classNames from "classnames";
-
-function RoundedInputText({ value, onChange, placeholder, type, validator, props }) {
-
-  const [hasError, setHasError] = useState(null);
-
-  return (
-    <div>
-      <input
-        className={classNames("text-xs text-gray-500 font-semibold  w-full h-9 border-purple-300 rounded-full pr-10 pl-4 border-1 focus:border-purple-900", { "text-black bg-red-200": hasError })}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        type={type}
-        onBlur={(e) => {
-          validator && setHasError(!validator.validate(e.currentTarget.value))
-        }}
-        {...props}
-      ></input>
-    </div >
-  );
-}
+import RoundedInputText from "../../components/common/RoundedInputText";
 
 function RegistroPage() {
   const handleContinueClicked = () => {
     if (!canContinue) {
       toast.warning("Por favor complete el formulario.");
     }
+
   };
 
   const days = getScheduleDays();
@@ -68,8 +48,8 @@ function RegistroPage() {
 
   return (
     <div className="flex items-center h-screen">
-      <div className="flex w-2/6"></div>
-      <div className="flex flex-col w-2/6 items-left  align-middle mt-10">
+      <div className="flex lg:w-2/6 xs:w-1/6"></div>
+      <div className="flex flex-col lg:w-2/6 xs:w-4/6 items-left  align-middle mt-10">
         <section className="">
           <h1 className="text-gray-900 text-3xl font-bold">
             Hola, un gusto verte
@@ -133,7 +113,7 @@ function RegistroPage() {
                 validate: (content) => {
                   return VALIDATIONS.EMAIL(content)
                 },
-                message: "Nombre es requerido."
+                message: "Correo Electrónico es requerido."
               }}
               value={email}
               onChange={(e) => setEmail(e.currentTarget.value)}
@@ -225,7 +205,7 @@ function RegistroPage() {
             </div>
           </FieldContainer>
           <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-            <button className="w-64 bg-purple-600 h-10 shadow-md rounded-full" onClick={handleContinueClicked}>
+            <button className="w-64 bg-purple-600 h-10 shadow-md rounded-md" onClick={handleContinueClicked}>
               Continuar
             </button>
           </div>
@@ -233,7 +213,7 @@ function RegistroPage() {
         </section>
 
       </div>
-      <div className="flex w-2/6"></div>
+      <div className="flex lg:w-2/6 xs:w-1/6"></div>
       <ToastContainer />
     </div >
   );
