@@ -198,47 +198,7 @@ function RegistroPage() {
               </div>
             </div>
           </FieldContainer>
-          <FieldContainer>
-            <RoundedInputText
-              validator={{
-                validate: (content) => {
-                  return VALIDATIONS.EMAIL(content)
-                },
-                message: "Correo Electrónico es requerido."
-              }}
-              value={email}
-              onChange={(e) => setEmail(e.currentTarget.value)}
-              placeholder="Ingresa tu correo electónico"
-            ></RoundedInputText>
-          </FieldContainer>
-          <FieldContainer>
-            <RoundedInputText
-              validator={{
-                validate: (content) => {
-                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
-                },
-                message: "Ingrese su contraseña."
-              }}
-              value={password}
-              onChange={(e) => setPassword(e.currentTarget.value)}
-              placeholder="Ingresa nueva contraseña"
-              type="password"
-            ></RoundedInputText>
-          </FieldContainer>
-          <FieldContainer>
-            <RoundedInputText
-              validator={{
-                validate: (content) => {
-                  return VALIDATIONS.REQUIRED_FREE_TEXT(content) && password === confirmPassword
-                },
-                message: "Reingrese su contraseña."
-              }}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-              placeholder="Confirma nueva Contraseña"
-              type="password"
-            ></RoundedInputText>
-          </FieldContainer>
+
           <FieldContainer title={"Fecha de Nacimiento"}>
             <div className="flex flex-wrap m-1">
               <div className="flex flex-col w-40 mr-2">

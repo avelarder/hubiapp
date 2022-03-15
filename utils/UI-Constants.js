@@ -1,4 +1,5 @@
 import moment from "moment";
+import { stringify } from "postcss";
 
 export const genderOptions = [
     { id: "MALE", text: "Masculino" },
@@ -333,6 +334,10 @@ export const getScheduleMinutes = () => [
 
 export const VALIDATIONS = {
     NONE: (input) => input.length > 0,
+    PASSWORD: (input) => {
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        return strongRegex.test(input)
+    },
     REQUIRED_FREE_TEXT: (input) => input.length > 0,
     ONLY_LETTERS: (input) => /^[a-zA-Z]+$/.test(input),
     ONLY_NUMBERS: (input) => /^[0-9]+$/.test(input),
@@ -342,6 +347,7 @@ export const VALIDATIONS = {
             input
         ),
     ZIPCODE: (input) => /^[0-9]{5}$/.test(input),
+    ACTIVATION_CODE: (input) => /^[0-9]{6}$/.test(input),
     PHONE_NUMBER: (input) =>
         /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/.test(input),
     DATE: (input) =>

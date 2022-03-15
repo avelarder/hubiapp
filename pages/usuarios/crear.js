@@ -9,6 +9,7 @@ import FieldContainer from "../../components/common/field-container";
 export default function Crear() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
   const { signInWithEmailAndPassword } = useAuth();
@@ -19,7 +20,7 @@ export default function Crear() {
     setError(null);
     //check if passwords match. If they do, create user in Firebase
     // and redirect to your logged in page.
-    if (VALIDATIONS.REQUIRED_FREE_TEXT(password)) {
+    if (VALIDATIONS.REQUIRED_FREE_TEXT(password) && VALIDATIONS.REQUIRED_FREE_TEXT(confirmPassword) && VALIDATIONS.PASSWORD(password) && password === confirmPassword) {
       createUserWithEmailAndPassword(email, password)
         .then((authUser) => {
 
@@ -64,7 +65,7 @@ export default function Crear() {
                 <RoundedInputText
                   validator={{
                     validate: (content) => {
-                      return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                      return VALIDATIONS.PASSWORD(content)
                     },
                     message: "Ingrese su contraseña."
                   }}
@@ -73,6 +74,30 @@ export default function Crear() {
                   placeholder="Ingrese su Contraseña"
                   type="password"
                 ></RoundedInputText>
+              </FieldContainer>
+              <FieldContainer>
+                <RoundedInputText
+                  validator={{
+                    validate: (content) => {
+                      return VALIDATIONS.PASSWORD(content)
+                    },
+                    message: "Confirme su contraseña."
+                  }}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.currentTarget.value)}
+                  placeholder="Confirme su Contraseña"
+                  type="password"
+                ></RoundedInputText>
+                <div className="flex flex-col items-start text-left">
+                  <span className="flex font-semibold text-xs my-4">Requisitos para una contraseña segura:</span>
+                  <ul className="text-xs">
+                    <li className="list-disc">Debe contener por lo menos un dígito [0-9].</li>
+                    <li className="list-disc">Debe contener por lo menos un caracter en minúscula [a-z].</li>
+                    <li className="list-disc">Debe contener por lo menos un caracter en mayúscula [A-Z].</li>
+                    <li className="list-disc">Debe contener por lo menos un caracter especial como ! @ # & ( ).</li>
+                    <li className="list-disc">Debe contener una longitud de entre 8 y 20 caracteres.</li>
+                  </ul>
+                </div>
               </FieldContainer>
             </div>
             <div className="flex  justify-end">
@@ -86,11 +111,11 @@ export default function Crear() {
             <div className="box-content text-center  pt-5 pb-5">
               <button
                 onClick={handleOnCreateUser}
-                className="h-10 w-full rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"
+                className="h-10 w-full rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
               >
-                Crear cuenta
+                Crear tu cuenta en HUBI
               </button>
-              <p className="w-96 text-sm mt-4">Al hacer click en &quotCrear Cuenta&quot aceptas nuestras <Link href="/politica/condiciones" passHref><span className="text-purple-700 font-semibold cursor-pointer">Condiciones</span></Link>, <Link href="/politica/datos" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Datos</span></Link> y <Link href="/politica/cookies" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Cookies</span></Link>. Es posible que te enviemos notificaciones por SMS que puedes desactivar cuando quieras.</p>
+              <p className="w-96 text-sm mt-4">Al hacer click en Crear Cuenta aceptas nuestras <Link href="/politica/condiciones" passHref><span className="text-purple-700 font-semibold cursor-pointer">Condiciones</span></Link>, <Link href="/politica/datos" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Datos</span></Link> y <Link href="/politica/cookies" passHref><span className="text-purple-700 font-semibold cursor-pointer">Política de Cookies</span></Link>. Es posible que te enviemos notificaciones por SMS que puedes desactivar cuando quieras.</p>
             </div>
             <div className="box-content flex flex-col pt-5 pb-5 items-center">
               <span className="mt-2 text-sm">Ya eres usuario? <Link href="/login" passHref><span className="text-purple-700 font-semibold cursor-pointer">Inicia sesión</span></Link></span>
