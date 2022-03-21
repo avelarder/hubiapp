@@ -17,6 +17,7 @@
     "chartjs-adapter-moment": "^1.0.0",
     "classnames": "^2.3.1",
     "cruip-js-toolkit": "^1.1.2",
+    "crypto-js": "^4.1.1",
     "emoji-annotation-to-unicode": "^0.3.0",
     "emoji-emoticon-to-unicode": "^0.2.2",
     "emoji-mart": "^3.0.1",

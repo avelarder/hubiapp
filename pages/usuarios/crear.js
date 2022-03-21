@@ -5,6 +5,10 @@ import { useRouter } from "next/router";
 import { useAuth } from "../../authUserProvider";
 import RoundedInputText from "../../components/common/RoundedInputText";
 import FieldContainer from "../../components/common/field-container";
+import Firebase from "../../firebase";
+import MD5 from "crypto-js/md5";
+import Mod9710 from "../../utils/iso7064";
+import { toast } from "react-toastify";
 
 export default function Crear() {
   const [email, setEmail] = useState("");
@@ -16,15 +20,34 @@ export default function Crear() {
 
   const { createUserWithEmailAndPassword } = useAuth();
 
-  const handleOnCreateUser = (event) => {
+  const handleOnCreateUser = async (event) => {
     setError(null);
     //check if passwords match. If they do, create user in Firebase
     // and redirect to your logged in page.
     if (VALIDATIONS.REQUIRED_FREE_TEXT(password) && VALIDATIONS.REQUIRED_FREE_TEXT(confirmPassword) && VALIDATIONS.PASSWORD(password) && password === confirmPassword) {
       createUserWithEmailAndPassword(email, password)
-        .then((authUser) => {
+        .then(async (authUser) => {
 
-          router.push("/usuarios/envio");
+          const activation = handleActivationRecord(authUser.user.uid);
+
+          const response = await fetch("/api/sendEmail", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              to: email, code: activation.code, hash: activation.activationHash
+            })
+          });
+
+          console.log(response)
+          if (response.status === 202) {
+            toast.success("Usuario creado con éxito, le hemos enviado un correo para activar su cuenta.");
+            router.push(`/usuarios/envio?uuid=${uthUser.user.uid
+              }&hash=${activation.activationHash}`);
+          } else {
+            toast.error("No pudimos enviarte en codigo de activación, por favor intente más tarde.");
+          }
         })
         .catch((error) => {
           // An error occurred. Set error message to be displayed to user
@@ -39,6 +62,27 @@ export default function Crear() {
   const handleOnForgetPassword = () => {
     router.push("/usuarios/recuperar");
   }
+
+  const handleActivationRecord = (userId) => {
+
+
+    const code = Mod9710.encode(Math.floor(Math.random() * 100000))
+    const activationHash = MD5(userId + "|" + code).toString();
+
+    const db = Firebase.default.firestore();
+    db.collection("ActivationRecords")
+      .doc(userId)
+      .set({
+        code: code,
+        activationHash: activationHash,
+        createdOnUTC: new Date().toISOString(),
+        expired: false,
+        expiredOnUTC: null,
+      });
+
+    return { code, activationHash }
+  };
+
   return (
     <div className="flex flex-col justify-center h-screen">
       <div className="flex flex-row justify-evenly">

@@ -3,20 +3,68 @@ import RoundedInputText from "../../components/common/RoundedInputText";
 import { VALIDATIONS } from "../../utils/UI-Constants";
 import { useState } from "react"
 import { useRouter } from "next/router";
+import useFirestoreQuery from "../../hooks/useFirestoreQuery";
+import Loader from "../../components/common/loader";
+import Firebase from "../../firebase";
+import { toast } from "react-toastify";
 
 export default function Envio() {
 
     const [activationCode, setActivationCode] = useState("")
+    const [activationValid, setActivationValid] = useState(true)
     const router = useRouter();
+    const { query } = router;
+    let activationEntry = {};
 
-    const handleOnLogin = () => {
-        router.push("/usuarios/registro");
+    const { data, status, error } = useFirestoreQuery(
+        db.collection("CommunityNews").doc(query.uuid)
+    );
+
+    if (status === "loading") {
+        return <Loader></Loader>;
+    }
+    if (status === "error") {
+        return <div>Lo sentimos pero no podemos verificar su cuenta, contáctese con su Administrador.</div>;
+    }
+    if (data === null) {
+        return <Loader></Loader>;
+    }
+    if (data) {
+
+        activationEntry = {
+            id: data.id,
+            activationHash: data.activationHash,
+            code: data.code,
+            expired: data.expired,
+        };
+
+        if (activationEntry.expired) {
+            setActivationValid(false)
+        }
+    }
+
+    const handleOnVerification = () => {
+        if (activationEntry.code === activationCode && !activationEntry.expired && query.activationHash === activationEntry.activationHash) {
+
+            const db = Firebase.default.firestore();
+            db.collection("ActivationRecords")
+                .doc(query.uuid)
+                .set({
+                    expired: true,
+                    expiredOnUTC: new Date().toISOString(),
+                });
+
+            toast.success("Su cuenta ha sido verificada con éxito.");
+            router.push('/usuarios/registro')
+        }
+        else
+            toast.error("El código de verificación no es válido o su cuenta no puede activarse.");
     }
     return (
         <div className="flex flex-col justify-center h-screen">
             <div className="flex flex-row justify-evenly">
                 <div className="p-10 ">
-                    <div className="box-content flex flex-col h-full w-100 p-4  rounded-md ">
+                    {activationValid ? (<div className="box-content flex flex-col h-full w-100 p-4  rounded-md ">
                         <div className="box-content flex text-center justify-center font-bold ">
                             <p className=" text-purple-600 text-center text-3xl">Verifiquemos tu correo electrónico</p>
                         </div>
@@ -40,15 +88,14 @@ export default function Envio() {
 
                         <div className="box-content text-center  pt-5 pb-5">
                             <button
-                                onClick={handleOnLogin}
+                                onClick={handleOnVerification}
                                 className="h-10 w-96 rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
                             >
                                 Verificar y Continuar
                             </button>
                         </div>
 
-                    </div>
-
+                    </div>) : (<div>Lo sentimos pero no podemos verificar su cuenta, contáctese con su Administrador.</div>)}
                 </div>
             </div>
         </div>
