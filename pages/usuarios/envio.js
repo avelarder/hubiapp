@@ -11,13 +11,13 @@ import { toast } from "react-toastify";
 export default function Envio() {
 
     const [activationCode, setActivationCode] = useState("")
-    const [activationValid, setActivationValid] = useState(true)
     const router = useRouter();
     const { query } = router;
     let activationEntry = {};
+    const db = Firebase.default.firestore();
 
     const { data, status, error } = useFirestoreQuery(
-        db.collection("CommunityNews").doc(query.uuid)
+        db.collection("ActivationRecords").doc(query.uuid)
     );
 
     if (status === "loading") {
@@ -30,6 +30,10 @@ export default function Envio() {
         return <Loader></Loader>;
     }
     if (data) {
+        if (data.expired) {
+            router.push('/login');
+            return (<div>Su cuenta ya está activa, por favor inicie sesión.</div>);;
+        }
 
         activationEntry = {
             id: data.id,
@@ -38,24 +42,28 @@ export default function Envio() {
             expired: data.expired,
         };
 
-        if (activationEntry.expired) {
-            setActivationValid(false)
-        }
+
     }
 
-    const handleOnVerification = () => {
-        if (activationEntry.code === activationCode && !activationEntry.expired && query.activationHash === activationEntry.activationHash) {
+    const handleOnVerification = async () => {
 
-            const db = Firebase.default.firestore();
-            db.collection("ActivationRecords")
-                .doc(query.uuid)
-                .set({
-                    expired: true,
-                    expiredOnUTC: new Date().toISOString(),
-                });
+        if (activationEntry.code === activationCode && !activationEntry.expired && query.hash === activationEntry.activationHash) {
+
+            try {
+
+                await db.collection("ActivationRecords")
+                    .doc(query.uuid)
+                    .update({
+                        expired: true,
+                        expiredOnUTC: new Date().toISOString(),
+                    });
+                console.log("Updated")
+            } catch (error) {
+                console.log(error)
+            }
 
             toast.success("Su cuenta ha sido verificada con éxito.");
-            router.push('/usuarios/registro')
+
         }
         else
             toast.error("El código de verificación no es válido o su cuenta no puede activarse.");
@@ -64,11 +72,11 @@ export default function Envio() {
         <div className="flex flex-col justify-center h-screen">
             <div className="flex flex-row justify-evenly">
                 <div className="p-10 ">
-                    {activationValid ? (<div className="box-content flex flex-col h-full w-100 p-4  rounded-md ">
+                    <div className="box-content flex flex-col h-full w-100 p-4  rounded-md ">
                         <div className="box-content flex text-center justify-center font-bold ">
                             <p className=" text-purple-600 text-center text-3xl">Verifiquemos tu correo electrónico</p>
                         </div>
-                        <p className="flex  mt-4 text-center">Por favor ingrese el código de verificación de 6 dígitos enviado a tu correo.</p>
+                        <p className="flex  mt-4 text-center">Por favor ingrese el código de verificación de 7 dígitos enviado a tu correo.</p>
                         <p className="flex  text-center">El código estará activo por 30 minutos.</p>
 
                         <FieldContainer>
@@ -95,7 +103,7 @@ export default function Envio() {
                             </button>
                         </div>
 
-                    </div>) : (<div>Lo sentimos pero no podemos verificar su cuenta, contáctese con su Administrador.</div>)}
+                    </div>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ export default async function handler(req, res) {
         payload.to,
         process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION,
         {
+            "id": payload.uuid,
             "code": payload.code,
             "activationHash": payload.hash,
         }

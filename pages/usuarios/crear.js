@@ -36,14 +36,14 @@ export default function Crear() {
               "Content-Type": "application/json"
             },
             body: JSON.stringify({
-              to: email, code: activation.code, hash: activation.activationHash
+              to: email, code: activation.code, hash: activation.activationHash, uuid: authUser.user.uid
             })
           });
 
-          console.log(response)
+          console.log(response.status)
           if (response.status === 202) {
             toast.success("Usuario creado con éxito, le hemos enviado un correo para activar su cuenta.");
-            router.push(`/usuarios/envio?uuid=${uthUser.user.uid
+            router.push(`/usuarios/envio?uuid=${authUser.user.uid
               }&hash=${activation.activationHash}`);
           } else {
             toast.error("No pudimos enviarte en codigo de activación, por favor intente más tarde.");
@@ -77,7 +77,9 @@ export default function Crear() {
         activationHash: activationHash,
         createdOnUTC: new Date().toISOString(),
         expired: false,
+        registered: false,
         expiredOnUTC: null,
+        registeredOnUTC: null,
       });
 
     return { code, activationHash }

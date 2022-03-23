@@ -347,7 +347,7 @@ export const VALIDATIONS = {
             input
         ),
     ZIPCODE: (input) => /^[0-9]{5}$/.test(input),
-    ACTIVATION_CODE: (input) => /^[0-9]{6}$/.test(input),
+    ACTIVATION_CODE: (input) => /^[0-9]{7}$/.test(input),
     PHONE_NUMBER: (input) =>
         /^(\([0-9]{3}\) |[0-9]{3}-)[0-9]{3}-[0-9]{4}$/.test(input),
     DATE: (input) =>

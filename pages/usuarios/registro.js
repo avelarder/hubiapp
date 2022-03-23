@@ -97,17 +97,11 @@ function RegistroPage() {
     //check if passwords match. If they do, create user in Firebase
     // and redirect to your logged in page.
 
-    createUserWithEmailAndPassword(email, password)
-      .then((authUser) => {
-        handlePostCreated(authUser.user.uuid);
-        toast.success("Usuario creado con éxito.");
 
-        router.push("/login");
-      })
-      .catch((error) => {
-        // An error occurred. Set error message to be displayed to user
-        toast.warning("No se pudo completar la operación, intente nuevamente.");
-      });
+    handlePostCreated(authUser.user.uuid);
+    toast.success("Usuario creado con éxito.");
+
+    router.push("/login");
 
     event.preventDefault();
 
