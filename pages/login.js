@@ -6,6 +6,7 @@ import { useAuth } from "../authUserProvider";
 import RoundedInputText from "../components/common/RoundedInputText";
 import FieldContainer from "../components/common/field-container";
 import Firebase from "../firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,12 +19,11 @@ export default function Login() {
     setError(null);
     signInWithEmailAndPassword(email, password)
       .then(async (authUser) => {
-
         const db = Firebase.default.firestore();
-        const data = await db.collection("ActivationRecords").doc(authUser.uuid).get()
-        const record = await data.data();
-        console.log(record)
-        if (record.registered)
+        const activationRef = db.collection("ActivationRecords").doc(authUser.user.uid)
+        const doc = await activationRef.get()
+
+        if (doc.exists && doc.data().registered)
           router.push("/app/dashboard");
         else
           router.push("/usuarios/registro");
