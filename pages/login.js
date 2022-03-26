@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "../authUserProvider";
 import RoundedInputText from "../components/common/RoundedInputText";
 import FieldContainer from "../components/common/field-container";
+import Firebase from "../firebase";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,8 +17,16 @@ export default function Login() {
   const handleOnSubmitClicked = (event) => {
     setError(null);
     signInWithEmailAndPassword(email, password)
-      .then((authUser) => {
-        router.push("/app/dashboard");
+      .then(async (authUser) => {
+
+        const db = Firebase.default.firestore();
+        const data = await db.collection("ActivationRecords").doc(authUser.uuid).get()
+        const record = await data.data();
+        console.log(record)
+        if (record.registered)
+          router.push("/app/dashboard");
+        else
+          router.push("/usuarios/registro");
       })
       .catch((error) => {
         setError(error.message);
