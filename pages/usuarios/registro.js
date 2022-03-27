@@ -15,7 +15,7 @@ import {
   genderOptions,
   VALIDATIONS
 } from "../../utils/UI-Constants";
-import { ToastContainer, toast } from 'react-toastify';
+
 import RoundedInputText from "../../components/common/RoundedInputText";
 
 function RegistroPage() {
@@ -60,7 +60,6 @@ function RegistroPage() {
   const days = getScheduleDays();
   const months = getScheduleMonths();
   const years = getScheduleYears(1900, new Date().getFullYear() - 18);
-  const [canContinue, setCanContinue] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -253,7 +252,7 @@ function RegistroPage() {
 
       </div>
       <div className="flex lg:w-2/6 xs:w-1/6"></div>
-      <ToastContainer />
+
     </div >
   );
 }

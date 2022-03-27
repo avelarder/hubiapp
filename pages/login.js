@@ -6,7 +6,7 @@ import { useAuth } from "../authUserProvider";
 import RoundedInputText from "../components/common/RoundedInputText";
 import FieldContainer from "../components/common/field-container";
 import Firebase from "../firebase";
-import { doc, getDoc } from "firebase/firestore";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");

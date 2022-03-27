@@ -39,7 +39,7 @@ export async function sendEmail(to, templateId, substitutions) {
         })
         return response;
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 
 }

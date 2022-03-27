@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
     var response = await sendEmail(
         payload.to,
-        process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION,
+        payload.templateId,
         {
             "id": payload.uuid,
             "code": payload.code,
