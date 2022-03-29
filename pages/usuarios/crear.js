@@ -11,6 +11,9 @@ import Mod9710 from "../../utils/iso7064";
 import { toast } from "react-toastify";
 
 export default function Crear() {
+
+  const sendGridTemplate = process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -40,7 +43,7 @@ export default function Crear() {
             })
           });
 
-          console.log(response.status)
+
           if (response.status === 202) {
             toast.success("Usuario creado con éxito, le hemos enviado un correo para activar su cuenta.");
             router.push(`/usuarios/envio?uuid=${authUser.user.uid
@@ -146,7 +149,6 @@ export default function Crear() {
                 </div>
               </FieldContainer>
             </div>
-
             <div className="box-content text-center  pt-5 pb-5">
               <button
                 onClick={handleOnCreateUser}

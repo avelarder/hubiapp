@@ -57,9 +57,8 @@ export default function Envio() {
                         expired: true,
                         expiredOnUTC: new Date().toISOString(),
                     });
-                console.log("Updated")
             } catch (error) {
-                console.log(error)
+                console.error(error)
             }
 
             toast.success("Su cuenta ha sido verificada con éxito.");

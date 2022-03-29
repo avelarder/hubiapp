@@ -15,12 +15,12 @@ import {
   genderOptions,
   VALIDATIONS
 } from "../../utils/UI-Constants";
-import { ToastContainer, toast } from 'react-toastify';
+
 import RoundedInputText from "../../components/common/RoundedInputText";
 
 function RegistroPage() {
   const router = useRouter();
-  const { createUserWithEmailAndPassword } = useAuth();
+  const { authUser } = useAuth();
 
   const validatorConfig = {
     firstName: {
@@ -41,12 +41,7 @@ function RegistroPage() {
       },
       message: "El número de celular es requerido."
     },
-    email: {
-      validate: (content) => {
-        return VALIDATIONS.EMAIL(content)
-      },
-      message: "Nombre es requerido."
-    },
+
     password: {
       validate: (content) => {
         return VALIDATIONS.REQUIRED_FREE_TEXT(content)
@@ -65,17 +60,15 @@ function RegistroPage() {
   const days = getScheduleDays();
   const months = getScheduleMonths();
   const years = getScheduleYears(1900, new Date().getFullYear() - 18);
-  const [canContinue, setCanContinue] = useState(false);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
+
   const [phoneArea, setPhoneArea] = useState(
     phoneAreaOptions.find((x) => x.id === "PE/PER")
   );
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [gender, setGender] = useState(genderOptions[0]);
   const [dobDay, setDobDay] = useState(days[0]);
   const [dobMonth, setDobMonth] = useState(months[0]);
@@ -83,35 +76,29 @@ function RegistroPage() {
   const [status, setStatus] = useState(statusOptions[0]);
   const [accessType, setAccessType] = useState(accessTypeOptions[0]);
 
-  const handleContinueClicked = (event) => {
+  const handleContinueClicked = async (event) => {
     if (!validatorConfig.firstName.validate(firstName) ||
       !validatorConfig.lastName.validate(lastName) ||
-      !validatorConfig.phone.validate(phone) ||
-      !validatorConfig.email.validate(email) ||
-      !validatorConfig.password.validate(password) ||
-      !validatorConfig.confirmPassword.validate(confirmPassword)) {
+      !validatorConfig.phone.validate(phone)
+    ) {
       toast.warning("Por favor complete el formulario.");
+      return;
     }
 
-
-    //check if passwords match. If they do, create user in Firebase
-    // and redirect to your logged in page.
-
-
-    handlePostCreated(authUser.user.uuid);
+    await handlePostCreated(authUser.uid, authUser.email);
     toast.success("Usuario creado con éxito.");
-
-    router.push("/login");
+    router.push("/app/dashboard");
 
     event.preventDefault();
 
   };
 
 
-  const handlePostCreated = (userId) => {
+  const handlePostCreated = async (userId, email) => {
 
     const db = Firebase.default.firestore();
-    db.collection("Profiles")
+
+    await db.collection("Profiles")
       .doc(userId)
       .set({
         firstName: firstName,
@@ -128,6 +115,12 @@ function RegistroPage() {
         createdOnUTC: new Date().toISOString(),
       });
 
+    await db.collection("ActivationRecords")
+      .doc(userId)
+      .update({
+        registered: true,
+        registeredOnUTC: new Date().toISOString(),
+      });
 
   };
 
@@ -259,7 +252,7 @@ function RegistroPage() {
 
       </div>
       <div className="flex lg:w-2/6 xs:w-1/6"></div>
-      <ToastContainer />
+
     </div >
   );
 }

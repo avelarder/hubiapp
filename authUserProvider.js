@@ -4,9 +4,11 @@ import useFirebaseAuth from "./useFirebaseAuth";
 const authUserContext = createContext({
   authUser: null,
   loading: true,
-  signInWithEmailAndPassword: async () => {},
-  createUserWithEmailAndPassword: async () => {},
-  signOut: async () => {},
+  signInWithEmailAndPassword: async () => { },
+  createUserWithEmailAndPassword: async () => { },
+  sendPasswordResetEmail: async (email, action) => { },
+  confirmPasswordReset: async (code, newPassword) => { },
+  signOut: async () => { },
 });
 
 export function AuthUserProvider({ children }) {

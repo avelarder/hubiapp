@@ -34,6 +34,12 @@ export default function useFirebaseAuth() {
   const createUserWithEmailAndPassword = (email, password) =>
     Firebase.default.auth().createUserWithEmailAndPassword(email, password);
 
+  const sendPasswordResetEmail = (email, action) =>
+    Firebase.default.auth().sendPasswordResetEmail(email, action);
+
+  const confirmPasswordReset = (code, newPassword) =>
+    Firebase.default.auth().confirmPasswordReset(code, newPassword);
+
   const signOut = () => Firebase.default.auth().signOut().then(clear);
   // listen for Firebase state change
   useEffect(() => {
@@ -48,6 +54,8 @@ export default function useFirebaseAuth() {
     loading,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    confirmPasswordReset,
     signOut,
   };
 }
