@@ -146,14 +146,7 @@ export default function Crear() {
                 </div>
               </FieldContainer>
             </div>
-            <div className="flex  justify-end">
-              <button
-                onClick={handleOnForgetPassword}
-                className="h-10 items-end text-sm"
-              >
-                Olvidaste tu contraseña?
-              </button>
-            </div>
+
             <div className="box-content text-center  pt-5 pb-5">
               <button
                 onClick={handleOnCreateUser}
