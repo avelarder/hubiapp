@@ -31,16 +31,24 @@ export default function Crear() {
       createUserWithEmailAndPassword(email, password)
         .then(async (authUser) => {
 
-          const activation = handleActivationRecord(authUser.user.uid);
+          const activation = await handleActivationRecord(authUser.user.uid);
 
+          const templateId = process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
+          const body = {
+            to: email,
+            templateId: templateId,
+            code: activation.code,
+            hash: activation.activationHash,
+            uuid: authUser.user.uid
+          };
+
+          console.log(body)
           const response = await fetch("/api/sendEmail", {
             method: "POST",
             headers: {
               "Content-Type": "application/json"
             },
-            body: JSON.stringify({
-              to: email, code: activation.code, hash: activation.activationHash, uuid: authUser.user.uid
-            })
+            body: JSON.stringify(body)
           });
 
 
@@ -66,14 +74,14 @@ export default function Crear() {
     router.push("/usuarios/recuperar");
   }
 
-  const handleActivationRecord = (userId) => {
+  const handleActivationRecord = async (userId) => {
 
 
     const code = Mod9710.encode(Math.floor(Math.random() * 100000))
     const activationHash = MD5(userId + "|" + code).toString();
 
     const db = Firebase.default.firestore();
-    db.collection("ActivationRecords")
+    await db.collection("ActivationRecords")
       .doc(userId)
       .set({
         code: code,
