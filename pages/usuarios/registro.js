@@ -14,7 +14,7 @@ import {
   accessTypeOptions,
   statusOptions,
   genderOptions,
-  VALIDATIONS
+  VALIDATIONS,
 } from "../../utils/UI-Constants";
 
 import RoundedInputText from "../../components/common/RoundedInputText";
@@ -26,37 +26,39 @@ function RegistroPage() {
   const validatorConfig = {
     firstName: {
       validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+        return VALIDATIONS.REQUIRED_FREE_TEXT(content);
       },
-      message: "Nombre es requerido."
+      message: "Nombre es requerido.",
     },
     lastName: {
       validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+        return VALIDATIONS.REQUIRED_FREE_TEXT(content);
       },
-      message: "Apellidos son requeridos."
+      message: "Apellidos son requeridos.",
     },
     phone: {
       validate: (content) => {
-        return VALIDATIONS.ONLY_NUMBERS(content)
+        return VALIDATIONS.ONLY_NUMBERS(content);
       },
-      message: "El número de celular es requerido."
+      message: "El número de celular es requerido.",
     },
 
     password: {
       validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+        return VALIDATIONS.REQUIRED_FREE_TEXT(content);
       },
-      message: "Ingrese su contraseña."
+      message: "Ingrese su contraseña.",
     },
     confirmPassword: {
       validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content) && password === confirmPassword
+        return (
+          VALIDATIONS.REQUIRED_FREE_TEXT(content) &&
+          password === confirmPassword
+        );
       },
-      message: "Reingrese su contraseña."
-    }
-  }
-
+      message: "Reingrese su contraseña.",
+    },
+  };
 
   const days = getScheduleDays();
   const months = getScheduleMonths();
@@ -78,7 +80,8 @@ function RegistroPage() {
   const [accessType, setAccessType] = useState(accessTypeOptions[0]);
 
   const handleContinueClicked = async (event) => {
-    if (!validatorConfig.firstName.validate(firstName) ||
+    if (
+      !validatorConfig.firstName.validate(firstName) ||
       !validatorConfig.lastName.validate(lastName) ||
       !validatorConfig.phone.validate(phone)
     ) {
@@ -86,20 +89,18 @@ function RegistroPage() {
       return;
     }
 
-    await handlePostCreated(authUser.uid, authUser.email);
+    await handleCompleteRegistration(authUser.uid, authUser.email);
     toast.success("Usuario creado con éxito.");
-    router.push("/app/dashboard");
+    router.push("/usuarios/bienvenido");
 
     event.preventDefault();
-
   };
 
-
-  const handlePostCreated = async (userId, email) => {
-
+  const handleCompleteRegistration = async (userId, email) => {
     const db = Firebase.default.firestore();
 
-    await db.collection("Profiles")
+    await db
+      .collection("Profiles")
       .doc(userId)
       .set({
         firstName: firstName,
@@ -116,13 +117,13 @@ function RegistroPage() {
         createdOnUTC: new Date().toISOString(),
       });
 
-    await db.collection("ActivationRecords")
+    await db
+      .collection("ActivationRecords")
       .doc(userId)
       .update({
         registered: true,
         registeredOnUTC: new Date().toISOString(),
       });
-
   };
 
   return (
@@ -140,9 +141,9 @@ function RegistroPage() {
             <RoundedInputText
               validator={{
                 validate: (content) => {
-                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content);
                 },
-                message: "Nombre es requerido."
+                message: "Nombre es requerido.",
               }}
               value={firstName}
               onChange={(e) => setFirstName(e.currentTarget.value)}
@@ -153,9 +154,9 @@ function RegistroPage() {
             <RoundedInputText
               validator={{
                 validate: (content) => {
-                  return VALIDATIONS.REQUIRED_FREE_TEXT(content)
+                  return VALIDATIONS.REQUIRED_FREE_TEXT(content);
                 },
-                message: "Apellidos son requeridos."
+                message: "Apellidos son requeridos.",
               }}
               value={lastName}
               onChange={(e) => setLastName(e.currentTarget.value)}
@@ -175,9 +176,9 @@ function RegistroPage() {
                 <RoundedInputText
                   validator={{
                     validate: (content) => {
-                      return VALIDATIONS.ONLY_NUMBERS(content)
+                      return VALIDATIONS.ONLY_NUMBERS(content);
                     },
-                    message: "El número de celular es requerido."
+                    message: "El número de celular es requerido.",
                   }}
                   value={phone}
                   onChange={(e) => setPhone(e.currentTarget.value)}
@@ -244,17 +245,17 @@ function RegistroPage() {
             </div>
           </FieldContainer>
           <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-            <button className="w-64 bg-purple-600 h-10 shadow-md rounded-md" onClick={handleContinueClicked}>
+            <button
+              className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
+              onClick={handleContinueClicked}
+            >
               Continuar
             </button>
           </div>
-
         </section>
-
       </div>
       <div className="flex lg:w-2/6 xs:w-1/6"></div>
-
-    </div >
+    </div>
   );
 }
 
