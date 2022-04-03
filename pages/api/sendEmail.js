@@ -2,7 +2,6 @@ import { sendEmail } from "../../utils/Email";
 
 export default async function handler(req, res) {
   const payload = req.body;
-  console.log(payload);
   var response = await sendEmail(payload.to, payload.templateId, {
     id: payload.uuid,
     code: payload.code,

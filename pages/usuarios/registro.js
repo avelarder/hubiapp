@@ -91,7 +91,7 @@ function RegistroPage() {
 
     await handleCompleteRegistration(authUser.uid, authUser.email);
     toast.success("Usuario creado con éxito.");
-    router.push("/app/dashboard");
+    router.push("/usuarios/bienvenido");
 
     event.preventDefault();
   };

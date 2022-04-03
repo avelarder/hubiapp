@@ -26,9 +26,9 @@ export default function Login() {
 
         if (doc.exists && (doc.data().registered || doc.data().welcomed))
           router.push("/app/dashboard");
-        else if (doc.exists && !doc.data().welcomed)
-          router.push("/usuarios/bienvenido");
-        else router.push("/usuarios/registro");
+        else if (doc.exists && !doc.data().registered)
+          router.push("/usuarios/registro");
+        else router.push("/usuarios/bienvenido");
       })
       .catch((error) => {
         setError(error.message);

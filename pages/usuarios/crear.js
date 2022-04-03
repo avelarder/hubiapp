@@ -47,7 +47,6 @@ export default function Crear() {
             uuid: authUser.user.uid,
           };
 
-          console.log(body);
           const response = await fetch("/api/sendEmail", {
             method: "POST",
             headers: {
