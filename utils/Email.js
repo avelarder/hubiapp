@@ -3,7 +3,7 @@ export async function sendEmail(to, templateId, substitutions) {
 
     const body = JSON.stringify({
         "from": {
-            "email": "velarde.rojas.arturo@gmail.com"
+            "email": "arturo@emmergia.biz"
         },
         "subject": "HUBI - Activación de Cuenta",
         "template_id": templateId,
