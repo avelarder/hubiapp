@@ -11,7 +11,7 @@ import Mod9710 from "../../utils/iso7064";
 import { toast } from "react-toastify";
 
 export default function Crear() {
-  const sendGridTemplate =
+  const sendGridTemplateId =
     process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
 
   const [email, setEmail] = useState("");
@@ -37,11 +37,9 @@ export default function Crear() {
         .then(async (authUser) => {
           const activation = await handleActivationRecord(authUser.user.uid);
 
-          const templateId =
-            process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
           const body = {
             to: email,
-            templateId: templateId,
+            templateId: sendGridTemplateId,
             code: activation.code,
             hash: activation.activationHash,
             uuid: authUser.user.uid,

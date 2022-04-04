@@ -86,7 +86,7 @@ export default function Select({
             </Listbox.Label>
           )}
           <div className="mt-1 relative">
-            <Listbox.Button className="relative w-full h-10 bg-white border border-purple-300 rounded-full pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-xs font-semibold text-gray-500">
+            <Listbox.Button className="relative w-full h-10 bg-white border border-purple-300 rounded-full pl-3 pr-10 py-2 text-left cursor-default focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 text-xs  font-semibold text-gray-500">
               <span className="flex items-center">
                 <span className="ml-3 block truncate">
                   {selectedOption.text}

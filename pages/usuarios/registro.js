@@ -128,8 +128,8 @@ function RegistroPage() {
 
   return (
     <div className="flex items-center h-screen">
-      <div className="flex lg:w-2/6 xs:w-1/6"></div>
-      <div className="flex flex-col lg:w-2/6 xs:w-4/6 items-left  align-middle mt-10">
+      <div className="flex xs:w-2/6"></div>
+      <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
         <section className="">
           <h1 className="text-gray-900 text-3xl font-bold">
             Hola, un gusto verte
@@ -254,7 +254,7 @@ function RegistroPage() {
           </div>
         </section>
       </div>
-      <div className="flex lg:w-2/6 xs:w-1/6"></div>
+      <div className="flex xs:w-2/6"></div>
     </div>
   );
 }
