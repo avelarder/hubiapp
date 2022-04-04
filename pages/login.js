@@ -6,16 +6,35 @@ import { useAuth } from "../authUserProvider";
 import RoundedInputText from "../components/common/RoundedInputText";
 import FieldContainer from "../components/common/field-container";
 import Firebase from "../firebase";
+import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "react-toastify";
 
 export default function Login() {
+  const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
+
+  const [captcha, setCaptcha] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const router = useRouter();
   const { signInWithEmailAndPassword } = useAuth();
 
+  function onChange(value) {
+    setCaptcha(value);
+  }
+
   const handleOnSubmitClicked = (event) => {
-    setError(null);
+    if (!VALIDATIONS.EMAIL(email) || !VALIDATIONS.PASSWORD(password)) {
+      toast.warning(
+        "Por favor, ingrese su correo electrónico y su contraseña."
+      );
+      return;
+    }
+    if (!VALIDATIONS.REQUIRED_FREE_TEXT(captcha)) {
+      toast.warning("Por favor, seleccione la opción - No soy un robot.");
+      return;
+    }
+
     signInWithEmailAndPassword(email, password)
       .then(async (authUser) => {
         const db = Firebase.default.firestore();
@@ -32,6 +51,7 @@ export default function Login() {
       })
       .catch((error) => {
         setError(error.message);
+        toast.error("Error al iniciar sesión. Por favor, intente nuevamente.");
       });
     event.preventDefault();
   };
@@ -88,7 +108,10 @@ export default function Login() {
                 Olvidaste tu contraseña?
               </button>
             </div>
-            <div className="box-content text-center  pt-5 pb-5">
+            <div className="box-content w-full self-center pt-5 pb-5">
+              <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
+            </div>
+            <div className="box-content text-center   pt-5 pb-5">
               <button
                 onClick={handleOnSubmitClicked}
                 className="h-10 w-full rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"

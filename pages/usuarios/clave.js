@@ -5,9 +5,12 @@ import FieldContainer from "../../components/common/field-container";
 import { toast } from "react-toastify";
 import { useAuth } from "../../authUserProvider";
 import { VALIDATIONS } from "../../utils/UI-Constants";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Clave() {
-  const [code, setCode] = useState("");
+  const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
+
+  const [captcha, setCaptcha] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const { confirmPasswordReset } = useAuth();
@@ -15,7 +18,16 @@ function Clave() {
   const router = useRouter();
   const { query } = router;
 
+  function onChange(value) {
+    setCaptcha(value);
+  }
+
   const handleOnCreateUser = async (event) => {
+    if (!VALIDATIONS.REQUIRED_FREE_TEXT(captcha)) {
+      toast.warning("Por favor, seleccione la opción - No soy un robot.");
+      return;
+    }
+
     if (
       VALIDATIONS.PASSWORD(password) &&
       VALIDATIONS.PASSWORD(confirmPassword) &&
@@ -98,7 +110,9 @@ function Clave() {
                 </div>
               </FieldContainer>
             </div>
-
+            <div className="box-content w-full self-center pt-5 pb-5">
+              <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
+            </div>
             <div className="box-content text-center  pt-5 pb-5">
               <button
                 onClick={handleOnCreateUser}
