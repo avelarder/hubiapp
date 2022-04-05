@@ -56,7 +56,7 @@ export default function Login() {
     event.preventDefault();
   };
 
-  const handleOnRemindMe = () => {};
+  const handleOnRemindMe = () => { };
 
   const handleOnForgetPasword = () => {
     router.push("/usuarios/recuperar");
@@ -108,7 +108,7 @@ export default function Login() {
                 Olvidaste tu contraseña?
               </button>
             </div>
-            <div className="box-content w-full self-center pt-5 pb-5">
+            <div className="flex w-full justify-center pt-5 pb-5">
               <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
             </div>
             <div className="box-content text-center   pt-5 pb-5">
@@ -125,7 +125,6 @@ export default function Login() {
                 <span className="mb-4 text-sm"> Recordame</span>
               </div>
               <span className="mt-2 text-sm ">
-                {" "}
                 Eres nuevo usuario?{" "}
                 <Link href="/usuarios/crear" passHref>
                   <span className="cursor-pointer text-purple-700 font-semibold">

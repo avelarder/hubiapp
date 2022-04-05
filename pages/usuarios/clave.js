@@ -110,7 +110,7 @@ function Clave() {
                 </div>
               </FieldContainer>
             </div>
-            <div className="box-content w-full self-center pt-5 pb-5">
+            <div className="flex w-full justify-center pt-5 pb-5">
               <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
             </div>
             <div className="box-content text-center  pt-5 pb-5">
