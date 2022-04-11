@@ -19,6 +19,7 @@ function TableSection({
   onChangeLimit,
   onOrderByFieldChanged,
   onFilterPostChanged,
+  filteringOptions,
 }) {
 
   const limitOptions = [
@@ -64,17 +65,19 @@ function TableSection({
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center">
         <h2 className="flex font-semibold text-gray-800 w-full">{sectionTitle}</h2>
-        <input
-          type={"text"}
-          className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-1 mx-4"
-          aria-multiline={true}
-          placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
-          value={filterPost}
-          onChange={(e) => {
-            onFilterPostChanged(e.currentTarget.value)
-          }
-          }
-        ></input>
+
+        {filteringOptions ??
+          <input
+            type={"text"}
+            className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-1 mx-4"
+            aria-multiline={true}
+            placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
+            value={filterPost}
+            onChange={(e) => {
+              onFilterPostChanged(e.currentTarget.value)
+            }
+            }
+          ></input>}
       </header>
       <div className="p-3 flex">
         {/* Table */}
