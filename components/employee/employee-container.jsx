@@ -6,8 +6,8 @@ import DeleteModal from "../common/delete-modal";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 import FieldContainer from "../common/field-container";
 import Select from "../common/select";
-import RoundedInputText from "../common/RoundedInputText";
-import { VALIDATIONS } from "../../utils/UI-Constants";
+import RoundedInputText from "../common/roundedInputText";
+import { PlusIcon, AdjustmentsIcon } from "@heroicons/react/solid";
 
 const DEFAULT_LIMIT = 10;
 
@@ -25,7 +25,7 @@ const initEmployees = {
   data: [],
 };
 
-function EmployeesContainer() {
+function EmployeesContainer({ handleCreateClicked, handleAccessClicked }) {
   const router = useRouter();
   const db = Firebase.default.firestore();
   let employees = {};
@@ -35,7 +35,7 @@ function EmployeesContainer() {
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("publishedOn");
+  const [orderField, setOrderField] = useState("CreatedOn");
   const [filterText, setFilterText] = useState("");
   const [filterEmployee, setFilterEmployee] = useState("");
   const [statusFilter, setStatusFilter] = useState({
@@ -81,14 +81,14 @@ function EmployeesContainer() {
   }
 
   if (data) {
-    var currentDocs = data.map((doc) => ({
+    var employeesData = data.map((doc) => ({
       id: doc.id,
-      name: doc.name,
-      role: doc.role,
+      name: `${doc.FirstName} ${doc.LastName}`,
+      role: doc.EmployeeType,
       access: doc.accessType ?? "--",
     }));
 
-    employees = { ...initEmployees, data: currentDocs };
+    employees = { ...initEmployees, data: employeesData };
   }
 
   const handleViewClicked = (id) => {
@@ -151,8 +151,8 @@ function EmployeesContainer() {
             onFilterPostChanged={setFilterEmployee}
             filteringOptions={
               <FieldContainer>
-                <div className="flex mx-1 justify-around">
-                  <div className="flex flex-col w-40 mr-2 self-end">
+                <div className="flex  mx-1 justify-around ">
+                  <div className="flex flex-col w-40 mr-2 self-end xs:hidden">
                     <Select
                       title={"Estado"}
                       showTitle
@@ -213,6 +213,30 @@ function EmployeesContainer() {
                       onChange={(e) => setFilterText(e.currentTarget.value)}
                       placeholder="Ingrese el texto a buscar"
                     ></RoundedInputText>
+                  </div>
+                  <div className="flex justify-start align-top content-start ml-10">
+                    <div className="flex align-bottom">
+                      <button
+                        className="w-full inline-flex justify-center self-end  rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
+                        onClick={() => {
+                          handleAccessClicked(true);
+                        }}
+                      >
+                        <AdjustmentsIcon className="w-5 h-5 mr-2 font-monse"></AdjustmentsIcon>
+                        Accesos
+                      </button>
+                    </div>
+                    <div className="flex align-bottom">
+                      <button
+                        className="w-full inline-flex self-end justify-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
+                        onClick={() => {
+                          handleCreateClicked(true);
+                        }}
+                      >
+                        <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>
+                        Crear
+                      </button>
+                    </div>
                   </div>
                 </div>
               </FieldContainer>
