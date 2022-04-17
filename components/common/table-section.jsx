@@ -4,6 +4,7 @@ import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import Select from "./select";
 import moment from "moment";
+import { isObject } from "../../utils/utilities";
 
 function TableSection({
   sectionTitle,
@@ -21,52 +22,68 @@ function TableSection({
   onFilterPostChanged,
   filteringOptions,
 }) {
-
   const limitOptions = [
     { id: 5, text: "  5" },
     { id: 10, text: " 10" },
     { id: 20, text: " 20" },
     { id: 50, text: " 50" },
-    { id: 100, text: "100" }
+    { id: 100, text: "100" },
   ];
 
   const handleSortAndFilter = () => {
-    const header = dataset.headers.find(x => x.source === orderField);
+    const header = dataset.headers.find((x) => x.source === orderField);
+    if (!header) header = dataset.headers[0];
+
     dataset.data = dataset.data
       .filter(
-        post => filterPost === "" || (post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
+        (post) =>
+          filterPost === "" ||
+          post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
           post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
-          post.expiresBy.toLowerCase().includes(filterPost.toLowerCase()))
+          post.expiresBy.toLowerCase().includes(filterPost.toLowerCase())
       )
       .sort((a, b) => {
         if (header.isDate) {
-          let fa = isOrderDesc ?
-            (a[orderField] ? moment(a[orderField], header.format).format("YYYY-MM-DD") : "--")
-            : (b[orderField] ? moment(b[orderField], header.format).format("YYYY-MM-DD") : "--"),
+          let fa = isOrderDesc
+              ? a[orderField]
+                ? moment(a[orderField], header.format).format("YYYY-MM-DD")
+                : "--"
+              : b[orderField]
+              ? moment(b[orderField], header.format).format("YYYY-MM-DD")
+              : "--",
+            fb = isOrderDesc
+              ? b[orderField]
+                ? moment(b[orderField], header.format).format("YYYY-MM-DD")
+                : "--"
+              : a[orderField]
+              ? moment(a[orderField], header.format).format("YYYY-MM-DD")
+              : "--";
 
-            fb = isOrderDesc ?
-              (b[orderField] ? moment(b[orderField], header.format).format("YYYY-MM-DD") : "--")
-              : (a[orderField] ? moment(a[orderField], header.format).format("YYYY-MM-DD") : "--");
+          return fa > fb ? 1 : fa < fb ? -1 : 0;
+        } else {
+          let fa = isOrderDesc
+              ? a[orderField].toLowerCase()
+              : b[orderField].toLowerCase(),
+            fb = isOrderDesc
+              ? b[orderField].toLowerCase()
+              : a[orderField].toLowerCase();
 
           return fa > fb ? 1 : fa < fb ? -1 : 0;
         }
-        else {
-          let fa = isOrderDesc ? a[orderField].toLowerCase() : b[orderField].toLowerCase(),
-            fb = isOrderDesc ? b[orderField].toLowerCase() : a[orderField].toLowerCase();
-
-          return fa > fb ? 1 : fa < fb ? -1 : 0;
-        }
-      }).map(x => x)
-  }
+      })
+      .map((x) => x);
+  };
 
   handleSortAndFilter(orderField, filterPost);
 
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
       <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center">
-        <h2 className="flex font-semibold text-gray-800 w-full">{sectionTitle}</h2>
+        <h2 className="flex font-semibold text-gray-800 w-full">
+          {sectionTitle}
+        </h2>
 
-        {filteringOptions ??
+        {filteringOptions ?? (
           <input
             type={"text"}
             className="flex text-sm text-gray-500 w-full h-8 border-gray-200 rounded-lg border-1 mx-4"
@@ -74,10 +91,10 @@ function TableSection({
             placeholder="Para realizar una búsqueda, ingrese el contenido a buscar..."
             value={filterPost}
             onChange={(e) => {
-              onFilterPostChanged(e.currentTarget.value)
-            }
-            }
-          ></input>}
+              onFilterPostChanged(e.currentTarget.value);
+            }}
+          ></input>
+        )}
       </header>
       <div className="p-3 flex">
         {/* Table */}
@@ -132,6 +149,8 @@ function TableSection({
                               >
                                 {row[header.source]}
                               </NavLink>
+                            ) : isObject(row[header.source]) ? (
+                              row[header.source].text
                             ) : (
                               row[header.source]
                             )}
@@ -188,13 +207,7 @@ function TableSection({
                 title={"Cantidad de registros por página"}
                 showTitle={false}
                 options={limitOptions}
-                selectedOption={
-                  limitOptions.find(
-                    (x) =>
-                      x.id ===
-                      currentLimit
-                  )
-                }
+                selectedOption={limitOptions.find((x) => x.id === currentLimit)}
                 onOptionChanged={(option) => onChangeLimit(option.id)}
               ></Select>
             </div>
@@ -209,9 +222,8 @@ function TableSection({
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
 export default TableSection;
-

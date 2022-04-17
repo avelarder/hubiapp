@@ -8,18 +8,20 @@ import FieldContainer from "../common/field-container";
 import Select from "../common/select";
 import RoundedInputText from "../common/roundedInputText";
 import { PlusIcon, AdjustmentsIcon } from "@heroicons/react/solid";
+import moment from "moment";
 
 const DEFAULT_LIMIT = 10;
 
 const initEmployees = {
   headers: [
     {
-      source: "name",
+      source: "fullName",
       columnName: "Empleados",
       isLink: true,
       path: (id) => `empleados/${id}/detalle`,
+      isDate: false,
     },
-    { source: "role", columnName: "Rol", isDate: false },
+    { source: "employeeTypeText", columnName: "Rol", isDate: false },
     { source: "access", columnName: "Accesos", isDate: false },
   ],
   data: [],
@@ -35,7 +37,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("CreatedOn");
+  const [orderField, setOrderField] = useState("fullName");
   const [filterText, setFilterText] = useState("");
   const [filterEmployee, setFilterEmployee] = useState("");
   const [statusFilter, setStatusFilter] = useState({
@@ -83,12 +85,17 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   if (data) {
     var employeesData = data.map((doc) => ({
       id: doc.id,
-      name: `${doc.FirstName} ${doc.LastName}`,
-      role: doc.EmployeeType,
-      access: doc.accessType ?? "--",
+      fullName: doc.fullName,
+      firstName: doc.firstName,
+      lastName: doc.lastName,
+      role: doc.employeeType,
+      employeeTypeText: doc.employeeTypeText,
+      access: "--",
+      createdOnUTC: moment(doc.createdOnUTC, true).format("DD/MM/YYYY"),
     }));
 
     employees = { ...initEmployees, data: employeesData };
+    console.log(employees);
   }
 
   const handleViewClicked = (id) => {

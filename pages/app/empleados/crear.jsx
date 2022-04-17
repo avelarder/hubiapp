@@ -107,6 +107,7 @@ function EmployeeCreatePage() {
       .collection("Employees")
       .doc(employeeId)
       .set({
+        fullName: `${firstName} ${lastName}`,
         firstName: firstName,
         lastName: lastName,
         phoneArea: phoneArea,
@@ -118,6 +119,7 @@ function EmployeeCreatePage() {
         gender: gender,
         status: status,
         employeeType: employeeType,
+        employeeTypeText: employeeType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });

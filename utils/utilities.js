@@ -29,3 +29,7 @@ export const formatValue = (value) =>
     maximumSignificantDigits: 3,
     notation: "compact",
   }).format(value);
+
+export const isObject = (obj) => {
+  return Object.prototype.toString.call(obj) === "[object Object]";
+};
