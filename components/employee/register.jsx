@@ -1,9 +1,28 @@
-import React from 'react'
+import React from "react";
+import ModalContainer from "../common/modal";
+import PostActionBar from "../post/shared/post-action-bar";
 
-function RegisterEmployee() {
+function RegisterEmployee(onCancel) {
   return (
-    <div>Register</div>
-  )
+    <ModalContainer onCancel={onCancel}>
+      <h3
+        className="text-lg leading-6 font-medium text-gray-900 text-center mb-4"
+        id="modal-title"
+      >
+        Crear Empleado
+      </h3>
+
+      <PostActionBar
+        state={postActionBarStatus}
+        onCancel={onCancel}
+        onNext={handlePostDataChange}
+        onBack={onBack}
+        isScheduled={scheduleEnabled}
+        isNextDisabled={isFormValid}
+        onPublish={handlePostDataSubmit}
+      ></PostActionBar>
+    </ModalContainer>
+  );
 }
 
-export default RegisterEmployee
+export default RegisterEmployee;

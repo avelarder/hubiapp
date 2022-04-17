@@ -21,6 +21,16 @@ export const accessTypeOptions = [
     { id: "TENAT", text: "Inquilino" },
     { id: "GUEST", text: "Familiar" },
 ];
+export const employeeTypeOptions = [
+    { id: "ADMINISTRATOR", text: "Administrador" },
+    { id: "CONCIERGE", text: "Conserje" },
+    { id: "CLEANNING", text: "Limpieza" },
+];
+export const documentTypeOptions = [
+    { id: "DNI", text: "DNI" },
+    { id: "PASSPORT", text: "Pasaporte" },
+    { id: "OTHER", text: "Otro" },
+];
 export const phoneAreaOptions = [
     { id: "AF/AFG", text: "Afghanistan (+93)" },
     { id: "AL/ALB", text: "Albania (+355)" },

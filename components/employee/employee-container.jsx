@@ -25,7 +25,7 @@ const initEmployees = {
   data: [],
 };
 
-function EmployeesContainer({ handleCreateClicked, handleAccessClicked }) {
+function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   const router = useRouter();
   const db = Firebase.default.firestore();
   let employees = {};
@@ -219,7 +219,7 @@ function EmployeesContainer({ handleCreateClicked, handleAccessClicked }) {
                       <button
                         className="w-full inline-flex justify-center self-end  rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
                         onClick={() => {
-                          handleAccessClicked(true);
+                          onAccessClicked();
                         }}
                       >
                         <AdjustmentsIcon className="w-5 h-5 mr-2 font-monse"></AdjustmentsIcon>
@@ -230,7 +230,7 @@ function EmployeesContainer({ handleCreateClicked, handleAccessClicked }) {
                       <button
                         className="w-full inline-flex self-end justify-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
                         onClick={() => {
-                          handleCreateClicked(true);
+                          onCreateClicked();
                         }}
                       >
                         <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>
