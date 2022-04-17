@@ -3,7 +3,7 @@ import { VALIDATIONS } from "../utils/UI-Constants";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../authUserProvider";
-import RoundedInputText from "../components/common/RoundedInputText";
+import RoundedInputText from "../components/common/roundedInputText";
 import FieldContainer from "../components/common/field-container";
 import Firebase from "../firebase";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -56,7 +56,7 @@ export default function Login() {
     event.preventDefault();
   };
 
-  const handleOnRemindMe = () => { };
+  const handleOnRemindMe = () => {};
 
   const handleOnForgetPasword = () => {
     router.push("/usuarios/recuperar");
