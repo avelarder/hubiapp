@@ -1,5 +1,5 @@
 import FieldContainer from "../../components/common/field-container";
-import RoundedInputText from "../../components/common/RoundedInputText";
+import RoundedInputText from "../../components/common/roundedInputText";
 import { VALIDATIONS } from "../../utils/UI-Constants";
 import { useState } from "react";
 import { useRouter } from "next/router";

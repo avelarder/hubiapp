@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../authUserProvider";
-import HeaderApp from "../components/dashboard/header";
-import Sidebar from "../components/dashboard/sidebar";
+import HeaderApp from "./dashboard/header";
+import Sidebar from "./dashboard/sidebar";
 
 function Layout(props) {
   const { authUser, loading } = useAuth();
