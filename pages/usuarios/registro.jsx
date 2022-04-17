@@ -17,7 +17,7 @@ import {
   VALIDATIONS,
 } from "../../utils/UI-Constants";
 
-import RoundedInputText from "../../components/common/RoundedInputText";
+import RoundedInputText from "../../components/common/roundedInputText";
 
 function RegistroPage() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import RoundedInputText from "../../components/common/RoundedInputText";
+import RoundedInputText from "../../components/common/roundedInputText";
 import FieldContainer from "../../components/common/field-container";
 import { toast } from "react-toastify";
 import { useAuth } from "../../authUserProvider";

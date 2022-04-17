@@ -3,7 +3,7 @@ import { VALIDATIONS } from "../../utils/UI-Constants";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useAuth } from "../../authUserProvider";
-import RoundedInputText from "../../components/common/RoundedInputText";
+import RoundedInputText from "../../components/common/roundedInputText";
 import FieldContainer from "../../components/common/field-container";
 import Firebase from "../../firebase";
 import MD5 from "crypto-js/md5";
