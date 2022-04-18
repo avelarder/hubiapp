@@ -156,6 +156,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
             onFilterPostChanged={setFilterEmployee}
+            onRowIsClicked={(id) => router.push(`/app/empleados/${id}/detalle`)}
             filteringOptions={
               <FieldContainer>
                 <div className="flex  mx-1 justify-around ">

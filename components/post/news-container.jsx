@@ -9,9 +9,24 @@ const DEFAULT_LIMIT = 10;
 
 const initCommunityNews = {
   headers: [
-    { source: "title", columnName: "Título", isLink: true, path: (id) => `posts/${id}/detalle` },
-    { source: "publishedOn", columnName: "Publicado", isDate: true, format: "DD/MM/YYYY" },
-    { source: "expiresBy", columnName: "Expiración", isDate: true, format: "DD/MM/YYYY" },
+    {
+      source: "title",
+      columnName: "Título",
+      isLink: true,
+      path: (id) => `posts/${id}/detalle`,
+    },
+    {
+      source: "publishedOn",
+      columnName: "Publicado",
+      isDate: true,
+      format: "DD/MM/YYYY",
+    },
+    {
+      source: "expiresBy",
+      columnName: "Expiración",
+      isDate: true,
+      format: "DD/MM/YYYY",
+    },
   ],
   data: [],
 };
@@ -21,7 +36,6 @@ function NewsContainer() {
   const db = Firebase.default.firestore();
   let communityNews = {};
 
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
@@ -29,9 +43,12 @@ function NewsContainer() {
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
   const [orderField, setOrderField] = useState("publishedOn");
 
-  const [filterPost, setFilterPost] = useState("")
+  const [filterPost, setFilterPost] = useState("");
 
-  const query = db.collection("CommunityNews").orderBy(orderField, "desc").limit(rowsPerPage);
+  const query = db
+    .collection("CommunityNews")
+    .orderBy(orderField, "desc")
+    .limit(rowsPerPage);
 
   const { data, status, error } = useFirestoreQuery(query);
 
@@ -55,7 +72,6 @@ function NewsContainer() {
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
-
   }
 
   const handleViewClicked = (id) => {
@@ -90,10 +106,10 @@ function NewsContainer() {
 
   const handleOrderByFieldChanged = (field) => {
     let localDirection;
-    if (field === orderField) localDirection = (!isOrderDirectionDesc);
+    if (field === orderField) localDirection = !isOrderDirectionDesc;
     else {
       setOrderField(field);
-      localDirection = (false);
+      localDirection = false;
     }
     setOrderDirection(localDirection);
   };
@@ -116,6 +132,9 @@ function NewsContainer() {
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
             onFilterPostChanged={setFilterPost}
+            onRowIsClicked={(id) => {
+              router.push(`/app/posts/${id}/detalle`);
+            }}
           ></TableSection>
         </div>
       )}

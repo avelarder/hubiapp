@@ -20,6 +20,7 @@ function TableSection({
   onChangeLimit,
   onOrderByFieldChanged,
   onFilterPostChanged,
+  onRowIsClicked,
   filteringOptions,
 }) {
   const limitOptions = [
@@ -136,7 +137,7 @@ function TableSection({
             <tbody className="text-sm divide-y divide-gray-100">
               {dataset.data.map((row) => {
                 return (
-                  <tr key={row.id}>
+                  <tr key={row.id} className="hover:bg-gray-50">
                     {dataset.headers.map((header) => (
                       <td key={header.source} className="p-2">
                         <div className="flex items-center">
