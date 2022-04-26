@@ -95,7 +95,6 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
     }));
 
     employees = { ...initEmployees, data: employeesData };
-    console.log(employees);
   }
 
   const handleViewClicked = (id) => {

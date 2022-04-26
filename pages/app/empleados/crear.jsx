@@ -5,6 +5,7 @@ import Select from "../../../components/common/select";
 import { useAuth } from "../../../authUserProvider";
 import Firebase from "../../../firebase";
 import { toast } from "react-toastify";
+import { getDownloadURL } from "firebase/storage";
 
 import {
   phoneAreaOptions,
@@ -16,7 +17,8 @@ import {
 } from "../../../utils/UI-Constants";
 
 import RoundedInputText from "../../../components/common/roundedInputText";
-import { uuid } from "uuidv4";
+import { v4 } from "uuid";
+import { XIcon } from "@heroicons/react/solid";
 
 function EmployeeCreatePage() {
   const router = useRouter();
@@ -69,7 +71,7 @@ function EmployeeCreatePage() {
   const [documentId, setDocumentId] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
-
+  const [images, setImages] = useState([]);
   const [phoneArea, setPhoneArea] = useState(
     phoneAreaOptions.find((x) => x.id === "PE/PER")
   );
@@ -78,6 +80,44 @@ function EmployeeCreatePage() {
   const [gender, setGender] = useState(genderOptions[0]);
   const [status, setStatus] = useState(statusOptions[0]);
   const [employeeType, setEmployeeType] = useState(employeeTypeOptions[0]);
+
+  const upload = async (employeeId) => {
+    const storage = Firebase.default.storage();
+
+    for (let index = 0; index < images.length; index++) {
+      const element = images[index];
+      const fileURL = `/files/employees/${employeeId}/${element.name}`;
+      const refToFile = storage.ref(fileURL);
+
+      const uploadTask = refToFile.put(element);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.log(error);
+        },
+        async () => {
+          // Handle successful uploads on complete
+          await handleEmployeeDocumentsLink(employeeId, fileURL);
+        }
+      );
+    }
+  };
 
   const handleContinueClicked = async (event) => {
     if (
@@ -92,16 +132,42 @@ function EmployeeCreatePage() {
       return;
     }
 
-    await handleCompleteRegistration(authUser.uid, authUser.email);
+    if (images.length === 0) {
+      toast.warning("No se ha seleccionado ningún archivo.");
+      return;
+    }
+
+    const employeeId = v4();
+    console.log(employeeId);
+
+    await upload(employeeId);
+    await handleCompleteRegistration(employeeId);
+
     toast.success("Empleado creado con éxito.");
     router.push("/app/empleados");
 
     event.preventDefault();
   };
 
-  const handleCompleteRegistration = async () => {
+  const handleEmployeeDocumentsLink = async (employeeId, url) => {
     const db = Firebase.default.firestore();
-    const employeeId = uuid();
+    const documentId = v4();
+
+    await db
+      .collection("Employees_Documents")
+      .doc(documentId)
+      .set({
+        url: `${url}`,
+        employeeId: `${employeeId}`,
+        status: "ACTIVE",
+        employeeTypeText: employeeType.text,
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+
+  const handleCompleteRegistration = async (employeeId) => {
+    const db = Firebase.default.firestore();
 
     await db
       .collection("Employees")
@@ -276,13 +342,40 @@ function EmployeeCreatePage() {
               Elige un archivo a subir
             </span>
             <div className="flex justify-start text-white text-md font-bold  mt-8 ">
-              <input
-                className="form-control block w-full px-3 py-1.5 text-base     font-normal     text-gray-700      bg-white bg-clip-padding     border border-solid border-gray-300     rounded     transition     ease-in-out     m-0     focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                type="file"
-                onChange={(e) => {
-                  console.log(e.currentTarget.value);
-                }}
-              />
+              <div className="flex flex-col">
+                <input
+                  className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                  type="file"
+                  onChange={(e) => {
+                    const newImageList = [...images, e.target.files[0]];
+                    setImages(newImageList);
+                    e.target.value = "";
+                  }}
+                  title="Seleccione una imagen"
+                />
+                {images.length === 0 ? (
+                  <span className="text-black">0 archivos.</span>
+                ) : (
+                  <ul className="flex flex-col mt-4 list-disc w-full">
+                    {images.map((image, index) => (
+                      <li
+                        className="flex  text-black text-sm justify-between"
+                        key={index}
+                      >
+                        <span className="w-ful uppercase">{image.name}</span>
+                        <XIcon className="flex w-5 h-5 cursor-pointer hover:text-red-500"></XIcon>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+
+                {/* <button
+                  className="w-64 bg-hubi_lime_green h-10 shadow-md rounded-md"
+                  onClick={upload}
+                >
+                  Subir
+                </button> */}
+              </div>
             </div>
           </FieldContainer>
           <div className="flex justify-end text-white text-md font-bold  mt-8 ">
