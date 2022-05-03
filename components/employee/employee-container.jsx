@@ -9,29 +9,17 @@ import Select from "../common/select";
 import RoundedInputText from "../common/roundedInputText";
 import { PlusIcon, AdjustmentsIcon } from "@heroicons/react/solid";
 import moment from "moment";
+import OffCanvas from "../common/OffCanvas";
 
 const DEFAULT_LIMIT = 10;
-
-const initEmployees = {
-  headers: [
-    {
-      source: "fullName",
-      columnName: "Empleados",
-      isLink: true,
-      path: (id) => `empleados/${id}/detalle`,
-      isDate: false,
-    },
-    { source: "employeeTypeText", columnName: "Rol", isDate: false },
-    { source: "access", columnName: "Accesos", isDate: false },
-  ],
-  data: [],
-};
 
 function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   const router = useRouter();
   const db = Firebase.default.firestore();
   let employees = {};
 
+  const [selectedEmployee, setSelectedEmployee] = useState({});
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [employeeToDelete, setEmployeeToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
@@ -52,6 +40,30 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
     id: "ALL",
     text: "Todas",
   });
+
+  const handleShowOffCanvas = (rowId) => {
+    setSelectedEmployee(employees.data.find((x) => x.id === rowId));
+    setShowOffCanvas(true);
+  };
+
+  const initEmployees = {
+    headers: [
+      {
+        source: "fullName",
+        columnName: "Empleados",
+        isLink: true,
+        path: (id) => `empleados/${id}/detalle`,
+        onClick: (e, id) => {
+          e.preventDefault();
+          handleShowOffCanvas(id);
+        },
+        isDate: false,
+      },
+      { source: "employeeTypeText", columnName: "Rol", isDate: false },
+      { source: "access", columnName: "Accesos", isDate: false },
+    ],
+    data: [],
+  };
 
   const handleStatusFilterChanged = (value) => {
     setStatusFilter(value);
@@ -88,6 +100,12 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
       fullName: doc.fullName,
       firstName: doc.firstName,
       lastName: doc.lastName,
+      address: doc.address,
+      phoneArea: doc.phoneArea.text,
+      phone: doc.phone,
+      email: doc.email,
+      documentId: doc.documentId,
+      documentType: doc.documentType.text,
       role: doc.employeeType,
       employeeTypeText: doc.employeeTypeText,
       access: "--",
@@ -148,6 +166,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
             isOrderDesc={isOrderDirectionDesc}
             orderField={orderField}
             filterPost={filterEmployee}
+            onShowOffCanvas={handleShowOffCanvas}
             onView={handleViewClicked}
             onEdit={handleEditClicked}
             onDelete={handleDeleteClicked}
@@ -155,7 +174,6 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
             onFilterPostChanged={setFilterEmployee}
-            onRowIsClicked={(id) => router.push(`/app/empleados/${id}/detalle`)}
             filteringOptions={
               <FieldContainer>
                 <div className="flex  mx-1 justify-around ">
@@ -249,6 +267,58 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
               </FieldContainer>
             }
           ></TableSection>
+          <OffCanvas
+            showSidebar={showOffCanvas}
+            setShowSidebar={setShowOffCanvas}
+          >
+            <div className="flex flex-col py-10 px-10 bg-white text-black border-1 rounded-lg border-purple-300">
+              <h3 className="flex  text-2xl font-semibold text-black justify-center text-center">
+                Información del Empleado
+              </h3>
+
+              <FieldContainer title={"Nombres"}>
+                <span className="ml-4">{selectedEmployee.firstName}</span>
+              </FieldContainer>
+              <FieldContainer title={"Apellidos"}>
+                <span className="ml-4">{selectedEmployee.lastName}</span>
+              </FieldContainer>
+
+              <FieldContainer title={"Email"}>
+                <span className="ml-4">{selectedEmployee.email}</span>
+              </FieldContainer>
+
+              <FieldContainer title={"Dirección"}>
+                <span className="ml-4">{selectedEmployee.address}</span>
+              </FieldContainer>
+
+              <FieldContainer title={"Teléfono"}>
+                <span className="ml-4">{`${selectedEmployee.phoneArea} ${selectedEmployee.phone}`}</span>
+              </FieldContainer>
+              <FieldContainer title={"DOC. IDENTIDAD"}>
+                <span className="ml-4">{`${selectedEmployee.documentType} ${selectedEmployee.documentId}`}</span>
+              </FieldContainer>
+            </div>
+            <div className="h-5"></div>
+            <div className="flex flex-col py-10 px-10 bg-white text-black border-1 rounded-lg border-purple-300">
+              <h3 className="flex  text-2xl font-semibold text-black justify-center text-center">
+                Accesos
+              </h3>
+
+              <FieldContainer title={"Role"}>
+                <span className="ml-4">Conserje</span>
+              </FieldContainer>
+              <FieldContainer title={"Tipo de Accesos"}>
+                <ul className="list-disc ml-4">
+                  <li>Web</li>
+                  <li>Movil</li>
+                </ul>
+              </FieldContainer>
+
+              <FieldContainer title={"Password Movil"}>
+                <span className="ml-4">1234</span>
+              </FieldContainer>
+            </div>
+          </OffCanvas>
         </div>
       )}
       {showDeleteModal && (

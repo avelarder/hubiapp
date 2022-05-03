@@ -20,7 +20,7 @@ function TableSection({
   onChangeLimit,
   onOrderByFieldChanged,
   onFilterPostChanged,
-  onRowIsClicked,
+  onShowOffCanvas,
   filteringOptions,
 }) {
   const limitOptions = [
@@ -76,6 +76,12 @@ function TableSection({
   };
 
   handleSortAndFilter(orderField, filterPost);
+
+  function showOffCanvas(e, rowId) {
+    if (onShowOffCanvas) {
+      onShowOffCanvas(rowId);
+    }
+  }
 
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
@@ -147,6 +153,11 @@ function TableSection({
                                 className={`block underline
                                  text-purple-600 hover:text-purple-400 transition duration-150 hover:text-gray-200"}`}
                                 href={header.path(row["id"])}
+                                onClick={
+                                  header.onClick
+                                    ? (e) => header.onClick(e, row["id"])
+                                    : null
+                                }
                               >
                                 {row[header.source]}
                               </NavLink>
