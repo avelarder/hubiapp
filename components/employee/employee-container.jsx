@@ -318,6 +318,14 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
                 <span className="ml-4">1234</span>
               </FieldContainer>
             </div>
+            <div className="flex justify-end text-white text-md font-bold  mt-8 ">
+              <button
+                className=" w-64 bg-purple-600 h-10 shadow-md rounded-md "
+                onClick={() => handleEditClicked(selectedEmployee.id)}
+              >
+                Editar
+              </button>
+            </div>
           </OffCanvas>
         </div>
       )}
