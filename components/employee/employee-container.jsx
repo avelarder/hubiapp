@@ -331,6 +331,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
       )}
       {showDeleteModal && (
         <DeleteModal
+          title={"Eliminar empleado?"}
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteConfirmation}
         ></DeleteModal>
