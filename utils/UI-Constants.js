@@ -26,6 +26,11 @@ export const employeeTypeOptions = [
     { id: "CONCIERGE", text: "Conserje" },
     { id: "CLEANNING", text: "Limpieza" },
 ];
+export const residentTypeOptions = [
+    { id: "OWNER", text: "Propietario" },
+    { id: "TENANT", text: "Inquilino" },
+    { id: "FAMILY_MEMBER", text: "Familiar" },
+];
 export const documentTypeOptions = [
     { id: "DNI", text: "DNI" },
     { id: "PASSPORT", text: "Pasaporte" },

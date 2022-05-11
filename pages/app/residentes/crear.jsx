@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useRouter } from "next/router";
 import FieldContainer from "../../../components/common/field-container";
 import Select from "../../../components/common/select";
 import { useAuth } from "../../../authUserProvider";
 import Firebase from "../../../firebase";
 import { toast } from "react-toastify";
-import { getDownloadURL } from "firebase/storage";
 
 import {
   phoneAreaOptions,
   documentTypeOptions,
-  employeeTypeOptions,
+  residentTypeOptions,
   statusOptions,
   genderOptions,
   VALIDATIONS,
@@ -20,7 +19,7 @@ import RoundedInputText from "../../../components/common/roundedInputText";
 import { v4 } from "uuid";
 import { XIcon } from "@heroicons/react/solid";
 
-function EmployeeCreatePage() {
+function ResidentCreatePage() {
   const router = useRouter();
   const { authUser } = useAuth();
 
@@ -43,12 +42,6 @@ function EmployeeCreatePage() {
       },
       message: "El número de celular es requerido.",
     },
-    address: {
-      validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content);
-      },
-      message: "Ingrese dirección.",
-    },
 
     email: {
       validate: (content) => {
@@ -65,11 +58,12 @@ function EmployeeCreatePage() {
     },
   };
 
+  const defaultButton = useRef(null);
+
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [documentId, setDocumentId] = useState("");
-  const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [images, setImages] = useState([]);
   const [phoneArea, setPhoneArea] = useState(
@@ -79,14 +73,14 @@ function EmployeeCreatePage() {
 
   const [gender, setGender] = useState(genderOptions[0]);
   const [status, setStatus] = useState(statusOptions[0]);
-  const [employeeType, setEmployeeType] = useState(employeeTypeOptions[0]);
+  const [residentType, setResidentType] = useState(residentTypeOptions[0]);
 
-  const upload = async (employeeId) => {
+  const upload = async (residentId) => {
     const storage = Firebase.default.storage();
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/employees/${employeeId}/${element.name}`;
+      const fileURL = `/files/residents/${residentId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);
@@ -113,7 +107,7 @@ function EmployeeCreatePage() {
         },
         async () => {
           // Handle successful uploads on complete
-          await handleEmployeeDocumentsLink(employeeId, fileURL);
+          await handleresidentDocumentsLink(residentId, fileURL);
         }
       );
     }
@@ -125,8 +119,7 @@ function EmployeeCreatePage() {
       !validatorConfig.lastName.validate(lastName) ||
       !validatorConfig.phone.validate(phone) ||
       !validatorConfig.email.validate(email) ||
-      !validatorConfig.documentId.validate(documentId) ||
-      !validatorConfig.address.validate(address)
+      !validatorConfig.documentId.validate(documentId)
     ) {
       toast.warning("Por favor complete el formulario.");
       return;
@@ -137,41 +130,41 @@ function EmployeeCreatePage() {
       return;
     }
 
-    const employeeId = v4();
-    console.log(employeeId);
+    const residentId = v4();
+    console.log(residentId);
 
-    await upload(employeeId);
-    await handleCompleteRegistration(employeeId);
+    await upload(residentId);
+    await handleCompleteRegistration(residentId);
 
-    toast.success("Empleado creado con éxito.");
-    router.push("/app/empleados");
+    toast.success("Residente creado con éxito.");
+    router.push("/app/residentes");
 
     event.preventDefault();
   };
 
-  const handleEmployeeDocumentsLink = async (employeeId, url) => {
+  const handleresidentDocumentsLink = async (residentId, url) => {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
     await db
-      .collection("Employees_Documents")
+      .collection("Residents_Documents")
       .doc(documentId)
       .set({
         url: `${url}`,
-        employeeId: `${employeeId}`,
+        residentId: `${residentId}`,
         status: "ACTIVE",
-        employeeTypeText: employeeType.text,
+        residentTypeText: residentType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
   };
 
-  const handleCompleteRegistration = async (employeeId) => {
+  const handleCompleteRegistration = async (residentId) => {
     const db = Firebase.default.firestore();
 
     await db
-      .collection("Employees")
-      .doc(employeeId)
+      .collection("Residents")
+      .doc(residentId)
       .set({
         fullName: `${firstName} ${lastName}`,
         firstName: firstName,
@@ -181,11 +174,11 @@ function EmployeeCreatePage() {
         email: email,
         documentType: documentType,
         documentId: documentId,
-        address: address,
+
         gender: gender,
         status: status,
-        employeeType: employeeType,
-        employeeTypeText: employeeType.text,
+        residentType: residentType,
+        residentTypeText: residentType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
@@ -197,7 +190,7 @@ function EmployeeCreatePage() {
       <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
         <section className="">
           <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
-            Crear Empleado
+            Crear Residente
           </h1>
           <h3 className="font-bold">Información Personal</h3>
         </section>
@@ -296,19 +289,7 @@ function EmployeeCreatePage() {
               </div>
             </div>
           </FieldContainer>
-          <FieldContainer>
-            <RoundedInputText
-              validator={{
-                validate: (content) => {
-                  return VALIDATIONS.REQUIRED_FREE_TEXT(content);
-                },
-                message: "Ingrese dirección.",
-              }}
-              value={address}
-              onChange={(e) => setAddress(e.currentTarget.value)}
-              placeholder="Address"
-            ></RoundedInputText>
-          </FieldContainer>
+
           <FieldContainer>
             <div className="flex flex-wrap">
               <div className="flex md:flex-col w-2/6">
@@ -330,9 +311,9 @@ function EmployeeCreatePage() {
               <div className="flex md:flex-col w-2/6">
                 <Select
                   showTitle={true}
-                  options={employeeTypeOptions}
-                  selectedOption={employeeType}
-                  onOptionChanged={setEmployeeType}
+                  options={residentTypeOptions}
+                  selectedOption={residentType}
+                  onOptionChanged={setResidentType}
                 ></Select>
               </div>
             </div>
@@ -373,6 +354,13 @@ function EmployeeCreatePage() {
           </FieldContainer>
           <div className="flex justify-end text-white text-md font-bold  mt-8 ">
             <button
+              ref={defaultButton}
+              className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
+              onClick={() => router.back()}
+            >
+              Regresar
+            </button>
+            <button
               className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
               onClick={handleContinueClicked}
             >
@@ -386,4 +374,4 @@ function EmployeeCreatePage() {
   );
 }
 
-export default EmployeeCreatePage;
+export default ResidentCreatePage;

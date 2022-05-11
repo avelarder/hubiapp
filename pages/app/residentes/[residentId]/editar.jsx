@@ -12,18 +12,18 @@ import MainSection from "../../../../components/dashboard/mainSection";
 import {
   phoneAreaOptions,
   documentTypeOptions,
-  employeeTypeOptions,
+  residentTypeOptions,
   statusOptions,
   genderOptions,
   VALIDATIONS,
 } from "../../../../utils/UI-Constants";
 import DeleteModal from "../../../../components/common/delete-modal";
 
-function EmployeeEdit() {
+function ResidentEdit() {
   const router = useRouter();
   const { query } = router;
 
-  const id = query.employeeId;
+  const id = query.residentId;
   const validatorConfig = {
     firstName: {
       validate: (content) => {
@@ -42,12 +42,6 @@ function EmployeeEdit() {
         return VALIDATIONS.ONLY_NUMBERS(content);
       },
       message: "El número de celular es requerido.",
-    },
-    address: {
-      validate: (content) => {
-        return VALIDATIONS.REQUIRED_FREE_TEXT(content);
-      },
-      message: "Ingrese dirección.",
     },
 
     email: {
@@ -69,30 +63,30 @@ function EmployeeEdit() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [documentId, setDocumentId] = useState("");
-  const [address, setAddress] = useState("");
+
   const [phone, setPhone] = useState("");
   const [images, setImages] = useState([]);
   const [phoneArea, setPhoneArea] = useState(phoneAreaOptions[0]);
   const [documentType, setDocumentType] = useState(documentTypeOptions[0]);
 
   const [gender, setGender] = useState(genderOptions[0]);
-  const [employeeStatus, setEmployeeStatus] = useState(statusOptions[0]);
-  const [employeeType, setEmployeeType] = useState(employeeTypeOptions[0]);
+  const [residentStatus, setResidentStatus] = useState(statusOptions[0]);
+  const [residentType, setResidentType] = useState(residentTypeOptions[0]);
 
   const db = Firebase.default.firestore();
 
   const {
-    data: dataEmployee,
-    status: statusEmployee,
-    error: errorEmployee,
-  } = useFirestoreQuery(db.collection("Employees").doc(id));
+    data: dataResident,
+    status: statusResident,
+    error: errorResident,
+  } = useFirestoreQuery(db.collection("Residents").doc(id));
 
   const {
     data: dataDocuments,
     status: statusDocuments,
     error: errorDocuments,
   } = useFirestoreQuery(
-    db.collection("Employees_Documents").where("employeeId", "==", id ?? "")
+    db.collection("Residents_Documents").where("residentId", "==", id ?? "")
   );
 
   const defaultButton = useRef(null);
@@ -102,20 +96,20 @@ function EmployeeEdit() {
   }, [defaultButton]);
 
   useEffect(() => {
-    if (dataEmployee) {
-      setFirstName(dataEmployee.firstName);
-      setLastName(dataEmployee.lastName);
-      setEmail(dataEmployee.email);
-      setPhone(dataEmployee.phone);
-      setPhoneArea(dataEmployee.phoneArea);
-      setDocumentId(dataEmployee.documentId);
-      setDocumentType(dataEmployee.documentType);
-      setGender(dataEmployee.gender);
-      setEmployeeStatus(dataEmployee.status);
-      setEmployeeType(dataEmployee.employeeType);
+    if (dataResident) {
+      setFirstName(dataResident.firstName);
+      setLastName(dataResident.lastName);
+      setEmail(dataResident.email);
+      setPhone(dataResident.phone);
+      setPhoneArea(dataResident.phoneArea);
+      setDocumentId(dataResident.documentId);
+      setDocumentType(dataResident.documentType);
+      setGender(dataResident.gender);
+      setresidentStatus(dataResident.status);
+      setresidentType(dataResident.residentType);
     }
     return () => {};
-  }, [dataEmployee]);
+  }, [dataResident]);
 
   useEffect(() => {
     if (dataDocuments) {
@@ -124,22 +118,22 @@ function EmployeeEdit() {
     return () => {};
   }, [dataDocuments]);
 
-  if (statusEmployee === "loading") {
+  if (statusResident === "loading") {
     return <Loader></Loader>;
   }
-  if (statusEmployee === "error") {
-    return `Error: ${errorEmployee.message}`;
+  if (statusResident === "error") {
+    return `Error: ${errorResident.message}`;
   }
-  if (dataEmployee === null) {
+  if (dataResident === null) {
     return <Loader></Loader>;
   }
 
-  const upload = async (employeeId) => {
+  const upload = async (residentId) => {
     const storage = Firebase.default.storage();
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/employees/${employeeId}/${element.name}`;
+      const fileURL = `/files/residents/${residentId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);
@@ -166,7 +160,7 @@ function EmployeeEdit() {
         },
         async () => {
           // Handle successful uploads on complete
-          await handleEmployeeDocumentsLink(employeeId, fileURL);
+          await handleResidentDocumentsLink(residentId, fileURL);
         }
       );
     }
@@ -177,8 +171,7 @@ function EmployeeEdit() {
       !validatorConfig.lastName.validate(lastName) ||
       !validatorConfig.phone.validate(phone) ||
       !validatorConfig.email.validate(email) ||
-      !validatorConfig.documentId.validate(documentId) ||
-      !validatorConfig.address.validate(address)
+      !validatorConfig.documentId.validate(documentId)
     ) {
       toast.warning("Por favor complete el formulario.");
       return;
@@ -189,41 +182,40 @@ function EmployeeEdit() {
       return;
     }
 
-    const employeeId = v4();
-    console.log(employeeId);
+    // const residentId = v4();
 
-    await upload(employeeId);
-    await handleCompleteRegistration(employeeId);
+    await upload(id);
+    await handleCompleteRegistration(id);
 
-    toast.success("Empleado actualizado con éxito.");
-    router.push("/app/empleados");
+    toast.success("Residente actualizado con éxito.");
+    router.push("/app/residentes");
 
     event.preventDefault();
   };
 
-  const handleEmployeeDocumentsLink = async (employeeId, url) => {
+  const handleResidentDocumentsLink = async (residentId, url) => {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
     await db
-      .collection("Employees_Documents")
+      .collection("Residents_Documents")
       .doc(documentId)
       .set({
         url: `${url}`,
-        employeeId: `${employeeId}`,
+        residentId: `${residentId}`,
         status: "ACTIVE",
-        employeeTypeText: employeeType.text,
+        residentTypeText: residentType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
   };
 
-  const handleCompleteRegistration = async (employeeId) => {
+  const handleCompleteRegistration = async (residentId) => {
     const db = Firebase.default.firestore();
 
     await db
-      .collection("Employees")
-      .doc(employeeId)
+      .collection("Residents")
+      .doc(residentId)
       .set({
         fullName: `${firstName} ${lastName}`,
         firstName: firstName,
@@ -233,23 +225,21 @@ function EmployeeEdit() {
         email: email,
         documentType: documentType,
         documentId: documentId,
-        address: address,
         gender: gender,
-        status: statusEmployee,
-        employeeType: employeeType,
-        employeeTypeText: employeeType.text,
+        status: statusResident,
+        residentType: residentType,
+        residentTypeText: residentType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
   };
-
   const handleDeleteConfirmation = async () => {
     await db
-      .collection("Employees")
+      .collection("Residents")
       .doc(id)
       .delete();
     setShowDeleteModal(false);
-    router.push("/app/empleados");
+    router.push("/app/residentes");
   };
 
   return (
@@ -262,7 +252,7 @@ function EmployeeEdit() {
               <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
                 <section className="">
                   <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
-                    Editar Empleado
+                    Editar Residente
                   </h1>
                   <h3 className="font-bold">Información Personal</h3>
                 </section>
@@ -361,19 +351,7 @@ function EmployeeEdit() {
                       </div>
                     </div>
                   </FieldContainer>
-                  <FieldContainer>
-                    <RoundedInputText
-                      validator={{
-                        validate: (content) => {
-                          return VALIDATIONS.REQUIRED_FREE_TEXT(content);
-                        },
-                        message: "Ingrese dirección.",
-                      }}
-                      value={address}
-                      onChange={(e) => setAddress(e.currentTarget.value)}
-                      placeholder="Address"
-                    ></RoundedInputText>
-                  </FieldContainer>
+
                   <FieldContainer>
                     <div className="flex flex-wrap">
                       <div className="flex md:flex-col w-2/6">
@@ -388,16 +366,16 @@ function EmployeeEdit() {
                         <Select
                           showTitle={true}
                           options={statusOptions}
-                          selectedOption={employeeStatus}
-                          onOptionChanged={setEmployeeStatus}
+                          selectedOption={residentStatus}
+                          onOptionChanged={setResidentStatus}
                         ></Select>
                       </div>
                       <div className="flex md:flex-col w-2/6">
                         <Select
                           showTitle={true}
-                          options={employeeTypeOptions}
-                          selectedOption={employeeType}
-                          onOptionChanged={setEmployeeType}
+                          options={residentTypeOptions}
+                          selectedOption={residentType}
+                          onOptionChanged={setResidentType}
                         ></Select>
                       </div>
                     </div>
@@ -470,4 +448,4 @@ function EmployeeEdit() {
   );
 }
 
-export default EmployeeEdit;
+export default ResidentEdit;

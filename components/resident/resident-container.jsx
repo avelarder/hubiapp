@@ -13,21 +13,21 @@ import OffCanvas from "../common/OffCanvas";
 
 const DEFAULT_LIMIT = 10;
 
-function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
+function ResidentContainer({ onCreateClicked, onAccessClicked }) {
   const router = useRouter();
   const db = Firebase.default.firestore();
-  let employees = {};
+  let residents = {};
 
-  const [selectedEmployee, setSelectedEmployee] = useState({});
+  const [selectedresident, setSelectedresident] = useState({});
   const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const [residentToDelete, setresidentToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
   const [orderField, setOrderField] = useState("fullName");
   const [filterText, setFilterText] = useState("");
-  const [filterEmployee, setFilterEmployee] = useState("");
+  const [filterresident, setFilterresident] = useState("");
   const [statusFilter, setStatusFilter] = useState({
     id: "ALL",
     text: "Todos",
@@ -42,25 +42,26 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   });
 
   const handleShowOffCanvas = (rowId) => {
-    setSelectedEmployee(employees.data.find((x) => x.id === rowId));
+    setSelectedresident(residents.data.find((x) => x.id === rowId));
     setShowOffCanvas(true);
   };
 
-  const initEmployees = {
+  const initresidents = {
     headers: [
       {
         source: "fullName",
-        columnName: "Empleados",
+        columnName: "Residente",
         isLink: true,
-        path: (id) => `empleados/${id}/detalle`,
+        path: (id) => `residente/${id}/detalle`,
         onClick: (e, id) => {
           e.preventDefault();
           handleShowOffCanvas(id);
         },
         isDate: false,
       },
-      { source: "employeeTypeText", columnName: "Rol", isDate: false },
+      { source: "residentTypeText", columnName: "Relación", isDate: false },
       { source: "access", columnName: "Accesos", isDate: false },
+      { source: "apartment", columnName: "Departamento", isDate: false },
     ],
     data: [],
   };
@@ -77,7 +78,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   };
 
   const query = db
-    .collection("Employees")
+    .collection("Residents")
     .orderBy(orderField, "desc")
     .limit(rowsPerPage);
 
@@ -95,43 +96,46 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   }
 
   if (data) {
-    var employeesData = data.map((doc) => ({
+    var residentsData = data.map((doc) => ({
       id: doc.id,
       fullName: doc.fullName,
       firstName: doc.firstName,
       lastName: doc.lastName,
-      address: doc.address,
       phoneArea: doc.phoneArea.text,
       phone: doc.phone,
       email: doc.email,
       documentId: doc.documentId,
       documentType: doc.documentType.text,
-      role: doc.employeeType,
-      employeeTypeText: doc.employeeTypeText,
+      role: doc.residentType,
+      pets: doc.pets,
+      vehicles: doc.vehicles,
+      residentTypeText: doc.residentTypeText,
+      building: doc.buildingType,
+      apartment: doc.apartment,
       access: "--",
       createdOnUTC: moment(doc.createdOnUTC, true).format("DD/MM/YYYY"),
     }));
 
-    employees = { ...initEmployees, data: employeesData };
+    residents = { ...initresidents, data: residentsData };
   }
 
   const handleViewClicked = (id) => {
-    router.push(`/app/empleados/${id}/detalle`);
+    router.push(`/app/residentes/${id}/detalle`);
   };
 
   const handleEditClicked = (id) => {
-    router.push(`/app/empleados/${id}/editar`);
+    router.push(`/app/residentes/${id}/editar`);
   };
 
   const handleDeleteClicked = (id) => {
     setShowDeleteModal(true);
-    setEmployeeToDelete(id);
+    setresidentToDelete(id);
   };
 
   const handleDeleteConfirmation = async () => {
     await db
-      .collection("Employees")
-      .doc(employeeToDelete)
+      .collection("residents")
+      .doc(residentToDelete)
       .delete();
     setShowDeleteModal(false);
   };
@@ -157,15 +161,15 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
 
   return (
     <div>
-      {employees.data && (
+      {residents.data && (
         <div>
           <TableSection
-            sectionTitle="Empleados"
-            dataset={employees}
+            sectionTitle="Residentes"
+            dataset={residents}
             currentLimit={currentLimit}
             isOrderDesc={isOrderDirectionDesc}
             orderField={orderField}
-            filterPost={filterEmployee}
+            filterPost={filterresident}
             onShowOffCanvas={handleShowOffCanvas}
             onView={handleViewClicked}
             onEdit={handleEditClicked}
@@ -173,7 +177,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
             onShowMore={handleShowMoreNewsClicked}
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
-            onFilterPostChanged={setFilterEmployee}
+            onFilterPostChanged={setFilterresident}
             filteringOptions={
               <FieldContainer>
                 <div className="flex  mx-1 justify-around ">
@@ -216,16 +220,16 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
                       options={[
                         { id: "ALL", text: "Todos" },
                         {
-                          id: "ADMINISTRATOR",
-                          text: "Administrador",
+                          id: "OWNER",
+                          text: "Propietario",
                         },
                         {
-                          id: "CONSERGE",
-                          text: "Conserje",
+                          id: "TENANT",
+                          text: "Inquilino",
                         },
                         {
-                          id: "SUPERVISOR",
-                          text: "Supervisor",
+                          id: "FAMILY_MEMBER",
+                          text: "Familiar",
                         },
                       ]}
                       selectedOption={roleFilter}
@@ -273,29 +277,25 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
           >
             <div className="flex flex-col py-10 px-10 bg-white text-black border-1 rounded-lg border-purple-300">
               <h3 className="flex  text-2xl font-semibold text-black justify-center text-center">
-                Información del Empleado
+                Información del Residente
               </h3>
 
               <FieldContainer title={"Nombres"}>
-                <span className="ml-4">{selectedEmployee.firstName}</span>
+                <span className="ml-4">{selectedresident.firstName}</span>
               </FieldContainer>
               <FieldContainer title={"Apellidos"}>
-                <span className="ml-4">{selectedEmployee.lastName}</span>
+                <span className="ml-4">{selectedresident.lastName}</span>
               </FieldContainer>
 
               <FieldContainer title={"Email"}>
-                <span className="ml-4">{selectedEmployee.email}</span>
-              </FieldContainer>
-
-              <FieldContainer title={"Dirección"}>
-                <span className="ml-4">{selectedEmployee.address}</span>
+                <span className="ml-4">{selectedresident.email}</span>
               </FieldContainer>
 
               <FieldContainer title={"Teléfono"}>
-                <span className="ml-4">{`${selectedEmployee.phoneArea} ${selectedEmployee.phone}`}</span>
+                <span className="ml-4">{`${selectedresident.phoneArea} ${selectedresident.phone}`}</span>
               </FieldContainer>
               <FieldContainer title={"DOC. IDENTIDAD"}>
-                <span className="ml-4">{`${selectedEmployee.documentType} ${selectedEmployee.documentId}`}</span>
+                <span className="ml-4">{`${selectedresident.documentType} ${selectedresident.documentId}`}</span>
               </FieldContainer>
             </div>
             <div className="h-5"></div>
@@ -321,7 +321,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
             <div className="flex justify-end text-white text-md font-bold  mt-8 ">
               <button
                 className=" w-64 bg-purple-600 h-10 shadow-md rounded-md "
-                onClick={() => handleEditClicked(selectedEmployee.id)}
+                onClick={() => handleEditClicked(selectedresident.id)}
               >
                 Editar
               </button>
@@ -340,4 +340,4 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   );
 }
 
-export default EmployeesContainer;
+export default ResidentContainer;

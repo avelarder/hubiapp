@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import ModalContainer from "./modal";
 
-function DeleteModal({ onConfirm, onCancel }) {
+function DeleteModal({ title, description, onConfirm, onCancel }) {
   const defaultButton = useRef(null);
 
   useEffect(() => {
@@ -12,11 +12,11 @@ function DeleteModal({ onConfirm, onCancel }) {
     <ModalContainer onCancel={onCancel}>
       <div className="flex flex-col items-center justify-center">
         <span className="font-semibold">
-          ¿Quieres eliminar esta publicación?
+          {title ?? "¿Quieres eliminar esta publicación?"}
         </span>
         <span className="text-sm">
-          Esta acción no se puede revertir, eliminará de la plataforma y de los
-          resultados de búsqueda.
+          {description ??
+            "Esta acción no se puede revertir, eliminará de la plataforma y de los resultados de búsqueda."}
         </span>
         <div className="flex mt-4 flex-row-reverse">
           <button
