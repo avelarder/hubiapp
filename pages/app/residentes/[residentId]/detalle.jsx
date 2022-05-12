@@ -23,7 +23,6 @@ function ResidentDetails() {
   const { query } = router;
 
   const id = query.residentId;
-  console.log(id);
   const validatorConfig = {
     firstName: {
       validate: (content) => {

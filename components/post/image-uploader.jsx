@@ -18,7 +18,7 @@ function ImageUploader() {
     });
 
     if (upload.ok) {
-      console.log("Uploaded successfully!");
+      console.info("Uploaded successfully!");
     } else {
       console.error("Upload failed.");
     }
