@@ -1,16 +1,18 @@
 import { useState } from "react";
-import { VALIDATIONS } from "../../utils/UI-Constants";
+import { VALIDATIONS } from "../../../utils/UI-Constants";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useAuth } from "../../authUserProvider";
-import RoundedInputText from "../../components/common/roundedInputText";
-import FieldContainer from "../../components/common/field-container";
-import Firebase from "../../firebase";
+import { useAuth } from "../../../authUserProvider";
+import RoundedInputText from "../../../components/common/roundedInputText";
+import FieldContainer from "../../../components/common/field-container";
+import Firebase from "../../../firebase";
 import MD5 from "crypto-js/md5";
-import Mod9710 from "../../utils/iso7064";
+import Mod9710 from "../../../utils/iso7064";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
-export default function Crear() {
+export default function ResidentsSignUp() {
   const sendGridTemplateId =
     process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
 
@@ -35,6 +37,7 @@ export default function Crear() {
     ) {
       createUserWithEmailAndPassword(email, password)
         .then(async (authUser) => {
+          await handleUserProfile(authUser.user.uid);
           const activation = await handleActivationRecord(authUser.user.uid);
 
           const body = {
@@ -70,6 +73,9 @@ export default function Crear() {
         .catch((error) => {
           // An error occurred. Set error message to be displayed to user
           setError(error.message);
+          if (error.code === "auth/email-already-in-use") {
+            toast.error("El correo ingresado ya está en uso.");
+          }
         });
     } else {
       setError("Password do not match");
@@ -104,12 +110,32 @@ export default function Crear() {
     return { code, activationHash };
   };
 
+  const handleUserProfile = async (userId) => {
+    const userProfileId = uuidv4();
+    const db = Firebase.default.firestore();
+    await db
+      .collection("UserProfiles")
+      .doc(userProfileId)
+      .set({
+        userId: userId,
+        profile: "RESIDENT",
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+
   return (
     <div className="flex flex-col justify-center h-screen">
       <div className="flex flex-row justify-evenly">
         <div className="p-10 ">
           <div className="box-content h-full w-100 p-4  rounded-md ">
-            <div className="box-content text-left font-bold ">
+            <div className="box-content text-center font-bold ">
+              <Image
+                src={"/illustrations/undraw_mobile_user_re_xta4.svg"}
+                width={200}
+                height={200}
+                alt="undraw_mobile_user_re_xta4"
+              ></Image>
               <p className=" text-purple-600 self-start   text-3xl">
                 El Poder de la Conexión
               </p>
@@ -128,7 +154,7 @@ export default function Crear() {
                   }}
                   value={email}
                   onChange={(e) => setEmail(e.currentTarget.value)}
-                  placeholder="Ingresa tu correo electónico"
+                  placeholder="Ingresa tu correo electrónico"
                 ></RoundedInputText>
               </FieldContainer>
               <FieldContainer>
@@ -141,7 +167,7 @@ export default function Crear() {
                   }}
                   value={password}
                   onChange={(e) => setPassword(e.currentTarget.value)}
-                  placeholder="Ingrese su Contraseña"
+                  placeholder="Ingrese su contraseña"
                   type="password"
                 ></RoundedInputText>
               </FieldContainer>
@@ -155,7 +181,7 @@ export default function Crear() {
                   }}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-                  placeholder="Confirme su Contraseña"
+                  placeholder="Confirme su contraseña"
                   type="password"
                 ></RoundedInputText>
                 <div className="flex flex-col items-start text-left">

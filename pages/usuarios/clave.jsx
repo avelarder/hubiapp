@@ -68,7 +68,7 @@ function Clave() {
                   }}
                   value={password}
                   onChange={(e) => setPassword(e.currentTarget.value)}
-                  placeholder="Ingrese su Contraseña"
+                  placeholder="Ingrese su contraseña"
                   type="password"
                 ></RoundedInputText>
               </FieldContainer>
@@ -82,7 +82,7 @@ function Clave() {
                   }}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-                  placeholder="Confirme su Contraseña"
+                  placeholder="Confirme su contraseña"
                   type="password"
                 ></RoundedInputText>
                 <div className="flex flex-col items-start text-left">

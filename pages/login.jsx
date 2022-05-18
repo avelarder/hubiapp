@@ -8,7 +8,7 @@ import FieldContainer from "../components/common/field-container";
 import Firebase from "../firebase";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
-
+import Image from "next/image";
 export default function Login() {
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
 
@@ -66,7 +66,13 @@ export default function Login() {
       <div className="flex flex-row justify-evenly">
         <div className="p-10 ">
           <div className="box-content h-full w-100 p-4  rounded-md ">
-            <div className="box-content text-left   font-bold ">
+            <div className="box-content text-center  font-bold ">
+              <Image
+                src={"/illustrations/undraw_connection_re_lcud.svg"}
+                width={200}
+                height={200}
+                alt="undraw_connection_re_lcud"
+              ></Image>
               <p className=" text-purple-600 self-start text-3xl">
                 El Poder de la Conexión.
               </p>
@@ -82,7 +88,7 @@ export default function Login() {
                   }}
                   value={email}
                   onChange={(e) => setEmail(e.currentTarget.value)}
-                  placeholder="Ingresa tu correo electónico"
+                  placeholder="Ingresa tu correo electrónico"
                 ></RoundedInputText>
               </FieldContainer>
               <FieldContainer>
@@ -95,7 +101,7 @@ export default function Login() {
                   }}
                   value={password}
                   onChange={(e) => setPassword(e.currentTarget.value)}
-                  placeholder="Ingrese su Contraseña"
+                  placeholder="Ingrese su contraseña"
                   type="password"
                 ></RoundedInputText>
               </FieldContainer>
@@ -103,7 +109,7 @@ export default function Login() {
             <div className="flex  justify-end">
               <button
                 onClick={handleOnForgetPasword}
-                className="h-10 items-end text-sm"
+                className="h-10 items-end text-sm text-purple-700 hover:text-purple-900"
               >
                 Olvidaste tu contraseña?
               </button>
@@ -126,8 +132,8 @@ export default function Login() {
               </div>
               <span className="mt-2 text-sm ">
                 Eres nuevo usuario?{" "}
-                <Link href="/usuarios/crear" passHref>
-                  <span className="cursor-pointer text-purple-700 font-semibold">
+                <Link href="/usuarios/seleccion" passHref>
+                  <span className="cursor-pointer text-purple-700  hover:text-purple-900">
                     Empieza aquí.
                   </span>
                 </Link>
