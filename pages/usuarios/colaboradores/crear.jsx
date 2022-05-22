@@ -12,10 +12,18 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 
-export default function CollaboratorsSignUp() {
+export async function getServerSideProps(context) {
   const sendGridTemplateId =
     process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
 
+  return {
+    props: {
+      sendGridTemplateId,
+    }, // will be passed to the page component as props
+  };
+}
+
+export default function CollaboratorsSignUp({ sendGridTemplateId }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,32 +45,27 @@ export default function CollaboratorsSignUp() {
     ) {
       createUserWithEmailAndPassword(email, password)
         .then(async (authUser) => {
-          await handleUserProfile(authUser.user.uid);
-          const activation = await handleActivationRecord(authUser.user.uid);
-
-          const body = {
-            to: email,
-            templateId: sendGridTemplateId,
-            code: activation.code,
-            hash: activation.activationHash,
-            uuid: authUser.user.uid,
-          };
-
-          const response = await fetch("/api/sendEmail", {
+          const response = await fetch("/api/setActivationRecord", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
 
-            body: JSON.stringify(body),
+            body: JSON.stringify({
+              to: email,
+              templateId: sendGridTemplateId,
+              activationType: "COLLABORATOR",
+              userId: authUser.user.uid,
+            }),
           });
 
           if (response.status === 202) {
             toast.success(
               "Usuario creado con éxito, le hemos enviado un correo para activar su cuenta."
             );
+            const data = await response.json();
             router.push(
-              `/usuarios/envio?uuid=${authUser.user.uid}&hash=${activation.activationHash}`
+              `/usuarios/envio?uuid=${authUser.user.uid}&hash=${data.activationHash}`
             );
           } else {
             toast.error(

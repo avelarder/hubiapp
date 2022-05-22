@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import FieldContainer from "../../components/common/field-container";
-import Select from "../../components/common/select";
-import { useAuth } from "../../authUserProvider";
-import Firebase from "../../firebase";
+import FieldContainer from "../../../components/common/field-container";
+import Select from "../../../components/common/select";
+import { useAuth } from "../../../authUserProvider";
+import Firebase from "../../../firebase";
 import { toast } from "react-toastify";
 
 import {
@@ -15,9 +15,9 @@ import {
   statusOptions,
   genderOptions,
   VALIDATIONS,
-} from "../../utils/UI-Constants";
+} from "../../../utils/UI-Constants";
 
-import RoundedInputText from "../../components/common/roundedInputText";
+import RoundedInputText from "../../../components/common/roundedInputText";
 
 function RegistroPage() {
   const router = useRouter();

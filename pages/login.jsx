@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import { useAuth } from "../authUserProvider";
 import RoundedInputText from "../components/common/roundedInputText";
 import FieldContainer from "../components/common/field-container";
-import Firebase from "../firebase";
+
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import Image from "next/image";
+
 export default function Login() {
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
 
@@ -37,17 +38,25 @@ export default function Login() {
 
     signInWithEmailAndPassword(email, password)
       .then(async (authUser) => {
-        const db = Firebase.default.firestore();
-        const activationRef = db
-          .collection("ActivationRecords")
-          .doc(authUser.user.uid);
-        const doc = await activationRef.get();
+        const response = await fetch("/api/getSignInNextAction", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
 
-        if (doc.exists && (doc.data().registered || doc.data().welcomed))
-          router.push("/app/dashboard");
-        else if (doc.exists && !doc.data().registered)
-          router.push("/usuarios/registro");
-        else router.push("/usuarios/bienvenido");
+          body: JSON.stringify({
+            userId: authUser.user.uid,
+          }),
+        });
+
+        if (response.status === 200) {
+          toast.success("Ingreso de sesión correcto.");
+          const data = await response.json();
+          router.push(data.target);
+        } else {
+          toast.error("Registro de activación no válido");
+          router.push(data.target);
+        }
       })
       .catch((error) => {
         setError(error.message);
