@@ -12,7 +12,7 @@ import MainSection from "../../../../components/dashboard/mainSection";
 import {
   phoneAreaOptions,
   documentTypeOptions,
-  employeeTypeOptions,
+  collaboratorTypeOptions,
   statusOptions,
   genderOptions,
   VALIDATIONS,
@@ -23,7 +23,7 @@ function EmployeeEdit() {
   const router = useRouter();
   const { query } = router;
 
-  const id = query.employeeId;
+  const id = query.collaboratorId;
   const validatorConfig = {
     firstName: {
       validate: (content) => {
@@ -76,8 +76,10 @@ function EmployeeEdit() {
   const [documentType, setDocumentType] = useState(documentTypeOptions[0]);
 
   const [gender, setGender] = useState(genderOptions[0]);
-  const [employeeStatus, setEmployeeStatus] = useState(statusOptions[0]);
-  const [employeeType, setEmployeeType] = useState(employeeTypeOptions[0]);
+  const [collaboratorStatus, setEmployeeStatus] = useState(statusOptions[0]);
+  const [collaboratorType, setEmployeeType] = useState(
+    collaboratorTypeOptions[0]
+  );
 
   const db = Firebase.default.firestore();
 
@@ -85,14 +87,16 @@ function EmployeeEdit() {
     data: dataEmployee,
     status: statusEmployee,
     error: errorEmployee,
-  } = useFirestoreQuery(db.collection("Employees").doc(id));
+  } = useFirestoreQuery(db.collection("Collaborators").doc(id));
 
   const {
     data: dataDocuments,
     status: statusDocuments,
     error: errorDocuments,
   } = useFirestoreQuery(
-    db.collection("Employees_Documents").where("employeeId", "==", id ?? "")
+    db
+      .collection("Collaborators_Documents")
+      .where("collaboratorId", "==", id ?? "")
   );
 
   const defaultButton = useRef(null);
@@ -112,7 +116,7 @@ function EmployeeEdit() {
       setDocumentType(dataEmployee.documentType);
       setGender(dataEmployee.gender);
       setEmployeeStatus(dataEmployee.status);
-      setEmployeeType(dataEmployee.employeeType);
+      setEmployeeType(dataEmployee.collaboratorType);
     }
     return () => {};
   }, [dataEmployee]);
@@ -134,12 +138,12 @@ function EmployeeEdit() {
     return <Loader></Loader>;
   }
 
-  const upload = async (employeeId) => {
+  const upload = async (collaboratorId) => {
     const storage = Firebase.default.storage();
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/employees/${employeeId}/${element.name}`;
+      const fileURL = `/files/collaborators/${collaboratorId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);
@@ -166,7 +170,7 @@ function EmployeeEdit() {
         },
         async () => {
           // Handle successful uploads on complete
-          await handleEmployeeDocumentsLink(employeeId, fileURL);
+          await handleEmployeeDocumentsLink(collaboratorId, fileURL);
         }
       );
     }
@@ -189,40 +193,40 @@ function EmployeeEdit() {
       return;
     }
 
-    const employeeId = v4();
+    const collaboratorId = v4();
 
-    await upload(employeeId);
-    await handleCompleteRegistration(employeeId);
+    await upload(collaboratorId);
+    await handleCompleteRegistration(collaboratorId);
 
-    toast.success("Empleado actualizado con éxito.");
-    router.push("/app/empleados");
+    toast.success("Colaborador actualizado con éxito.");
+    router.push("/app/colaboradores");
 
     event.preventDefault();
   };
 
-  const handleEmployeeDocumentsLink = async (employeeId, url) => {
+  const handleEmployeeDocumentsLink = async (collaboratorId, url) => {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
     await db
-      .collection("Employees_Documents")
+      .collection("Collaborators_Documents")
       .doc(documentId)
       .set({
         url: `${url}`,
-        employeeId: `${employeeId}`,
+        collaboratorId: `${collaboratorId}`,
         status: "ACTIVE",
-        employeeTypeText: employeeType.text,
+        collaboratorTypeText: collaboratorType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
   };
 
-  const handleCompleteRegistration = async (employeeId) => {
+  const handleCompleteRegistration = async (collaboratorId) => {
     const db = Firebase.default.firestore();
 
     await db
-      .collection("Employees")
-      .doc(employeeId)
+      .collection("Collaborators")
+      .doc(collaboratorId)
       .set({
         fullName: `${firstName} ${lastName}`,
         firstName: firstName,
@@ -235,8 +239,8 @@ function EmployeeEdit() {
         address: address,
         gender: gender,
         status: statusEmployee,
-        employeeType: employeeType,
-        employeeTypeText: employeeType.text,
+        collaboratorType: collaboratorType,
+        collaboratorTypeText: collaboratorType.text,
         createdOnUTC: new Date().toISOString(),
         updatedOnUTC: new Date().toISOString(),
       });
@@ -244,11 +248,11 @@ function EmployeeEdit() {
 
   const handleDeleteConfirmation = async () => {
     await db
-      .collection("Employees")
+      .collection("Collaborators")
       .doc(id)
       .delete();
     setShowDeleteModal(false);
-    router.push("/app/empleados");
+    router.push("/app/colaboradores");
   };
 
   return (
@@ -261,7 +265,7 @@ function EmployeeEdit() {
               <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
                 <section className="">
                   <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
-                    Editar Empleado
+                    Editar Colaborador
                   </h1>
                   <h3 className="font-bold">Información Personal</h3>
                 </section>
@@ -387,15 +391,15 @@ function EmployeeEdit() {
                         <Select
                           showTitle={true}
                           options={statusOptions}
-                          selectedOption={employeeStatus}
+                          selectedOption={collaboratorStatus}
                           onOptionChanged={setEmployeeStatus}
                         ></Select>
                       </div>
                       <div className="flex md:flex-col w-2/6">
                         <Select
                           showTitle={true}
-                          options={employeeTypeOptions}
-                          selectedOption={employeeType}
+                          options={collaboratorTypeOptions}
+                          selectedOption={collaboratorType}
                           onOptionChanged={setEmployeeType}
                         ></Select>
                       </div>

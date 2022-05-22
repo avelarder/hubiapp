@@ -55,7 +55,6 @@ export default function Login() {
           router.push(data.target);
         } else {
           toast.error("Registro de activación no válido");
-          router.push(data.target);
         }
       })
       .catch((error) => {

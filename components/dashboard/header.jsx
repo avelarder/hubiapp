@@ -1,6 +1,7 @@
 import React from "react";
 import Notification from "./notification";
 import UserInfo from "./user-info";
+import LocationSelector from "./locationSelector";
 
 function HeaderApp({ user, sidebarOpen, setSidebarOpen }) {
   return (
@@ -34,6 +35,7 @@ function HeaderApp({ user, sidebarOpen, setSidebarOpen }) {
           {/* Header: Right side */}
 
           <div className="flex flex-row justify-end w-full">
+            <LocationSelector></LocationSelector>
             <Notification />
             <hr className="w-px h-6 bg-gray-200 mx-3" />
             <UserInfo user={user} />

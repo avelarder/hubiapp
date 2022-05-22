@@ -12,7 +12,7 @@ import MainSection from "../../../../components/dashboard/mainSection";
 import {
   phoneAreaOptions,
   documentTypeOptions,
-  employeeTypeOptions,
+  collaboratorTypeOptions,
   statusOptions,
   genderOptions,
   VALIDATIONS,
@@ -58,7 +58,7 @@ function EmployeeDetails() {
   const router = useRouter();
   const { query } = router;
 
-  const id = query.employeeId;
+  const id = query.collaboratorId;
   const validatorConfig = {
     firstName: {
       validate: (content) => {
@@ -111,8 +111,10 @@ function EmployeeDetails() {
   const [documentType, setDocumentType] = useState(documentTypeOptions[0]);
 
   const [gender, setGender] = useState(genderOptions[0]);
-  const [employeeStatus, setEmployeeStatus] = useState(statusOptions[0]);
-  const [employeeType, setEmployeeType] = useState(employeeTypeOptions[0]);
+  const [collaboratorStatus, setEmployeeStatus] = useState(statusOptions[0]);
+  const [collaboratorType, setEmployeeType] = useState(
+    collaboratorTypeOptions[0]
+  );
 
   const db = Firebase.default.firestore();
 
@@ -120,14 +122,16 @@ function EmployeeDetails() {
     data: dataEmployee,
     status: statusEmployee,
     error: errorEmployee,
-  } = useFirestoreQuery(db.collection("Employees").doc(id));
+  } = useFirestoreQuery(db.collection("Collaborators").doc(id));
 
   const {
     data: dataDocuments,
     status: statusDocuments,
     error: errorDocuments,
   } = useFirestoreQuery(
-    db.collection("Employees_Documents").where("employeeId", "==", id ?? "")
+    db
+      .collection("Collaborators_Documents")
+      .where("collaboratorId", "==", id ?? "")
   );
 
   const defaultButton = useRef(null);
@@ -148,7 +152,7 @@ function EmployeeDetails() {
       setDocumentType(dataEmployee.documentType);
       setGender(dataEmployee.gender);
       setEmployeeStatus(dataEmployee.status);
-      setEmployeeType(dataEmployee.employeeType);
+      setEmployeeType(dataEmployee.collaboratorType);
     }
     return () => {};
   }, [dataEmployee]);
@@ -171,16 +175,16 @@ function EmployeeDetails() {
   }
 
   const handleEditClicked = async (event) => {
-    router.push(`/app/empleados/${id}/editar`);
+    router.push(`/app/colaboradores/${id}/editar`);
   };
 
   const handleDeleteConfirmation = async () => {
     await db
-      .collection("Employees")
+      .collection("Collaborators")
       .doc(id)
       .delete();
     setShowDeleteModal(false);
-    router.push("/app/empleados");
+    router.push("/app/colaboradores");
   };
 
   return (
@@ -193,7 +197,7 @@ function EmployeeDetails() {
               <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
                 <section className="">
                   <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
-                    Detalle de Empleado
+                    Detalle de Colaborador
                   </h1>
                   <h3 className="font-bold">Información Personal</h3>
                 </section>
@@ -243,10 +247,10 @@ function EmployeeDetails() {
                         <span>{gender.text}</span>
                       </div>
                       <div className="flex md:flex-col w-2/6">
-                        <span>{employeeStatus.text}</span>
+                        <span>{collaboratorStatus.text}</span>
                       </div>
                       <div className="flex md:flex-col w-2/6">
-                        <span>{employeeType.text}</span>
+                        <span>{collaboratorType.text}</span>
                       </div>
                     </div>
                   </FieldContainer>

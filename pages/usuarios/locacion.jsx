@@ -27,6 +27,8 @@ function LocationPage() {
   }, [authUser, loading]);
 
   const locationQuery = db.collection("Locations");
+
+  //TODO: Remove as the values exists on the user profile context
   const profilesQuery = db
     .collection("UserProfiles")
     .where("userId", "==", authUser ? authUser.uid : "");

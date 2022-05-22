@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "../../../components/layout";
 import MainSection from "../../../components/dashboard/mainSection";
 import Footer from "../../../components/dashboard/footer";
-import EmployeesContainer from "../../../components/employee/employee-container";
+import CollaboratorContainer from "../../../components/collaborator/collaborator-container";
 
 function Index() {
   const [showRegister, setShowRegister] = useState(false);
@@ -17,9 +17,9 @@ function Index() {
           <div className="flex flex-col w-full">
             <div className="mt-2">
               <div className="flex justify-around "></div>
-              <EmployeesContainer
-                onCreateClicked={() => router.push("./empleados/crear")}
-              ></EmployeesContainer>
+              <CollaboratorContainer
+                onCreateClicked={() => router.push("./colaboradores/crear")}
+              ></CollaboratorContainer>
             </div>
           </div>
         </MainSection>

@@ -1,9 +1,11 @@
+import { FireIcon } from "@heroicons/react/solid";
 import { useState, useEffect } from "react";
 import Firebase from "./firebase";
 
-const formatAuthUser = (user) => ({
+const formatAuthUser = (user, profiles) => ({
   uid: user.uid,
   email: user.email,
+  profiles: profiles,
 });
 
 export default function useFirebaseAuth() {
@@ -21,10 +23,32 @@ export default function useFirebaseAuth() {
       setLoading(false);
       return;
     }
-
     setLoading(true);
-    var formattedUser = formatAuthUser(authState);
+
+    const db = Firebase.default.firestore();
+    const profiles = await db
+      .collection("UserProfiles")
+      .where("userId", "==", authState.uid)
+      .get();
+
+    var mapped = await Promise.all(
+      profiles.docs.map(async (p) => {
+        const data = p.data();
+        const docRef = (await data.locationRef.get()).data();
+
+        return {
+          locationId: data.location,
+          location: docRef.Title,
+          profile: data.profile,
+          profileId: data.id,
+        };
+      })
+    );
+
+    var formattedUser = formatAuthUser(authState, mapped);
+
     setAuthUser(formattedUser);
+
     setLoading(false);
   };
 
@@ -40,7 +64,11 @@ export default function useFirebaseAuth() {
   const confirmPasswordReset = (code, newPassword) =>
     Firebase.default.auth().confirmPasswordReset(code, newPassword);
 
-  const signOut = () => Firebase.default.auth().signOut().then(clear);
+  const signOut = () =>
+    Firebase.default
+      .auth()
+      .signOut()
+      .then(clear);
   // listen for Firebase state change
   useEffect(() => {
     const unsubscribe = Firebase.default

@@ -147,7 +147,7 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
             <SidebarItem
               icon={<UserGroupIcon className="text-white"></UserGroupIcon>}
               backgroundColor="bg-hubi_gold"
-              path="/app/empleados"
+              path="/app/colaboradores"
               text="Equipo"
             ></SidebarItem>
 

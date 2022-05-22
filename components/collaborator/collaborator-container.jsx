@@ -13,15 +13,15 @@ import OffCanvas from "../common/OffCanvas";
 
 const DEFAULT_LIMIT = 10;
 
-function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
+function CollaboratorContainer({ onCreateClicked, onAccessClicked }) {
   const router = useRouter();
   const db = Firebase.default.firestore();
-  let employees = {};
+  let collaborators = {};
 
   const [selectedEmployee, setSelectedEmployee] = useState({});
   const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [employeeToDelete, setEmployeeToDelete] = useState(null);
+  const [collaboratorToDelete, setEmployeeToDelete] = useState(null);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
@@ -42,24 +42,24 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   });
 
   const handleShowOffCanvas = (rowId) => {
-    setSelectedEmployee(employees.data.find((x) => x.id === rowId));
+    setSelectedEmployee(collaborators.data.find((x) => x.id === rowId));
     setShowOffCanvas(true);
   };
 
-  const initEmployees = {
+  const initCollaborators = {
     headers: [
       {
         source: "fullName",
-        columnName: "Empleados",
+        columnName: "Colaboradores",
         isLink: true,
-        path: (id) => `empleados/${id}/detalle`,
+        path: (id) => `collaboradores/${id}/detalle`,
         onClick: (e, id) => {
           e.preventDefault();
           handleShowOffCanvas(id);
         },
         isDate: false,
       },
-      { source: "employeeTypeText", columnName: "Rol", isDate: false },
+      { source: "collaboratorTypeText", columnName: "Rol", isDate: false },
       { source: "access", columnName: "Accesos", isDate: false },
     ],
     data: [],
@@ -77,7 +77,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   };
 
   const query = db
-    .collection("Employees")
+    .collection("Collaborators")
     .orderBy(orderField, "desc")
     .limit(rowsPerPage);
 
@@ -95,7 +95,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   }
 
   if (data) {
-    var employeesData = data.map((doc) => ({
+    var collaboratorsData = data.map((doc) => ({
       id: doc.id,
       fullName: doc.fullName,
       firstName: doc.firstName,
@@ -106,21 +106,21 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
       email: doc.email,
       documentId: doc.documentId,
       documentType: doc.documentType.text,
-      role: doc.employeeType,
-      employeeTypeText: doc.employeeTypeText,
+      role: doc.collaboratorType,
+      collaboratorTypeText: doc.collaboratorTypeText,
       access: "--",
       createdOnUTC: moment(doc.createdOnUTC, true).format("DD/MM/YYYY"),
     }));
 
-    employees = { ...initEmployees, data: employeesData };
+    collaborators = { ...initCollaborators, data: collaboratorsData };
   }
 
   const handleViewClicked = (id) => {
-    router.push(`/app/empleados/${id}/detalle`);
+    router.push(`/app/colaboradores/${id}/detalle`);
   };
 
   const handleEditClicked = (id) => {
-    router.push(`/app/empleados/${id}/editar`);
+    router.push(`/app/colaboradores/${id}/editar`);
   };
 
   const handleDeleteClicked = (id) => {
@@ -130,8 +130,8 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
 
   const handleDeleteConfirmation = async () => {
     await db
-      .collection("Employees")
-      .doc(employeeToDelete)
+      .collection("Collaborators")
+      .doc(collaboratorToDelete)
       .delete();
     setShowDeleteModal(false);
   };
@@ -157,11 +157,11 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
 
   return (
     <div>
-      {employees.data && (
+      {collaborators.data && (
         <div>
           <TableSection
-            sectionTitle="Empleados"
-            dataset={employees}
+            sectionTitle="Colaboradores"
+            dataset={collaborators}
             currentLimit={currentLimit}
             isOrderDesc={isOrderDirectionDesc}
             orderField={orderField}
@@ -273,7 +273,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
           >
             <div className="flex flex-col py-10 px-10 bg-white text-black border-1 rounded-lg border-purple-300">
               <h3 className="flex  text-2xl font-semibold text-black justify-center text-center">
-                Información del Empleado
+                Información del Colaborador
               </h3>
 
               <FieldContainer title={"Nombres"}>
@@ -331,7 +331,7 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
       )}
       {showDeleteModal && (
         <DeleteModal
-          title={"Eliminar empleado?"}
+          title={"Eliminar colaborador?"}
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteConfirmation}
         ></DeleteModal>
@@ -340,4 +340,4 @@ function EmployeesContainer({ onCreateClicked, onAccessClicked }) {
   );
 }
 
-export default EmployeesContainer;
+export default CollaboratorContainer;

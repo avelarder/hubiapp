@@ -331,7 +331,7 @@ function ResidentContainer({ onCreateClicked, onAccessClicked }) {
       )}
       {showDeleteModal && (
         <DeleteModal
-          title={"Eliminar empleado?"}
+          title={"Eliminar colaborador?"}
           onCancel={() => setShowDeleteModal(false)}
           onConfirm={handleDeleteConfirmation}
         ></DeleteModal>
