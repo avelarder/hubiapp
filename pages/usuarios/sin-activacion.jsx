@@ -4,4 +4,4 @@ function NoActivationErrorPage() {
   return <div>NoActivationPage</div>;
 }
 
-export default NoActivationPage;
+export default NoActivationErrorPage;
