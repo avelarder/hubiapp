@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 
+
+
 export default function useLocation() {
   const [location, setLocationObject] = useState(
-    localStorage.getItem("hubi_location") ?? "Default"
+    "Default"
   );
 
   const clear = () => {
@@ -11,7 +13,7 @@ export default function useLocation() {
   };
 
   const setLocation = (locationId) => {
-    localStorage.setItem("hubi_location", locationId);
+
     setLocationObject(locationId);
   };
 

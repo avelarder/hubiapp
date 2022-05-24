@@ -143,6 +143,16 @@ function RegistroPage() {
         updatedOnUTC: new Date().toISOString(),
       });
   };
+  const handleActivationRecord = async (userId) => {
+    const db = Firebase.default.firestore();
+    await db
+      .collection("ActivationRecords")
+      .doc(userId)
+      .update({
+        registered: true,
+        registeredOnUTC: new Date().toISOString(),
+      });
+  };
 
   const handleContinueClicked = async (event, formValues) => {
     event.preventDefault();
@@ -163,9 +173,10 @@ function RegistroPage() {
       return;
     }
 
-    const collaboratorId = v4();
+    const collaboratorId = authUser.uid;
     await upload(collaboratorId, formValues.images);
     await handleCompleteRegistration(collaboratorId, formValues);
+    await handleActivationRecord(collaboratorId);
 
     toast.success("Registro completado existosamente");
     router.push(paths.WELCOME());
