@@ -1,4 +1,9 @@
 export const paths = {
+  ADMIN: {
+    DASHBOARD: () => "/admin/dashboard",
+    LOCATION_PICKER: () => "/admin/actions/pick-location",
+    REGISTER_COLLABORATOR: (locationId) => `/admin/actions/${locationId}/register-collaborator`,
+  },
   DASHBOARD: () => "/app/dashboard",
   USER_CREATION: {
     COLLABORATORS: () => "/usuarios/colaboradores/crear",
