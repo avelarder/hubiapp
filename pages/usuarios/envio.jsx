@@ -7,17 +7,49 @@ import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 import Loader from "../../components/common/loader";
 import Firebase from "../../firebase";
 import { toast } from "react-toastify";
+import { paths } from "../../utils/paths";
+import {
+  Container,
+  PageHeader,
+  StyledButton,
+} from "../../components/admin/base-ui-components";
+import { useAuth } from "../../authUserProvider";
 
 export default function Envio() {
   const [activationCode, setActivationCode] = useState("");
+  const [buttonEnabled, setButtonEnabled] = useState(true);
+
   const router = useRouter();
   const { query } = router;
   let activationEntry = {};
   const db = Firebase.default.firestore();
+  const { sendPasswordResetEmail } = useAuth();
 
   const { data, status, error } = useFirestoreQuery(
     db.collection("ActivationRecords").doc(query.uuid)
   );
+
+  const handleActivationRecord = async (userId) => {
+    const db = Firebase.default.firestore();
+    await db
+      .collection("ActivationRecords")
+      .doc(userId)
+      .update({
+        passwordReset: true,
+        passwordResetOnUTC: new Date().toISOString(),
+      });
+  };
+
+  const onChangePasswordClicked = async () => {
+    setButtonEnabled(false);
+
+    await sendPasswordResetEmail(query.email);
+    await handleActivationRecord(query.uuid);
+
+    toast.success(
+      "Se ha enviado un correo con los pasos para cambiar su contraseña."
+    );
+  };
 
   if (status === "loading") {
     return <Loader></Loader>;
@@ -35,10 +67,38 @@ export default function Envio() {
   }
   if (data) {
     if (data.expired) {
-      router.push("/login");
-      return <div>Su cuenta ya está activa, por favor inicie sesión.</div>;
+      if (data.passwordReset) {
+        return (
+          <Container>
+            <PageHeader>Revise su casilla de correo.</PageHeader>
+            <span className="flex mt-4 text-center md:w-2/3">
+              Le hemos enviado un correo con los pasos para que pueda cambiar su
+              contraseña. Está a un paso de acceder a HUBI y conectar con su
+              comunidad.
+            </span>
+          </Container>
+        );
+      }
+      if (!data.passwordReset) {
+        return (
+          <Container>
+            <PageHeader>
+              Su cuenta está activa pero aún no ha cambiado su contraseña.
+            </PageHeader>
+            <span className="flex mt-4 text-center md:w-2/3">
+              El cambio de su contraseña es requerido ya que su cuenta fue
+              creada con una contrasela temporal. Haciendo click en el siguiente
+              enlace recibirá un mail con los pasos necesarios.
+            </span>
+            {buttonEnabled && (
+              <StyledButton onClick={onChangePasswordClicked}>
+                Cambiar contraseña.
+              </StyledButton>
+            )}
+          </Container>
+        );
+      }
     }
-
     activationEntry = {
       id: data.id,
       activationHash: data.activationHash,
@@ -60,6 +120,8 @@ export default function Envio() {
           .update({
             expired: true,
             expiredOnUTC: new Date().toISOString(),
+            emailValidated: true,
+            emailValidatedOnUTC: new Date().toISOString(),
           });
       } catch (error) {
         console.error(error);

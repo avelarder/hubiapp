@@ -1,19 +1,29 @@
 import React from "react";
+import CollaboratorRegistration from "../../../../components/collaborator/register";
+import { VALIDATIONS } from "../../../../utils/UI-Constants";
 import { useRouter } from "next/router";
-import { useAuth } from "../../../authUserProvider";
-import Firebase from "../../../firebase";
+import Firebase from "../../../../firebase";
+import { generatePassword } from "../../../../utils/PasswordGenerator";
 import { toast } from "react-toastify";
+import { v4 as uuidv4 } from "uuid";
+import { useAuth } from "../../../../authUserProvider";
+import { paths } from "../../../../utils/paths";
 
-import { VALIDATIONS } from "../../../utils/UI-Constants";
+export async function getServerSideProps(context) {
+  const sendGridTemplateId =
+    process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
 
-import CollaboratorRegistration from "../../../components/collaborator/register";
-import { paths } from "../../../utils/paths";
-import { uuid as v4 } from "uuidv4";
+  return {
+    props: {
+      sendGridTemplateId,
+    }, // will be passed to the page component as props
+  };
+}
 
-function RegistroPage() {
+function CollaboratorRegistrationPage({ sendGridTemplateId }) {
   const router = useRouter();
-  const { authUser } = useAuth();
-
+  const locationId = router.query.locationId;
+  const { createUserWithEmailAndPassword } = useAuth();
   const validatorConfig = {
     firstName: {
       validate: (content) => {
@@ -55,9 +65,59 @@ function RegistroPage() {
     },
   };
 
+  const handleOnCreateUser = async (email, password, confirmPassword) => {
+    let userId = "";
+    let activationHash = "";
+    //check if passwords match. If they do, create user in Firebase
+    // and redirect to your logged in page.
+    if (
+      VALIDATIONS.REQUIRED_FREE_TEXT(password) &&
+      VALIDATIONS.REQUIRED_FREE_TEXT(confirmPassword) &&
+      VALIDATIONS.PASSWORD(password) &&
+      password === confirmPassword
+    ) {
+      const authUser = await createUserWithEmailAndPassword(email, password);
+
+      const response = await fetch("/api/setActivationRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          to: email,
+          templateId: sendGridTemplateId,
+          activationType: "COLLABORATOR",
+          userId: authUser.user.uid,
+          email: email,
+          password: password,
+          locationId: locationId,
+        }),
+      });
+
+      if (response.status === 202) {
+        userId = authUser.user.uid;
+        toast.success(
+          "Usuario creado con éxito, le hemos enviado un correo para activar su cuenta."
+        );
+
+        const data = await response.json();
+        activationHash = data.activationHash;
+      } else {
+        toast.error(
+          "No pudimos enviarte en codigo de activación, por favor intente más tarde."
+        );
+      }
+    } else {
+      toast.error("La contraseña no coincide");
+    }
+
+    return { userId, activationHash };
+  };
+
   const handleEmployeeDocumentsLink = async (collaboratorId, url) => {
     const db = Firebase.default.firestore();
-    const documentId = v4();
+    const documentId = uuidv4();
 
     await db
       .collection("Collaborators_Documents")
@@ -128,7 +188,7 @@ function RegistroPage() {
         dobDay: collaboratorData.dobDay,
         dobMonth: collaboratorData.dobMonth,
         dobYear: collaboratorData.dobYear,
-        email: authUser.email,
+        email: collaboratorData.email,
         documentType: collaboratorData.documentType,
         documentId: collaboratorData.documentId,
         address: collaboratorData.address,
@@ -161,6 +221,7 @@ function RegistroPage() {
       !validatorConfig.firstName.validate(formValues.firstName) ||
       !validatorConfig.lastName.validate(formValues.lastName) ||
       !validatorConfig.phone.validate(formValues.phone) ||
+      !validatorConfig.email.validate(formValues.email) ||
       !validatorConfig.documentId.validate(formValues.documentId) ||
       !validatorConfig.address.validate(formValues.address)
     ) {
@@ -173,16 +234,22 @@ function RegistroPage() {
       return;
     }
 
-    const collaboratorId = authUser.uid;
-    await upload(collaboratorId, formValues.images);
-    await handleCompleteRegistration(collaboratorId, formValues);
-    await handleActivationRecord(collaboratorId);
+    const password = generatePassword();
+
+    const { userId } = await handleOnCreateUser(
+      formValues.email,
+      password,
+      password
+    );
+
+    await upload(userId, formValues.images);
+    await handleCompleteRegistration(userId, formValues);
+    await handleActivationRecord(userId);
 
     toast.success("Registro completado existosamente");
-    router.push(paths.WELCOME());
+    router.push(paths.ADMIN.DASHBOARD());
   };
 
-  // const router = useRouter();
   return (
     <CollaboratorRegistration
       title="Registro Collaborador HUBI"
@@ -193,4 +260,4 @@ function RegistroPage() {
   );
 }
 
-export default RegistroPage;
+export default CollaboratorRegistrationPage;

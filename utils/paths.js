@@ -1,20 +1,18 @@
 export const paths = {
   ADMIN: {
+    SIGN_IN: () => "/admin/signin",
     DASHBOARD: () => "/admin/dashboard",
     LOCATION_PICKER: () => "/admin/actions/pick-location",
-    REGISTER_COLLABORATOR: (locationId) => `/admin/actions/${locationId}/register-collaborator`,
+    REGISTER_COLLABORATOR: (locationId) =>
+      `/admin/actions/${locationId}/registro-colaborador`,
   },
+  LOGIN: () => "/login",
   DASHBOARD: () => "/app/dashboard",
-  USER_CREATION: {
-    COLLABORATORS: () => "/usuarios/colaboradores/crear",
-    RESIDENTS: () => "/usuarios/residentes/crear",
-  },
+
   REGISTER: {
-    PROFILE_COLLABORATOR: (locationId) =>
-      `/usuarios/${locationId}/registro-colaborador`,
-    PROFILE_RESIDENT: (locationId) =>
-      `/usuarios/${locationId}/registro-resident`,
-    LOCATION: () => "/usuarios/locacion",
+    EMAIL_VERIFICATION: (userId, userEmail, activationHash) =>
+      `/usuarios/envio?uuid=${userId}&hash=${activationHash}&email=${userEmail}`,
+    PASSWORD_RESET: () => "/usuarios/envio",
   },
   WELCOME: () => "/usuarios/bienvenido",
   COLLABORATORS: {
@@ -24,6 +22,9 @@ export const paths = {
     DETAILS: (collaboratorId) => `/collaboradores/${collaboratorId}/detalle`,
   },
   ERROR: {
+    NO_REGISTRATION: () => "/usuarios/sin-registro",
+    NO_LOCATION: () => "/usuarios/sin-locacion",
+    NO_PASSWORD_RESET: () => "/usuarios/sin-restablecer",
     NO_ACTIVATION_RECORD: () => "/usuarios/sin-activacion",
     NO_PROFILE_FOUND: () => "/usuarios/sin-perfil",
   },

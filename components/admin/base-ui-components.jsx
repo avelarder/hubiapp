@@ -50,17 +50,18 @@ const Divider = tw.div`
 
 const StyledButton = tw.button`
     bg-gradient-to-tr
-    from-purple-500
-    to-purple-600 
+    from-purple-700
+    to-purple-400 
     border-1
-    hover:border-gray-300
-     w-40
-     h-8
-     my-2
-     rounded-lg 
-     text-white 
+    hover:border-purple-200
+    w-40
+    h-8
+    my-2
+    rounded-lg 
+    text-white 
     text-sm
-     shadow-sm`;
+    font-regular
+    shadow-sm`;
 
 const ScrollableContainer = tw.div`
     mt-2 

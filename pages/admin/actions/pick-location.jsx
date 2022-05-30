@@ -18,11 +18,11 @@ function LocationPickerPage() {
 
   const locations = [
     {
-      code: "REGISTER_COLLABORATOR1",
-      title: "Registrar colaborador para una Ubicación",
+      code: "alHS7YkaO3o0ZVczrnTd",
+      title: "CONDOMINIO FLORESTA SUR",
       description:
         "Registre administradores, conserjes, personal de limpieza y seguridad a una locación en particular.",
-      image: "/images/building.jpg",
+      image: "/condominio-floresta-sur.png",
     },
     {
       code: "SUSPEND_LOCATION_COLLABORATOR2",
