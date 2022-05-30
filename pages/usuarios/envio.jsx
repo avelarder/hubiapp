@@ -87,7 +87,7 @@ export default function Envio() {
             </PageHeader>
             <span className="flex mt-4 text-center md:w-2/3">
               El cambio de su contraseña es requerido ya que su cuenta fue
-              creada con una contrasela temporal. Haciendo click en el siguiente
+              creada con una contraseña temporal. Haciendo click en el siguiente
               enlace recibirá un mail con los pasos necesarios.
             </span>
             {buttonEnabled && (
