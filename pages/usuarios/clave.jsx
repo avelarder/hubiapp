@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../authUserProvider";
 import { VALIDATIONS } from "../../utils/UI-Constants";
 import ReCAPTCHA from "react-google-recaptcha";
+import Firebase from "../../firebase";
 
 function Clave() {
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;

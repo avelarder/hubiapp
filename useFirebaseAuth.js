@@ -34,11 +34,11 @@ export default function useFirebaseAuth() {
     var mapped = await Promise.all(
       profiles.docs.map(async (p) => {
         const data = p.data();
-        const docRef = (await data.locationRef.get()).data();
+        const docRef = (await data.locationRef?.get())?.data();
 
         return {
           locationId: data.location,
-          location: docRef.Title,
+          location: docRef?.Title,
           profile: data.profile,
           profileId: data.id,
         };

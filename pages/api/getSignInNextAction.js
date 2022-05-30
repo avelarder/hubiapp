@@ -8,28 +8,20 @@ export default async function handler(req, res) {
   const activationRef = db.collection("ActivationRecords").doc(payload.userId);
   const activationRecord = await activationRef.get();
 
-  const userProfileRef = db
-    .collection("UserProfiles")
-    .where("userId", "==", payload.userId);
-  const userProfileRecord = await userProfileRef.get();
-
   if (!activationRecord.exists) {
     res.status(500).send({ target: paths.ERROR.NO_ACTIVATION_RECORD() });
     return;
   }
+  if (!activationRecord.data().passwordReset) {
+    res.status(500).send({ target: paths.ERROR.NO_PASSWORD_RESET() });
+    return;
+  }
   if (!activationRecord.data().locationAssigned) {
-    res.status(200).send({ target: paths.REGISTER.LOCATION() });
+    res.status(500).send({ target: paths.ERROR.NO_LOCATION() });
     return;
   }
   if (!activationRecord.data().registered) {
-    const { location, profile } = userProfileRecord.docs[0].data();
-
-    res.status(200).send({
-      target:
-        profile === "COLLABORATOR"
-          ? paths.REGISTER.PROFILE_COLLABORATOR(location)
-          : paths.REGISTER.PROFILE_RESIDENT(location),
-    });
+    res.status(500).send({ target: paths.ERROR.NO_REGISTRATION() });
     return;
   }
   if (!activationRecord.data().welcomed) {

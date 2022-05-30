@@ -13,13 +13,13 @@ import {
 } from "../../utils/UI-Constants";
 import RoundedInputText from "../common/roundedInputText";
 import { XIcon } from "@heroicons/react/solid";
+import { StyledButton } from "../admin/base-ui-components";
 
 function CollaboratorRegistration({
   title,
   description,
   onContinueClicked,
   formValidatorConfig,
-  userProfile,
 }) {
   const days = getScheduleDays();
   const months = getScheduleMonths();
@@ -120,16 +120,14 @@ function CollaboratorRegistration({
             </div>
           </FieldContainer>
 
-          {userProfile === "RESIDENT" && (
-            <FieldContainer>
-              <RoundedInputText
-                validator={formValidatorConfig.email}
-                value={email}
-                onChange={(e) => setEmail(e.currentTarget.value)}
-                placeholder="Email"
-              ></RoundedInputText>
-            </FieldContainer>
-          )}
+          <FieldContainer>
+            <RoundedInputText
+              validator={formValidatorConfig.email}
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+              placeholder="Email"
+            ></RoundedInputText>
+          </FieldContainer>
 
           <section className="mt-4">
             <h3 className="font-bold text-xs">Fecha de Nacimiento</h3>
@@ -236,7 +234,7 @@ function CollaboratorRegistration({
             </div>
           </FieldContainer>
           <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-            <button
+            <StyledButton
               className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
               onClick={(e) =>
                 onContinueClicked(e, {
@@ -259,7 +257,7 @@ function CollaboratorRegistration({
               }
             >
               Crear
-            </button>
+            </StyledButton>
           </div>
         </section>
       </div>
