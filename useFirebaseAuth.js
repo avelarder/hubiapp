@@ -39,6 +39,7 @@ export default function useFirebaseAuth() {
         return {
           locationId: data.location,
           location: docRef?.Title,
+          buildings: docRef?.Buildings,
           profile: data.profile,
           profileId: data.id,
         };

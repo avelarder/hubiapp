@@ -356,6 +356,7 @@ export const VALIDATIONS = {
   REQUIRED_FREE_TEXT: (input) => input.length > 0,
   ONLY_LETTERS: (input) => /^[a-zA-Z]+$/.test(input),
   ONLY_NUMBERS: (input) => /^[0-9]+$/.test(input),
+  ONLY_NUMBERS_GREATHER_THAN_ZERO: (input) => /^[1-9]+$/.test(input),
   EMAIL: (input) =>
     // eslint-disable-next-line
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(

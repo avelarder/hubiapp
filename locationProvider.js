@@ -2,16 +2,18 @@ import { createContext, useContext, Context } from "react";
 import useLocation from "./useLocation";
 
 const locationContext = createContext({
-  locationId: "",
-  setLocation: (locationId) => {},
+  locationSelected: {},
+  availableLocations: [],
+  setSelectedLocation: (location) => {},
+  setAvailableLocations: (locations) => {},
   clear: () => {},
 });
 
 export function LocationProvider({ children }) {
-  const { location } = useLocation();
+  const locationInstance = useLocation();
 
   return (
-    <locationContext.Provider value={location}>
+    <locationContext.Provider value={locationInstance}>
       {children}
     </locationContext.Provider>
   );

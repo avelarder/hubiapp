@@ -1,25 +1,34 @@
 import { useState, useEffect } from "react";
 
-
-
 export default function useLocation() {
-  const [location, setLocationObject] = useState(
-    "Default"
-  );
+  const [locationSelected, setLocationSelected] = useState({
+    id: "DEFAULT",
+    text: "Seleccione una locación",
+    buildings: ["Seleccione"],
+  });
+  const [availableLocations, setAvailableLocationsState] = useState([]);
 
   const clear = () => {
-    setLocationObject(null);
-    localStorage.removeItem(hubi_location);
+    setLocationSelected({
+      id: "DEFAULT",
+      text: "Seleccione una locación",
+      buildings: ["Seleccione"],
+    });
   };
 
-  const setLocation = (locationId) => {
+  const setSelectedLocation = (location) => {
+    setLocationSelected(location);
+  };
 
-    setLocationObject(locationId);
+  const setAvailableLocations = (locations) => {
+    setAvailableLocationsState(locations);
   };
 
   return {
-    location,
-    setLocation,
+    locationSelected,
+    availableLocations,
+    setSelectedLocation,
+    setAvailableLocations,
     clear,
   };
 }
