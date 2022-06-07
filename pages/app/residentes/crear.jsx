@@ -14,16 +14,27 @@ import {
   genderOptions,
   VALIDATIONS,
 } from "../../../utils/UI-Constants";
-
+import { generatePassword } from "../../../utils/PasswordGenerator";
 import RoundedInputText from "../../../components/common/roundedInputText";
 import { v4 } from "uuid";
 import { XIcon } from "@heroicons/react/solid";
 import Layout from "../../../components/layout";
 import { useLocationContext } from "../../../locationProvider";
 
-function ResidentCreatePage() {
+export async function getServerSideProps(context) {
+  const sendGridTemplateId =
+    process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
+
+  return {
+    props: {
+      sendGridTemplateId,
+    }, // will be passed to the page component as props
+  };
+}
+
+function ResidentCreatePage({ sendGridTemplateId }) {
   const router = useRouter();
-  const { authUser } = useAuth();
+  const { createUserWithEmailAndPassword } = useAuth();
   const { locationSelected } = useLocationContext();
 
   const validatorConfig = {
@@ -121,6 +132,72 @@ function ResidentCreatePage() {
   const [status, setStatus] = useState(statusOptions[0]);
   const [residentType, setResidentType] = useState(residentTypeOptions[0]);
 
+  const handleOnCreateUser = async (email, password, confirmPassword) => {
+    let userId = "";
+    let activationHash = "";
+    //check if passwords match. If they do, create user in Firebase
+    // and redirect to your logged in page.
+    if (
+      VALIDATIONS.REQUIRED_FREE_TEXT(password) &&
+      VALIDATIONS.REQUIRED_FREE_TEXT(confirmPassword) &&
+      VALIDATIONS.PASSWORD(password) &&
+      password === confirmPassword
+    ) {
+      const authUser = await createUserWithEmailAndPassword(email, password);
+
+      const response = await fetch("/api/setActivationRecord", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({
+          to: email,
+          templateId: sendGridTemplateId,
+          activationType: "RESIDENT",
+          userId: authUser.user.uid,
+          email: email,
+          password: password,
+          locationId: locationSelected.id,
+        }),
+      });
+
+      if (response.status === 202) {
+        userId = authUser.user.uid;
+        toast.success(
+          "Usuario creado con éxito, le hemos enviado un correo para activar su cuenta."
+        );
+
+        const data = await response.json();
+        activationHash = data.activationHash;
+      } else {
+        toast.error(
+          "No pudimos enviarte en codigo de activación, por favor intente más tarde."
+        );
+      }
+    } else {
+      toast.error("La contraseña no coincide");
+    }
+
+    return { userId, activationHash };
+  };
+
+  const handleResidentDocumentsLink = async (residentId, url) => {
+    const db = Firebase.default.firestore();
+    const documentId = v4();
+
+    await db
+      .collection("Residents_Documents")
+      .doc(documentId)
+      .set({
+        url: `${url}`,
+        residentId: `${residentId}`,
+        status: "ACTIVE",
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+
   const upload = async (residentId) => {
     const storage = Firebase.default.storage();
 
@@ -153,83 +230,94 @@ function ResidentCreatePage() {
         },
         async () => {
           // Handle successful uploads on complete
-          await handleresidentDocumentsLink(residentId, fileURL);
+          await handleResidentDocumentsLink(residentId, fileURL);
         }
       );
     }
   };
 
-  const handleContinueClicked = async (event) => {
+  const handleCompleteRegistration = async (userId, formValues) => {
+    const db = Firebase.default.firestore();
+
+    await db
+      .collection("Residents")
+      .doc(userId)
+      .set({
+        fullName: `${formValues.firstName} ${formValues.lastName}`,
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        phoneArea: formValues.phoneArea,
+        phone: formValues.phone,
+        email: formValues.email,
+        documentType: formValues.documentType,
+        documentId: formValues.documentId,
+        address: formValues.address,
+        appartmentNumber: formValues.appartmentNumber,
+        notes: formValues.notes,
+        petCount: formValues.petCount,
+        numberOfResidents: formValues.numberOfResidents,
+        parking1: formValues.parking1,
+        parking2: formValues.parking2,
+        numberOfVehicles: formValues.numberOfVehicles,
+        numberOfParkingSlots: formValues.numberOfParkingSlots,
+        building: formValues.building,
+        gender: formValues.gender,
+        status: formValues.status,
+        residentType: formValues.residentType,
+        residentTypeText: formValues.residentType.text,
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+  const handleActivationRecord = async (userId) => {
+    const db = Firebase.default.firestore();
+    await db
+      .collection("ActivationRecords")
+      .doc(userId)
+      .update({
+        registered: true,
+        registeredOnUTC: new Date().toISOString(),
+      });
+  };
+  const handleContinueClicked = async (event, formValues) => {
     if (
-      !validatorConfig.firstName.validate(firstName) ||
-      !validatorConfig.lastName.validate(lastName) ||
-      !validatorConfig.phone.validate(phone) ||
-      !validatorConfig.email.validate(email) ||
-      !validatorConfig.documentId.validate(documentId)
+      !validatorConfig.firstName.validate(formValues.firstName) ||
+      !validatorConfig.lastName.validate(formValues.lastName) ||
+      !validatorConfig.phone.validate(formValues.phone) ||
+      !validatorConfig.email.validate(formValues.email) ||
+      !validatorConfig.address.validate(formValues.address) ||
+      !validatorConfig.appartmentNumber.validate(formValues.appartmentNumber) ||
+      !validatorConfig.numberOfResidents.validate(
+        formValues.numberOfResidents
+      ) ||
+      !validatorConfig.documentId.validate(formValues.documentId)
     ) {
       toast.warning("Por favor complete el formulario.");
       return;
     }
 
-    if (images.length === 0) {
+    if (formValues.images.length === 0) {
       toast.warning("No se ha seleccionado ningún archivo.");
       return;
     }
 
-    const residentId = v4();
+    const password = generatePassword();
 
-    await upload(residentId);
-    await handleCompleteRegistration(residentId);
+    const { userId } = await handleOnCreateUser(
+      formValues.email,
+      password,
+      password
+    );
+
+    await upload(userId, formValues.images);
+    await handleCompleteRegistration(userId, formValues);
+    await handleActivationRecord(userId);
 
     toast.success("Residente creado con éxito.");
     router.push("/app/residentes");
 
     event.preventDefault();
   };
-
-  const handleresidentDocumentsLink = async (residentId, url) => {
-    const db = Firebase.default.firestore();
-    const documentId = v4();
-
-    await db
-      .collection("Residents_Documents")
-      .doc(documentId)
-      .set({
-        url: `${url}`,
-        residentId: `${residentId}`,
-        status: "ACTIVE",
-        residentTypeText: residentType.text,
-        createdOnUTC: new Date().toISOString(),
-        updatedOnUTC: new Date().toISOString(),
-      });
-  };
-
-  const handleCompleteRegistration = async (residentId) => {
-    const db = Firebase.default.firestore();
-
-    await db
-      .collection("Residents")
-      .doc(residentId)
-      .set({
-        fullName: `${firstName} ${lastName}`,
-        firstName: firstName,
-        lastName: lastName,
-        phoneArea: phoneArea,
-        phone: phone,
-        email: email,
-        documentType: documentType,
-        documentId: documentId,
-
-        gender: gender,
-        status: status,
-        residentType: residentType,
-        residentTypeText: residentType.text,
-        createdOnUTC: new Date().toISOString(),
-        updatedOnUTC: new Date().toISOString(),
-      });
-  };
-
-  console.log(locationSelected);
 
   return (
     <Layout>
@@ -488,7 +576,31 @@ function ResidentCreatePage() {
               </button>
               <button
                 className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
-                onClick={handleContinueClicked}
+                onClick={(e) =>
+                  handleContinueClicked(e, {
+                    firstName,
+                    lastName,
+                    email,
+                    documentId,
+                    documentType,
+                    address,
+                    phone,
+                    phoneArea,
+                    gender,
+                    status,
+                    residentType,
+                    building,
+                    appartmentNumber,
+                    numberOfParkingSlots,
+                    numberOfResidents,
+                    numberOfVehicles,
+                    parking1,
+                    parking2,
+                    petCount,
+                    notes,
+                    images,
+                  })
+                }
               >
                 Guardar
               </button>

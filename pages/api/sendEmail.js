@@ -11,5 +11,6 @@ export default async function handler(req, res) {
     activationHash: payload.hash,
     baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   });
+
   res.status(response.status).send("OK");
 }
