@@ -30,9 +30,9 @@ module.exports = {
       //   blue: "2px solid rgba(0, 112, 244, 0.5)",
       // },
       fontFamily: {
-        sans: ["Monsetrrat", "Roboto", "sans-serif"],
-        inter: ["Inter", "sans-serif"],
-        monse: ["Montserrat", "serif"],
+        sans: ["Montserrat", "Roboto", "sans-serif"],
+        inter: ["Montserrat", "Inter", "sans-serif"],
+        monse: ["Montserrat", "sans-serif"],
       },
       fontSize: {
         xs: ["0.75rem", { lineHeight: "1.5" }],
@@ -75,10 +75,14 @@ module.exports = {
       margin: ["first", "last"],
       borderWidth: ["first", "last"],
       padding: ["first", "last"],
+      fontFamily: ["hover", "focus"],
     },
   },
   plugins: [
     // eslint-disable-next-line global-require
     require("@tailwindcss/forms"),
   ],
+  corePlugins: {
+    fontFamily: true,
+  },
 };
