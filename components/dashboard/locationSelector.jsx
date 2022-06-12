@@ -1,42 +1,48 @@
 import React, { useState, useEffect } from "react";
 import Select from "../../components/common/select";
 import { useAuth } from "../../authUserProvider";
-import useLocation from "../../useLocation";
+import { useLocationContext } from "../../locationProvider";
 
 function LocationSelector() {
   const { authUser } = useAuth();
   const {
-    location: currentLocation,
-    setLocation: setLocationContext,
-  } = useLocation();
-
-  const [locations, setLocations] = useState([{ id: "SELECCIONE", text: "" }]);
+    locationSelected,
+    availableLocations,
+    setSelectedLocation,
+    setAvailableLocations,
+  } = useLocationContext();
 
   useEffect(() => {
-    if (authUser?.uid) {
-      setLocations(
-        authUser?.profiles?.map((profile) => {
-          return {
-            id: profile.locationId,
-            text: profile.location,
-          };
-        })
-      );
+    if (authUser?.uid && availableLocations.length === 0) {
+      const mappedLocations = authUser?.profiles?.map((profile) => {
+        return {
+          id: profile.locationId,
+          text: profile.location,
+          buildings: profile.buildings,
+        };
+      });
+      setAvailableLocations(mappedLocations);
+      setSelectedLocation(mappedLocations[0]);
     }
-  }, [authUser]);
+  }, [
+    authUser,
+    availableLocations,
+    setAvailableLocations,
+    setSelectedLocation,
+  ]);
 
   return (
     <div className="w-64">
-      {locations && locations.length > 0 && (
+      {availableLocations ? (
         <Select
-          options={locations}
-          selectedOption={
-            locations.length > 0 ? locations[0] : { id: "SELECCIONE", text: "" }
-          }
+          options={availableLocations}
+          selectedOption={locationSelected}
           onOptionChanged={(value) => {
-            setLocationContext(value.id);
+            setSelectedLocation(value);
           }}
         ></Select>
+      ) : (
+        <div>No hay ubicaciones disponibles</div>
       )}
     </div>
   );
