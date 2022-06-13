@@ -84,23 +84,19 @@ function UserInfo({ user }) {
           </div>
           <ul>
             <li>
-              <Link
+              <span
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-                href="/"
-                passHref
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 Settings
-              </Link>
+              </span>
             </li>
             <li>
               <button
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
-
                 onClick={async () => {
-
-                  await signOut()
-                  setDropdownOpen(!dropdownOpen)
+                  await signOut();
+                  setDropdownOpen(!dropdownOpen);
                 }}
               >
                 Sign Out
