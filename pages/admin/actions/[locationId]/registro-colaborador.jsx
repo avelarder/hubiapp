@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../../../../authUserProvider";
 import { paths } from "../../../../utils/paths";
-
+import { collaboratorTypeOptions } from "../../../../utils/UI-Constants";
 export async function getServerSideProps(context) {
   const sendGridTemplateId =
     process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
@@ -256,6 +256,7 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
       description={"Un gusto verte, por favor complete sus datos."}
       formValidatorConfig={validatorConfig}
       onContinueClicked={handleContinueClicked}
+      collaboratorOptions={collaboratorTypeOptions}
     ></CollaboratorRegistration>
   );
 }

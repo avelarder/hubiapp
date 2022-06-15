@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../../authUserProvider";
 import Firebase from "../../../firebase";
 import { toast } from "react-toastify";
-
+import Layout from "../../../components/layout";
 import CollaboratorRegistration from "../../../components/collaborator/register";
-
-import { VALIDATIONS } from "../../../utils/UI-Constants";
+import { StyledButton } from "../../../components/admin/base-ui-components";
+import {
+  VALIDATIONS,
+  collaboratorTypeOptions,
+} from "../../../utils/UI-Constants";
 
 import { v4 } from "uuid";
 import { paths } from "../../../utils/paths";
@@ -14,6 +17,7 @@ import { paths } from "../../../utils/paths";
 function EmployeeCreatePage() {
   const router = useRouter();
   const { authUser } = useAuth();
+  const defaultButton = useRef(null);
 
   const validatorConfig = {
     firstName: {
@@ -174,11 +178,22 @@ function EmployeeCreatePage() {
   };
 
   return (
-    <CollaboratorRegistration
-      title="Registro Collaborador HUBI"
-      formValidatorConfig={validatorConfig}
-      onContinueClicked={handleContinueClicked}
-    ></CollaboratorRegistration>
+    <Layout>
+      <div className="flex items-start h-screen">
+        <div className="flex xs:w-1/6"></div>
+        <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
+          <CollaboratorRegistration
+            title="Registro Collaborador HUBI"
+            formValidatorConfig={validatorConfig}
+            onContinueClicked={handleContinueClicked}
+            collaboratorOptions={collaboratorTypeOptions.filter(
+              (x) => x.id != "ADMINISTRATOR"
+            )}
+          ></CollaboratorRegistration>
+        </div>
+        <div className="flex xs:w-1/6"></div>
+      </div>
+    </Layout>
   );
 }
 

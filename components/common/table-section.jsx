@@ -85,7 +85,7 @@ function TableSection({
 
   return (
     <div className="flex flex-col bg-white shadow-lg rounded-sm border border-gray-200">
-      <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center">
+      <header className="flex px-5 py-4 border-b border-gray-100 justify-end items-center bg-gray-50">
         <h2 className="flex font-semibold text-gray-800 w-full">
           {sectionTitle}
         </h2>

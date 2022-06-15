@@ -10,6 +10,7 @@ import RoundedInputText from "../common/roundedInputText";
 import { PlusIcon, AdjustmentsIcon } from "@heroicons/react/solid";
 import moment from "moment";
 import OffCanvas from "../common/OffCanvas";
+import { StyledButton } from "../admin/base-ui-components";
 
 const DEFAULT_LIMIT = 10;
 
@@ -30,11 +31,11 @@ function CollaboratorContainer({ onCreateClicked, onAccessClicked }) {
   const [filterEmployee, setFilterEmployee] = useState("");
   const [statusFilter, setStatusFilter] = useState({
     id: "ALL",
-    text: "Todos",
+    text: "ESTADOS: Todos",
   });
   const [roleFilter, setRoleFilter] = useState({
     id: "ALL",
-    text: "Todos",
+    text: "ROLES: Todos",
   });
   const [locationsFilter, setLocationsFilter] = useState({
     id: "ALL",
@@ -176,13 +177,11 @@ function CollaboratorContainer({ onCreateClicked, onAccessClicked }) {
             onFilterPostChanged={setFilterEmployee}
             filteringOptions={
               <FieldContainer>
-                <div className="flex  mx-1 justify-around ">
-                  <div className="flex flex-col w-40 mr-2 self-end xs:hidden">
+                <div className="flex mx-1 justify-evenly items-center ">
+                  <div className="w-60 mr-2 ">
                     <Select
-                      title={"Estado"}
-                      showTitle
                       options={[
-                        { id: "ALL", text: "Todos" },
+                        { id: "ALL", text: "ESTADOS: Todos" },
                         { id: "ACTIVE", text: "Activos" },
                         { id: "INACTIVE", text: "Inactivos" },
                       ]}
@@ -190,31 +189,10 @@ function CollaboratorContainer({ onCreateClicked, onAccessClicked }) {
                       onOptionChanged={handleStatusFilterChanged}
                     ></Select>
                   </div>
-                  <div className="flex flex-col w-40 mr-2 self-end">
+                  <div className="w-40 ">
                     <Select
-                      title={"Locaciones"}
-                      showTitle
                       options={[
-                        { id: "ALL", text: "Todas" },
-                        {
-                          id: "06481e68-ff8b-4621-a3e8-4d2f9002e7cb",
-                          text: "Floresta",
-                        },
-                        {
-                          id: "bde9ca06-053b-4cb3-8fc3-89802c05134d",
-                          text: "Matellini",
-                        },
-                      ]}
-                      selectedOption={locationsFilter}
-                      onOptionChanged={handleLocationsFilterChanged}
-                    ></Select>
-                  </div>
-                  <div className="flex flex-col w-40 self-end">
-                    <Select
-                      title={"Role"}
-                      showTitle
-                      options={[
-                        { id: "ALL", text: "Todos" },
+                        { id: "ALL", text: "ROLES: Todos" },
                         {
                           id: "ADMINISTRATOR",
                           text: "Administrador",
@@ -232,37 +210,33 @@ function CollaboratorContainer({ onCreateClicked, onAccessClicked }) {
                       onOptionChanged={handleRoleFilterChanged}
                     ></Select>
                   </div>
-                  <div className="flex flex-col w-80 self-end ml-2 ">
+                  <div className="w-80 ml-2 ">
                     <RoundedInputText
                       value={filterText}
                       onChange={(e) => setFilterText(e.currentTarget.value)}
                       placeholder="Ingrese el texto a buscar"
                     ></RoundedInputText>
                   </div>
-                  <div className="flex justify-start align-top content-start ml-10">
-                    <div className="flex align-bottom">
-                      <button
-                        className="w-full inline-flex justify-center self-end  rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
-                        onClick={() => {
-                          onAccessClicked();
-                        }}
-                      >
-                        <AdjustmentsIcon className="w-5 h-5 mr-2 font-monse"></AdjustmentsIcon>
-                        Accesos
-                      </button>
-                    </div>
-                    <div className="flex align-bottom">
-                      <button
-                        className="w-full inline-flex self-end justify-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm  md:mx-1 sm:w-40 h-10 shadow-sm"
-                        onClick={() => {
-                          onCreateClicked();
-                        }}
-                      >
-                        <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>
-                        Crear
-                      </button>
-                    </div>
-                  </div>
+
+                  <StyledButton
+                    className="w-full inline-flex justify-center self-end   px-4 py-2     sm:text-sm  md:mx-1 sm:w-40 h-10 "
+                    onClick={() => {
+                      onAccessClicked();
+                    }}
+                  >
+                    <AdjustmentsIcon className="w-5 h-5 mr-2 font-monse"></AdjustmentsIcon>
+                    Accesos
+                  </StyledButton>
+
+                  <StyledButton
+                    className="w-full inline-flex justify-center self-end   px-4 py-2     sm:text-sm  md:mx-1 sm:w-40 h-10 "
+                    onClick={() => {
+                      onCreateClicked();
+                    }}
+                  >
+                    <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>
+                    Crear
+                  </StyledButton>
                 </div>
               </FieldContainer>
             }

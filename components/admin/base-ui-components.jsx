@@ -63,6 +63,21 @@ const StyledButton = tw.button`
     font-regular
     shadow-sm`;
 
+const StyledSecondaryButton = tw.button`
+    bg-gradient-to-tr
+    from-gray-500
+    to-gray-400 
+    border-1
+    hover:border-gray-200
+    w-40
+    h-8
+    my-2
+    rounded-lg 
+    text-white 
+    text-sm
+    font-regular
+    shadow-sm`;
+
 const ScrollableContainer = tw.div`
     mt-2 
     w-full 
@@ -79,5 +94,6 @@ export {
   StyledInput,
   Divider,
   StyledButton,
+  StyledSecondaryButton,
   ScrollableContainer,
 };
