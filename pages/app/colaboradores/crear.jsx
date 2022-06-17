@@ -3,21 +3,20 @@ import { useRouter } from "next/router";
 import { useAuth } from "../../../authUserProvider";
 import Firebase from "../../../firebase";
 import { toast } from "react-toastify";
-import Layout from "../../../components/layout";
+import NewLayout from "../../../components/newLayout";
 import CollaboratorRegistration from "../../../components/collaborator/register";
-import { StyledButton } from "../../../components/admin/base-ui-components";
+
 import {
   VALIDATIONS,
   collaboratorTypeOptions,
 } from "../../../utils/UI-Constants";
 
-import { v4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
 import { paths } from "../../../utils/paths";
 
 function EmployeeCreatePage() {
   const router = useRouter();
   const { authUser } = useAuth();
-  const defaultButton = useRef(null);
 
   const validatorConfig = {
     firstName: {
@@ -178,7 +177,7 @@ function EmployeeCreatePage() {
   };
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="flex items-start h-screen">
         <div className="flex xs:w-1/6"></div>
         <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
@@ -193,7 +192,7 @@ function EmployeeCreatePage() {
         </div>
         <div className="flex xs:w-1/6"></div>
       </div>
-    </Layout>
+    </NewLayout>
   );
 }
 

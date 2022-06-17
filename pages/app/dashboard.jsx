@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Footer from "../../components/dashboard/footer";
-import Layout from "../../components/layout";
+import NewLayout from "../../components/newLayout";
 import MainSection from "../../components/dashboard/mainSection";
 import Tile from "../../components/dashboard/tile";
 
 function DashboardPage() {
   return (
-    <Layout>
+    <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
         <div>
           <MainSection>
@@ -19,7 +19,7 @@ function DashboardPage() {
           <Footer></Footer>
         </div>
       </div>
-    </Layout>
+    </NewLayout>
   );
 }
 

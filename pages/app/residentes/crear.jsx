@@ -16,10 +16,14 @@ import {
 } from "../../../utils/UI-Constants";
 import { generatePassword } from "../../../utils/PasswordGenerator";
 import RoundedInputText from "../../../components/common/roundedInputText";
-import { v4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
 import { XIcon } from "@heroicons/react/solid";
-import Layout from "../../../components/layout";
+import NewLayout from "../../../components/newLayout";
 import { useLocationContext } from "../../../locationProvider";
+import {
+  StyledButton,
+  StyledSecondaryButton,
+} from "../../../components/admin/base-ui-components";
 
 export async function getServerSideProps(context) {
   const sendGridTemplateId =
@@ -320,7 +324,7 @@ function ResidentCreatePage({ sendGridTemplateId }) {
   };
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="flex items-start h-screen">
         <div className="flex xs:w-1/6"></div>
         <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
@@ -567,14 +571,14 @@ function ResidentCreatePage({ sendGridTemplateId }) {
               </div>
             </FieldContainer>
             <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-              <button
+              <StyledSecondaryButton
                 ref={defaultButton}
                 className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                 onClick={() => router.back()}
               >
                 Regresar
-              </button>
-              <button
+              </StyledSecondaryButton>
+              <StyledButton
                 className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
                 onClick={(e) =>
                   handleContinueClicked(e, {
@@ -603,13 +607,13 @@ function ResidentCreatePage({ sendGridTemplateId }) {
                 }
               >
                 Guardar
-              </button>
+              </StyledButton>
             </div>
           </section>
         </div>
         <div className="flex xs:w-1/6"></div>
       </div>
-    </Layout>
+    </NewLayout>
   );
 }
 

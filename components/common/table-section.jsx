@@ -1,4 +1,4 @@
-import { NavLink } from "../navLink";
+import NavLink from "../navLink";
 import React, { useState } from "react";
 import ContextualMenu from "../dashboard/contextualMenu";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";

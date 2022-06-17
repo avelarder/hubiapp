@@ -31,13 +31,10 @@ export default function Envio() {
 
   const handleActivationRecord = async (userId) => {
     const db = Firebase.default.firestore();
-    await db
-      .collection("ActivationRecords")
-      .doc(userId)
-      .update({
-        passwordReset: true,
-        passwordResetOnUTC: new Date().toISOString(),
-      });
+    await db.collection("ActivationRecords").doc(userId).update({
+      passwordReset: true,
+      passwordResetOnUTC: new Date().toISOString(),
+    });
   };
 
   const onChangePasswordClicked = async () => {
@@ -114,15 +111,12 @@ export default function Envio() {
       query.hash === activationEntry.activationHash
     ) {
       try {
-        await db
-          .collection("ActivationRecords")
-          .doc(query.uuid)
-          .update({
-            expired: true,
-            expiredOnUTC: new Date().toISOString(),
-            emailValidated: true,
-            emailValidatedOnUTC: new Date().toISOString(),
-          });
+        await db.collection("ActivationRecords").doc(query.uuid).update({
+          expired: true,
+          expiredOnUTC: new Date().toISOString(),
+          emailValidated: true,
+          emailValidatedOnUTC: new Date().toISOString(),
+        });
       } catch (error) {
         console.error(error);
       }
@@ -167,12 +161,9 @@ export default function Envio() {
             </FieldContainer>
 
             <div className="box-content text-center  pt-5 pb-5">
-              <button
-                onClick={handleOnVerification}
-                className="h-10 w-96 rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
-              >
+              <StyledButton onClick={handleOnVerification}>
                 Verificar y Continuar
-              </button>
+              </StyledButton>
             </div>
           </div>
         </div>

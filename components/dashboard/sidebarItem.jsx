@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { NavLink } from "../navLink";
+import NavLink from "../navLink";
 import { useRouter } from "next/router";
+import Tooltip from "react-simple-tooltip";
 
 function SidebarItem({
   icon,
-  backgroundColor,
   path,
   text,
   nestedItems,
@@ -20,24 +20,30 @@ function SidebarItem({
 
   return (
     <li
-      className={`flex flex-col items-center align-middle text-center item px-3 py-2 rounded-sm mb-0.5 last:mb-0 ${page === "" && "bg-gray-900"
-        }`}
+      className={`flex  px-3 py-2 rounded-sm mb-0.5  last:mb-0 ${page === "" &&
+        "bg-gray-900"}`}
       onClick={handleNestedContainerCollapsed}
     >
       <NavLink
         href={path}
-        className={`block text-gray-200 hover:text-white transition duration-150 ${page === "" && "hover:text-gray-200"
-          }`}
+        className={`block text-gray-200 hover:text-white transition duration-150 ${page ===
+          "" && "hover:text-gray-200"}`}
       >
-        <div className="flex flex-col text-center">
+        <div className=" m-2  flex justify-center">
           {icon && (
-            <div className={`flex justify-center items-center self-center rounded-lg text-sm text-purple-200 h-12 w-12 ${backgroundColor ?? "bg-transparent"}`}>
-              <div className="w-8 h-8" >
+            <Tooltip
+              content={text}
+              placement="right"
+              background="rgb(124, 58, 237)"
+              padding="10"
+            >
+              <div
+                className={`flex justify-center rounded-lg text-sm h-12 w-12`}
+              >
                 {icon}
               </div>
-            </div>
+            </Tooltip>
           )}
-          <span className="text-xs text-center text-gray-800">{text}</span>
         </div>
       </NavLink>
 
