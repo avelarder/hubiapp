@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { CheckIcon } from "@heroicons/react/solid";
 import Firebase from "../../firebase";
 import { useAuth } from "../../authUserProvider";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 function Welcome() {
   const history = useRouter();
@@ -12,13 +13,10 @@ function Welcome() {
     const db = Firebase.default.firestore();
     const userId = authUser.uid;
 
-    await db
-      .collection("ActivationRecords")
-      .doc(userId)
-      .update({
-        welcomed: true,
-        welcomedOnUTC: new Date().toISOString(),
-      });
+    await db.collection("ActivationRecords").doc(userId).update({
+      welcomed: true,
+      welcomedOnUTC: new Date().toISOString(),
+    });
 
     history.push("/app/dashboard");
   };
@@ -61,12 +59,9 @@ function Welcome() {
             <CheckIcon className="w-10 h-10 mr-1 text-green-500"></CheckIcon>
           </div>
           <div className="box-content text-center  pt-5 pb-5">
-            <button
-              onClick={handleOnRedirectDashboard}
-              className="h-10 w-64 rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
-            >
+            <StyledButton onClick={handleOnRedirectDashboard}>
               Continuar
-            </button>
+            </StyledButton>
           </div>
         </div>
       </div>

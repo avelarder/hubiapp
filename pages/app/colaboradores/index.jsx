@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Layout from "../../../components/layout";
+import NewLayout from "../../../components/newLayout";
 import MainSection from "../../../components/dashboard/mainSection";
 import Footer from "../../../components/dashboard/footer";
 import CollaboratorContainer from "../../../components/collaborator/collaborator-container";
@@ -11,7 +11,7 @@ function Index() {
   const router = useRouter();
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
         <MainSection>
           <div className="flex flex-col w-full">
@@ -27,7 +27,7 @@ function Index() {
           <Footer></Footer>
         </div>
       </div>
-    </Layout>
+    </NewLayout>
   );
 }
 

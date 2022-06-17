@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
 import Loader from "../../../../components/common/loader";
-import Layout from "../../../../components/layout";
+import NewLayout from "../../../../components/newLayout";
 import MainSection from "../../../../components/dashboard/mainSection";
 import {
   phoneAreaOptions,
@@ -18,6 +18,10 @@ import {
   VALIDATIONS,
 } from "../../../../utils/UI-Constants";
 import DeleteModal from "../../../../components/common/delete-modal";
+import {
+  StyledButton,
+  StyledSecondaryButton,
+} from "../../../../components/admin/base-ui-components";
 
 function Thumbnail({ imagePath }) {
   let defaultPathImage = "/hubi-logo.jpg";
@@ -179,16 +183,13 @@ function EmployeeDetails() {
   };
 
   const handleDeleteConfirmation = async () => {
-    await db
-      .collection("Collaborators")
-      .doc(id)
-      .delete();
+    await db.collection("Collaborators").doc(id).delete();
     setShowDeleteModal(false);
     router.push("/app/colaboradores");
   };
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
         <MainSection>
           <div className="flex flex-col h-screen w-full">
@@ -272,19 +273,15 @@ function EmployeeDetails() {
                     </div>
                   </FieldContainer>
                   <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-                    <button
+                    <StyledSecondaryButton
                       ref={defaultButton}
-                      className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                       onClick={() => router.back()}
                     >
                       Regresar
-                    </button>
-                    <button
-                      className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
-                      onClick={handleEditClicked}
-                    >
+                    </StyledSecondaryButton>
+                    <StyledButton onClick={handleEditClicked}>
                       Editar
-                    </button>
+                    </StyledButton>
                   </div>
                 </section>
               </div>
@@ -299,7 +296,7 @@ function EmployeeDetails() {
           )}
         </MainSection>
       </div>
-    </Layout>
+    </NewLayout>
   );
 }
 

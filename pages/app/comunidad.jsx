@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import Layout from "../../components/layout";
+import NewLayout from "../../components/newLayout";
 import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
 import CreatePost from "../../components/post/create-post";
 import Firebase from "../../firebase";
 import { Disclosure } from "@headlessui/react";
-import { v4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
 import moment from "moment";
 import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
 
 import { postOptions, postScopeOptions } from "../../utils/UI-Constants";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 function Comunidad() {
-
   const [showCreatePost, setShowCreatePost] = useState(false);
 
   const defaultActioBarStatus = {
@@ -52,8 +52,12 @@ function Comunidad() {
         options: postData.data.find((x) => x.key === "options")?.value ?? null,
         expiresBy:
           postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
-        allowAddOption: postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
-        schedule: postData.data.find((x) => x.key === "schedule")?.value.toISOString() ?? null,
+        allowAddOption:
+          postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
+        schedule:
+          postData.data
+            .find((x) => x.key === "schedule")
+            ?.value.toISOString() ?? null,
         publishedOn: publishedOn,
         createdOnUTC: new Date().toISOString(),
       });
@@ -119,18 +123,19 @@ function Comunidad() {
 
   return (
     <>
-      <Layout>
+      <NewLayout>
         <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
           <MainSection>
             <div className="flex flex-col w-full">
-              <button
-                className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700 sm:text-sm sm:mb-3 md:mx-1 sm:w-40 shadow-sm"
+              <StyledButton
+                className="inline-flex items-center justify-center"
                 onClick={() => {
                   handleCreatePostVisibility(true);
                 }}
               >
-                <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>Crear Aviso
-              </button>
+                <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>Crear
+                Aviso
+              </StyledButton>
 
               <div className="mt-2">
                 <Disclosure defaultOpen="open">
@@ -139,8 +144,9 @@ function Comunidad() {
                       <Disclosure.Button className="flex justify-between shadow-md w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg border-1 border-purple-200 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
                         <span>Avisos y Encuestas</span>
                         <ChevronUpIcon
-                          className={`${open ? 'transform rotate-180' : ''
-                            } w-5 h-5 text-purple-500`}
+                          className={`${
+                            open ? "transform rotate-180" : ""
+                          } w-5 h-5 text-purple-500`}
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
@@ -149,8 +155,6 @@ function Comunidad() {
                     </>
                   )}
                 </Disclosure>
-
-
               </div>
             </div>
           </MainSection>
@@ -166,7 +170,6 @@ function Comunidad() {
               onOptionChanged={handleCurrentOptionChange}
               postOptions={postOptions}
               postScopeOptions={postScopeOptions}
-
               onCancel={hideCreatePostModal}
               onConfirm={handlePostCreated}
               onPreview={handlePostPreview}
@@ -175,7 +178,7 @@ function Comunidad() {
             ></CreatePost>
           )}
         </div>
-      </Layout>
+      </NewLayout>
     </>
   );
 }

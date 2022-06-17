@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import { generatePassword } from "../../../../utils/PasswordGenerator";
 import { toast } from "react-toastify";
-import { v4 as uuidv4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
 import { useAuth } from "../../../../authUserProvider";
 import { paths } from "../../../../utils/paths";
 import { collaboratorTypeOptions } from "../../../../utils/UI-Constants";
@@ -117,7 +117,7 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
 
   const handleEmployeeDocumentsLink = async (collaboratorId, url) => {
     const db = Firebase.default.firestore();
-    const documentId = uuidv4();
+    const documentId = v4();
 
     await db
       .collection("Collaborators_Documents")

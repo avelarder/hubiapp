@@ -6,10 +6,14 @@ import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
 import Loader from "../../../../components/common/loader";
-import Layout from "../../../../components/layout";
+import NewLayout from "../../../../components/newLayout";
 import RoundedLabel from "../../../../components/common/roundedLabel";
 
 import DeleteModal from "../../../../components/common/delete-modal";
+import {
+  StyledButton,
+  StyledSecondaryButton,
+} from "../../../../components/admin/base-ui-components";
 
 function ResidentDetails() {
   const router = useRouter();
@@ -63,16 +67,13 @@ function ResidentDetails() {
   };
 
   const handleDeleteConfirmation = async () => {
-    await db
-      .collection("Residents")
-      .doc(id)
-      .delete();
+    await db.collection("Residents").doc(id).delete();
     setShowDeleteModal(false);
     router.push("/app/residentes");
   };
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="flex items-start h-screen">
         <div className="flex xs:w-1/6"></div>
         <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
@@ -230,20 +231,20 @@ function ResidentDetails() {
               </div>
             </FieldContainer>
             <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-              <button
+              <StyledSecondaryButton
                 ref={defaultButton}
                 className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                 onClick={() => router.back()}
               >
                 Regresar
-              </button>
+              </StyledSecondaryButton>
 
-              <button
+              <StyledButton
                 className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
                 onClick={handleEditClicked}
               >
                 Editar
-              </button>
+              </StyledButton>
             </div>
           </section>
         </div>
@@ -255,7 +256,7 @@ function ResidentDetails() {
           onConfirm={handleDeleteConfirmation}
         ></DeleteModal>
       )}
-    </Layout>
+    </NewLayout>
   );
 }
 

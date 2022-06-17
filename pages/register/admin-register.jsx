@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../authUserProvider";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 function AdminRegister() {
   const [email, setEmail] = useState("");
@@ -18,7 +19,6 @@ function AdminRegister() {
     if (passwordOne === passwordTwo) {
       createUserWithEmailAndPassword(email, passwordOne)
         .then((authUser) => {
-
           router.push("/app/dashboard");
         })
         .catch((error) => {
@@ -61,12 +61,7 @@ function AdminRegister() {
               ></input>
             </div>
             <div className="box-content text-center font-sans pt-5 pb-5">
-              <button
-                onClick={onSubmit}
-                className="h-10 w-max rounded-full px-20 bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"
-              >
-                Registrar
-              </button>
+              <StyledButton onClick={onSubmit}>Registrar</StyledButton>
             </div>
           </div>
         </div>

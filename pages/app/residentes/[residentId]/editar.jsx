@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
 import Loader from "../../../../components/common/loader";
-import Layout from "../../../../components/layout";
+import NewLayout from "../../../../components/newLayout";
 import {
   phoneAreaOptions,
   documentTypeOptions,
@@ -20,7 +20,11 @@ import { useLocationContext } from "../../../../locationProvider";
 import { editResidentValidatorConfig as validatorConfig } from "../../../../utils/validators/residents";
 import Thumbnail from "../../../../components/common/thumbnail";
 import { toast } from "react-toastify";
-import { v4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
+import {
+  StyledButton,
+  StyledSecondaryButton,
+} from "../../../../components/admin/base-ui-components";
 
 function ResidentEdit() {
   const router = useRouter();
@@ -224,10 +228,7 @@ function ResidentEdit() {
       });
   };
   const handleDeleteConfirmation = async () => {
-    await db
-      .collection("Residents")
-      .doc(residentId)
-      .delete();
+    await db.collection("Residents").doc(residentId).delete();
     setShowDeleteModal(false);
     router.push("/app/residentes");
   };
@@ -265,7 +266,7 @@ function ResidentEdit() {
   };
 
   return (
-    <Layout>
+    <NewLayout>
       <div className="flex items-start h-screen">
         <div className="flex xs:w-1/6"></div>
         <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
@@ -515,14 +516,14 @@ function ResidentEdit() {
               </div>
             </FieldContainer>
             <div className="flex justify-end text-white text-md font-bold  mt-8 ">
-              <button
+              <StyledSecondaryButton
                 ref={defaultButton}
                 className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                 onClick={() => router.back()}
               >
                 Regresar
-              </button>
-              <button
+              </StyledSecondaryButton>
+              <StyledButton
                 className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
                 onClick={(e) =>
                   handleContinueClicked(e, {
@@ -551,7 +552,7 @@ function ResidentEdit() {
                 }
               >
                 Guardar
-              </button>
+              </StyledButton>
             </div>
           </section>
         </div>
@@ -564,7 +565,7 @@ function ResidentEdit() {
           onConfirm={handleDeleteConfirmation}
         ></DeleteModal>
       )}
-    </Layout>
+    </NewLayout>
   );
 }
 

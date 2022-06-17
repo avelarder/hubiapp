@@ -4,7 +4,7 @@ import { useAuth } from "../authUserProvider";
 import HeaderApp from "./dashboard/header";
 import Sidebar from "./dashboard/sidebar";
 
-function Layout(props) {
+function NewLayout(props) {
   const { authUser, loading } = useAuth();
   const router = useRouter();
 
@@ -17,7 +17,6 @@ function Layout(props) {
 
   return (
     <>
-
       <div className="flex h-screen overflow-hidden">
         {/* Sidebar */}
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
@@ -38,4 +37,4 @@ function Layout(props) {
   );
 }
 
-export default Layout;
+export default NewLayout;

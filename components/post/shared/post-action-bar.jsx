@@ -5,6 +5,7 @@ import {
   ShareIcon,
 } from "@heroicons/react/outline";
 import { ClockIcon, XIcon } from "@heroicons/react/solid";
+import { StyledButton } from "../../admin/base-ui-components";
 
 function PostActionBar({
   state,
@@ -17,9 +18,9 @@ function PostActionBar({
   return (
     <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
       {state.publishEnabled && (
-        <button
+        <StyledButton
           type="button"
-          className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700   sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+          className=" inline-flex justify-center items-center"
           onClick={onPublish}
           autoFocus
         >
@@ -32,38 +33,38 @@ function PostActionBar({
               <ClockIcon className="w-5 h-5 mr-2"></ClockIcon>Programar
             </>
           )}
-        </button>
+        </StyledButton>
       )}
 
       {state.nextEnabled && (
-        <button
+        <StyledButton
           type="button"
-          className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+          className="w-full inline-flex justify-center items-center"
           onClick={onNext}
           autoFocus
         >
           <ArrowRightIcon className="w-5 h-5 mr-2"></ArrowRightIcon>Siguiente
-        </button>
+        </StyledButton>
       )}
       {state.backEnabled && (
-        <button
+        <StyledButton
           type="button"
-          className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+          className="w-full inline-flex justify-center items-center"
           onClick={onBack}
           autoFocus
         >
           <ArrowLeftIcon className="w-5 h-5 mr-2"></ArrowLeftIcon>Atrás
-        </button>
+        </StyledButton>
       )}
       {state.closeEnabled && (
-        <button
+        <StyledButton
           autoFocus
           type="button"
-          className="w-full inline-flex justify-center items-center rounded-xl border px-4 py-2 bg-purple-600 text-base font-medium text-white hover:bg-red-700  sm:w-auto sm:text-sm sm:mb-3 md:mx-1"
+          className="inline-flex justify-center items-center "
           onClick={onCancel}
         >
           <XIcon className="w-5 h-5 mr-2"></XIcon>Cerrar
-        </button>
+        </StyledButton>
       )}
     </div>
   );

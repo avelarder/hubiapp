@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { CheckIcon } from "@heroicons/react/solid";
+import { StyledButton } from "../../components/admin/base-ui-components";
 function Success() {
   const history = useRouter();
 
@@ -24,12 +25,9 @@ function Success() {
             </p>
           </div>
           <div className="box-content text-center  pt-5 pb-5">
-            <button
-              onClick={handleOnRedirectLogin}
-              className="h-10 w-64 rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
-            >
+            <StyledButton onClick={handleOnRedirectLogin}>
               Inciar Sesión
-            </button>
+            </StyledButton>
           </div>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { VALIDATIONS } from "../../utils/UI-Constants";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../authUserProvider";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 export default function Recuperar() {
   const { sendPasswordResetEmail } = useAuth();
@@ -63,12 +64,7 @@ export default function Recuperar() {
             </FieldContainer>
 
             <div className="box-content text-center  pt-5 pb-5">
-              <button
-                onClick={handleOnConfirm}
-                className="h-10 w-96 rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
-              >
-                Confirmar
-              </button>
+              <StyledButton onClick={handleOnConfirm}>Confirmar</StyledButton>
             </div>
           </div>
         </div>

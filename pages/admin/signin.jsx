@@ -9,6 +9,7 @@ import FieldContainer from "../../components/common/field-container";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 export default function AdminSignInPage() {
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
@@ -126,12 +127,9 @@ export default function AdminSignInPage() {
               <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
             </div>
             <div className="box-content text-center   pt-5 pb-5">
-              <button
-                onClick={handleOnSubmitClicked}
-                className="h-10 w-full rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700"
-              >
+              <StyledButton onClick={handleOnSubmitClicked}>
                 Iniciar Sesión
-              </button>
+              </StyledButton>
             </div>
           </div>
         </div>

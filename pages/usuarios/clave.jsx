@@ -7,6 +7,7 @@ import { useAuth } from "../../authUserProvider";
 import { VALIDATIONS } from "../../utils/UI-Constants";
 import ReCAPTCHA from "react-google-recaptcha";
 import Firebase from "../../firebase";
+import { StyledButton } from "../../components/admin/base-ui-components";
 
 function Clave() {
   const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_KEY;
@@ -115,12 +116,12 @@ function Clave() {
               <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
             </div>
             <div className="box-content text-center  pt-5 pb-5">
-              <button
+              <StyledButton
                 onClick={handleOnCreateUser}
                 className="h-10 w-full rounded-md bg-purple-600 bg-opacity-100 text-white hover:bg-purple-700 font-semibold"
               >
                 Confirmar
-              </button>
+              </StyledButton>
             </div>
           </div>
         </div>

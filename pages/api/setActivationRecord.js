@@ -2,7 +2,7 @@ import MD5 from "crypto-js/md5";
 import Mod9710 from "../../utils/iso7064";
 import Firebase from "../../firebase";
 import { sendEmail } from "../../utils/Email";
-import { v4 as uuidv4 } from "uuid";
+import { uuid as v4 } from "uuidv4";
 
 export default async function handler(req, res) {
   const payload = req.body;
@@ -13,23 +13,20 @@ export default async function handler(req, res) {
     return;
   }
 
-  const userProfileId = uuidv4();
+  const userProfileId = v4();
   const db = Firebase.default.firestore();
 
   const locationRef = db.collection("Locations").doc(payload.locationId);
 
-  await db
-    .collection("UserProfiles")
-    .doc(userProfileId)
-    .set({
-      userId: payload.userId,
-      profile: activationType,
-      location: payload.locationId,
-      locationRef: locationRef,
-      createdOnUTC: new Date().toISOString(),
-      updatedOnUTC: new Date().toISOString(),
-      locationSetOnUTC: new Date().toISOString(),
-    });
+  await db.collection("UserProfiles").doc(userProfileId).set({
+    userId: payload.userId,
+    profile: activationType,
+    location: payload.locationId,
+    locationRef: locationRef,
+    createdOnUTC: new Date().toISOString(),
+    updatedOnUTC: new Date().toISOString(),
+    locationSetOnUTC: new Date().toISOString(),
+  });
 
   const activationKey =
     activationType === "COLLABORATOR"
@@ -41,25 +38,22 @@ export default async function handler(req, res) {
     `${payload.userId}|${activationKey}|${code}`
   ).toString();
 
-  await db
-    .collection("ActivationRecords")
-    .doc(payload.userId)
-    .set({
-      code: code,
-      activationHash: activationHash,
-      activationKey: activationKey,
-      createdOnUTC: new Date().toISOString(),
-      expired: false,
-      emailValidated: false,
-      passwordReset: false,
-      locationAssigned: true,
-      locationSetOnUTC: new Date().toISOString(),
-      registered: false,
-      welcomed: false,
-      expiredOnUTC: null,
-      registeredOnUTC: null,
-      welcomedOnUTC: null,
-    });
+  await db.collection("ActivationRecords").doc(payload.userId).set({
+    code: code,
+    activationHash: activationHash,
+    activationKey: activationKey,
+    createdOnUTC: new Date().toISOString(),
+    expired: false,
+    emailValidated: false,
+    passwordReset: false,
+    locationAssigned: true,
+    locationSetOnUTC: new Date().toISOString(),
+    registered: false,
+    welcomed: false,
+    expiredOnUTC: null,
+    registeredOnUTC: null,
+    welcomedOnUTC: null,
+  });
 
   var response = await sendEmail(payload.to, payload.templateId, {
     uuid: payload.userId,
