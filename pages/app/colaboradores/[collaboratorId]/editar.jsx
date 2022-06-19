@@ -22,6 +22,8 @@ import {
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
+import FileUpload from "../../../../components/common/file-upload";
+import Thumbnail from "../../../../components/common/thumbnail";
 
 function EmployeeEdit() {
   const router = useRouter();
@@ -76,6 +78,8 @@ function EmployeeEdit() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [images, setImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+
   const [phoneArea, setPhoneArea] = useState(phoneAreaOptions[0]);
   const [documentType, setDocumentType] = useState(documentTypeOptions[0]);
 
@@ -406,27 +410,27 @@ function EmployeeEdit() {
                       </div>
                     </div>
                   </FieldContainer>
+                  <FieldContainer title={"Galería de Imágenes"}>
+                    <div className="grid grid-flow-col w-full h-48 px-2">
+                      {images.map((x, i) => (
+                        <Thumbnail key={i} imagePath={x.url}></Thumbnail>
+                      ))}
+                    </div>
+                  </FieldContainer>
                   <FieldContainer>
-                    <span className="font-medium mt-10 text-sm">
-                      Elige un archivo a subir
-                    </span>
-                    <div className="flex justify-start text-white text-md font-bold  mt-8 ">
-                      <div className="flex flex-col">
-                        <input
-                          className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                          type="file"
-                          onChange={(e) => {
-                            const newImageList = [...images, e.target.files[0]];
-                            setImages(newImageList);
-                            e.target.value = "";
+                    <div className="flex justify-start text-white text-md font-bold  mt-8 w-full">
+                      <div className="flex flex-col mt-4 w-full">
+                        <FileUpload
+                          onFileSelected={(file) => {
+                            const newImageList = [...newImages, file];
+                            setNewImages(newImageList);
                           }}
-                          title="Seleccione una imagen"
-                        />
-                        {images.length === 0 ? (
+                        ></FileUpload>
+                        {newImages.length === 0 ? (
                           <span className="text-black">0 archivos.</span>
                         ) : (
                           <ul className="flex flex-col mt-4 list-disc w-full">
-                            {images.map((image, index) => (
+                            {newImages.map((image, index) => (
                               <li
                                 className="flex  text-black text-sm justify-between"
                                 key={index}

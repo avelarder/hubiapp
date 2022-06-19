@@ -127,7 +127,7 @@ export default function Login() {
               <ReCAPTCHA sitekey={recaptchaKey} onChange={onChange} />
             </div>
             <div className="box-content text-center   pt-5 pb-5">
-              <StyledButton onClick={handleOnSubmitClicked}>
+              <StyledButton className="w-full" onClick={handleOnSubmitClicked}>
                 Iniciar Sesión
               </StyledButton>
             </div>

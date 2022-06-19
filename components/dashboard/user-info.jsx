@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import Transition from "../../utils/Transition";
-import Link from "next/link";
+
 import { useAuth } from "../../authUserProvider";
 
 function UserInfo({ user }) {
@@ -88,7 +88,7 @@ function UserInfo({ user }) {
                 className="font-medium text-sm text-indigo-500 hover:text-indigo-600 flex items-center py-1 px-3"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                Settings
+                Opciones
               </span>
             </li>
             <li>
@@ -99,7 +99,7 @@ function UserInfo({ user }) {
                   setDropdownOpen(!dropdownOpen);
                 }}
               >
-                Sign Out
+                Cerrar sesión
               </button>
             </li>
           </ul>

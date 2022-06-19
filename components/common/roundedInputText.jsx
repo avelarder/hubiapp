@@ -14,7 +14,7 @@ function RoundedInputText({
   return (
     <input
       className={classNames(
-        "text-xs text-gray-500  w-full h-10 border-purple-300 rounded-full border-1 focus:border-purple-900 pl-6",
+        "bg-gradient-to-r from-gray-50 to-white text-xs text-gray-500  w-full h-10 border-grayt-200 rounded-full border-b-1 focus:border-purple-900 pl-6",
         { "text-black bg-red-200": hasError }
       )}
       value={value}

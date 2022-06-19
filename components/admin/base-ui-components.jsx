@@ -55,7 +55,7 @@ const StyledButton = tw.button`
     border-1
     hover:border-purple-200
     w-40
-    h-8
+    h-10
     my-2
     rounded-lg 
     text-white 
@@ -65,8 +65,8 @@ const StyledButton = tw.button`
 
 const StyledSecondaryButton = tw.button`
     bg-gradient-to-tr
-    from-gray-500
-    to-gray-400 
+    from-gray-400
+    to-gray-300 
     border-1
     hover:border-gray-200
     w-40

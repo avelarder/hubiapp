@@ -25,6 +25,7 @@ import {
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
+import FileUpload from "../../../../components/common/file-upload";
 
 function ResidentEdit() {
   const router = useRouter();
@@ -485,18 +486,14 @@ function ResidentEdit() {
               </div>
             </FieldContainer>
             <FieldContainer>
-              <div className="flex justify-start text-white text-md font-bold  mt-8 ">
-                <div className="flex flex-col">
-                  <input
-                    className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-                    type="file"
-                    onChange={(e) => {
-                      const newImageList = [...newImages, e.target.files[0]];
+              <div className="flex justify-start text-white text-md font-bold  mt-8 w-full">
+                <div className="flex flex-col w-full mt-4">
+                  <FileUpload
+                    onFileSelected={(file) => {
+                      const newImageList = [...newImages, file];
                       setNewImages(newImageList);
-                      e.target.value = "";
                     }}
-                    title="Seleccione una imagen"
-                  />
+                  ></FileUpload>
                   {newImages.length === 0 ? (
                     <span className="text-black">0 archivos.</span>
                   ) : (

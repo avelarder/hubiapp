@@ -20,14 +20,16 @@ function SidebarItem({
 
   return (
     <li
-      className={`flex  px-3 py-2 rounded-sm mb-0.5  last:mb-0 ${page === "" &&
-        "bg-gray-900"}`}
+      className={`flex  px-3 py-2 rounded-sm mb-0.5  last:mb-0 ${
+        page === "" && "bg-gray-900"
+      }`}
       onClick={handleNestedContainerCollapsed}
     >
       <NavLink
         href={path}
-        className={`block text-gray-200 hover:text-white transition duration-150 ${page ===
-          "" && "hover:text-gray-200"}`}
+        className={`block text-gray-200 hover:text-white transition duration-150 ${
+          page === "" && "hover:text-gray-200"
+        }`}
       >
         <div className=" m-2  flex justify-center">
           {icon && (
@@ -35,7 +37,8 @@ function SidebarItem({
               content={text}
               placement="right"
               background="rgb(124, 58, 237)"
-              padding="10"
+              padding={10}
+              border="rgba(255, 255, 255, 0)"
             >
               <div
                 className={`flex justify-center rounded-lg text-sm h-12 w-12`}
