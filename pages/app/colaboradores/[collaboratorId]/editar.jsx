@@ -266,8 +266,8 @@ function EmployeeEdit() {
         <MainSection>
           <div className="flex flex-col h-screen w-full">
             <div className="flex h-screen">
-              <div className="flex xs:w-2/6"></div>
-              <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
+              <div className="flex xs:w-1/6"></div>
+              <div className="flex flex-col flex-1 xs:w-2/6  items-left  align-middle mt-10">
                 <section className="">
                   <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
                     Editar Colaborador
@@ -411,7 +411,7 @@ function EmployeeEdit() {
                     </div>
                   </FieldContainer>
                   <FieldContainer title={"Galería de Imágenes"}>
-                    <div className="grid grid-flow-col w-full h-48 px-2">
+                    <div className="grid grid-flow-col w-full h-32 px-2">
                       {images.map((x, i) => (
                         <Thumbnail key={i} imagePath={x.url}></Thumbnail>
                       ))}
@@ -419,7 +419,7 @@ function EmployeeEdit() {
                   </FieldContainer>
                   <FieldContainer>
                     <div className="flex justify-start text-white text-md font-bold  mt-8 w-full">
-                      <div className="flex flex-col mt-4 w-full">
+                      <div className="flex flex-col  w-full">
                         <FileUpload
                           onFileSelected={(file) => {
                             const newImageList = [...newImages, file];
@@ -449,9 +449,10 @@ function EmployeeEdit() {
                   <div className="flex justify-end text-white text-md font-bold  mt-8 ">
                     <StyledSecondaryButton
                       ref={defaultButton}
+                      className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                       onClick={() => router.back()}
                     >
-                      Cancelar
+                      Regresar
                     </StyledSecondaryButton>
                     <StyledButton onClick={handleContinueClicked}>
                       Registrar
@@ -459,7 +460,7 @@ function EmployeeEdit() {
                   </div>
                 </section>
               </div>
-              <div className="flex xs:w-2/6"></div>
+              <div className="flex xs:w-1/6"></div>
             </div>
           </div>
           {showDeleteModal && (

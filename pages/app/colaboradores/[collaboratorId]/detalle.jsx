@@ -22,6 +22,7 @@ import {
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
+import RoundedLabel from "../../../../components/common/roundedLabel";
 
 function Thumbnail({ imagePath }) {
   let defaultPathImage = "/hubi-logo.jpg";
@@ -144,22 +145,22 @@ function EmployeeDetails() {
     if (defaultButton.current) defaultButton.current.focus();
   }, [defaultButton]);
 
-  useEffect(() => {
-    if (dataEmployee) {
-      setFirstName(dataEmployee.firstName);
-      setAddress(dataEmployee.address);
-      setLastName(dataEmployee.lastName);
-      setEmail(dataEmployee.email);
-      setPhone(dataEmployee.phone);
-      setPhoneArea(dataEmployee.phoneArea);
-      setDocumentId(dataEmployee.documentId);
-      setDocumentType(dataEmployee.documentType);
-      setGender(dataEmployee.gender);
-      setEmployeeStatus(dataEmployee.status);
-      setEmployeeType(dataEmployee.collaboratorType);
-    }
-    return () => {};
-  }, [dataEmployee]);
+  // useEffect(() => {
+  //   if (dataEmployee) {
+  //     setFirstName(dataEmployee.firstName);
+  //     setAddress(dataEmployee.address);
+  //     setLastName(dataEmployee.lastName);
+  //     setEmail(dataEmployee.email);
+  //     setPhone(dataEmployee.phone);
+  //     setPhoneArea(dataEmployee.phoneArea);
+  //     setDocumentId(dataEmployee.documentId);
+  //     setDocumentType(dataEmployee.documentType);
+  //     setGender(dataEmployee.gender);
+  //     setEmployeeStatus(dataEmployee.status);
+  //     setEmployeeType(dataEmployee.collaboratorType);
+  //   }
+  //   return () => {};
+  // }, [dataEmployee]);
 
   useEffect(() => {
     if (dataDocuments) {
@@ -190,14 +191,14 @@ function EmployeeDetails() {
 
   return (
     <NewLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 mx-auto">
         <MainSection>
           <div className="flex flex-col h-screen w-full">
             <div className="flex h-screen">
-              <div className="flex xs:w-2/6"></div>
-              <div className="flex flex-col  xs:w-2/6  items-left  align-middle mt-10">
+              <div className="flex xs:w-1/6"></div>
+              <div className="flex flex-col flex-1 xs:w-2/6  items-left  align-middle  p-5">
                 <section className="">
-                  <h1 className="text-gray-900 text-3xl font-bold text-center mb-10">
+                  <h1 className="text-gray-900 text-2xl font-bold text-center mb-10 uppercase">
                     Detalle de Colaborador
                   </h1>
                   <h3 className="font-bold">Información Personal</h3>
@@ -205,68 +206,91 @@ function EmployeeDetails() {
                 <section>
                   <div className="flex items-center ">
                     <div className="w-2/4">
-                      <FieldContainer title={"Nombres"}>
-                        <span>{firstName}</span>
+                      <FieldContainer>
+                        <RoundedLabel
+                          label={`Nombres`}
+                          value={dataEmployee.firstName}
+                        ></RoundedLabel>
                       </FieldContainer>
                     </div>
                     <div className="w-2/4 ml-2">
-                      <FieldContainer title={"Apellidos"}>
-                        <span>{lastName}</span>
+                      <FieldContainer>
+                        <RoundedLabel
+                          label={`Apellidos`}
+                          value={dataEmployee.lastName}
+                        ></RoundedLabel>
                       </FieldContainer>
                     </div>
                   </div>
 
-                  <FieldContainer title={"Phone"}>
+                  <FieldContainer>
                     <div className="flex items-center ">
                       <div className="w-2/4">
-                        <span>{phoneArea.text}</span>
+                        <RoundedLabel
+                          label={`Código de Area`}
+                          value={dataEmployee.phoneArea.text}
+                        ></RoundedLabel>
                       </div>
                       <div className="w-2/4 ml-2">
-                        <span>{phone}</span>
+                        <RoundedLabel
+                          label={`Número de Teléfono`}
+                          value={dataEmployee.phone}
+                        ></RoundedLabel>
                       </div>
                     </div>
                   </FieldContainer>
-                  <FieldContainer title={"Correo Electrónico"}>
-                    <span>{email}</span>
+                  <FieldContainer>
+                    <RoundedLabel
+                      label={`Correo Electrónico`}
+                      value={dataEmployee.email}
+                    ></RoundedLabel>
                   </FieldContainer>
-                  <FieldContainer title={"Documento de Identidad"}>
+                  <FieldContainer>
                     <div className="flex items-center ">
                       <div className="w-2/4">
-                        <span>{documentType.text}</span>
+                        <RoundedLabel
+                          label={`Tipo de Documento`}
+                          value={dataEmployee.documentType.text}
+                        ></RoundedLabel>
                       </div>
                       <div className="w-2/4 ml-2">
-                        <span>{documentId}</span>
+                        <RoundedLabel
+                          label={`Número de Documento`}
+                          value={dataEmployee.documentId}
+                        ></RoundedLabel>
                       </div>
                     </div>
                   </FieldContainer>
-                  <FieldContainer title={"Dirección"}>
-                    <span>{address}</span>
+                  <FieldContainer>
+                    <RoundedLabel
+                      label={`Dirección del Domicilio`}
+                      value={dataEmployee.address}
+                    ></RoundedLabel>
                   </FieldContainer>
-                  <FieldContainer title={"Género"}>
+                  <FieldContainer>
                     <div className="flex flex-wrap">
                       <div className="flex md:flex-col w-2/6">
-                        <span>{gender.text}</span>
+                        <RoundedLabel
+                          label={`Género`}
+                          value={dataEmployee.gender.text}
+                        ></RoundedLabel>
                       </div>
                       <div className="flex md:flex-col w-2/6">
-                        <span>{collaboratorStatus.text}</span>
+                        <RoundedLabel
+                          label={`Estado`}
+                          value={dataEmployee.status.text}
+                        ></RoundedLabel>
                       </div>
                       <div className="flex md:flex-col w-2/6">
-                        <span>{collaboratorType.text}</span>
+                        <RoundedLabel
+                          label={`Rol`}
+                          value={dataEmployee.collaboratorType.text}
+                        ></RoundedLabel>
                       </div>
                     </div>
                   </FieldContainer>
                   <FieldContainer title={"Galería de Imágenes"}>
-                    <div className="grid grid-flow-col w-full overflow-x-scroll px-2">
-                      {/* <div className="grid relative w-32 h-32 bg-gray-50 m-2">
-                        <Image
-                          className="block relative"
-                          src={"/hubi-logo.jpg"}
-                          width={128}
-                          height={128}
-                          alt="Cover"
-                        ></Image>
-                        <XIcon className="grid w-10 h-10 absolute text-center cursor-pointer hover:bg-purple-700 text-white bg-purple-900 "></XIcon>
-                      </div> */}
+                    <div className="grid grid-flow-col w-full h-48 px-2">
                       {images.map((x, i) => (
                         <Thumbnail key={i} imagePath={x.url}></Thumbnail>
                       ))}
@@ -275,6 +299,7 @@ function EmployeeDetails() {
                   <div className="flex justify-end text-white text-md font-bold  mt-8 ">
                     <StyledSecondaryButton
                       ref={defaultButton}
+                      className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
                       onClick={() => router.back()}
                     >
                       Regresar
@@ -285,7 +310,7 @@ function EmployeeDetails() {
                   </div>
                 </section>
               </div>
-              <div className="flex xs:w-2/6"></div>
+              <div className="flex xs:w-1/6"></div>
             </div>
           </div>
           {showDeleteModal && (
