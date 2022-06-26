@@ -7,7 +7,6 @@ import {
   ClipboardListIcon,
   CogIcon,
   ShieldCheckIcon,
-  HomeIcon,
   UserGroupIcon,
   IdentificationIcon,
 } from "@heroicons/react/outline";

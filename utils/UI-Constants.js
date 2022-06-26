@@ -279,11 +279,10 @@ export const phoneAreaOptions = [
 ];
 
 export const postOptions = [
-  { key: "news", steps: 3 },
-  { key: "marketplace", steps: 4 },
-  { key: "survey", steps: 4 },
-  { key: "rent", steps: 4 },
-  { key: "report", steps: 3 },
+  { key: "news" },
+  { key: "event" },
+  { key: "marketplace" },
+  { key: "rent" },
 ];
 
 export const postScopeOptions = [

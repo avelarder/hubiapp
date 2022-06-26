@@ -14,13 +14,10 @@ const TextInput = ({
 }) => {
   const [validInput, setValidInput] = useState(true);
 
-  //  className={classNames(
-  //     "bg-gradient-to-r from-gray-50 to-white text-xs text-gray-500  w-full h-10 border-grayt-200 rounded-full border-b-1 focus:border-purple-900 pl-6",
-  //     { "text-black bg-red-200": hasError }
-  //   )}
   const inputClassNames = classnames(
-    "bg-gradient-to-r from-gray-50 to-white text-xs text-gray-500  w-full h-10 border-grayt-200 rounded-full border-b-1 focus:border-purple-900 pl-6",
-    { "border-red-500": !validInput }
+    "bg-gradient-to-r from-gray-50 to-white text-xs text-gray-500  w-full h-10 border-gray-200 rounded-lg border-b-1  pl-6",
+    { "border-red-400 border-b-2": !validInput },
+    { "rounded-full": mask }
   );
 
   return (
@@ -42,6 +39,7 @@ const TextInput = ({
         ></InputMask>
       ) : (
         <TextareaAutosize
+          className={inputClassNames}
           value={value}
           onChange={(e) => {
             onChange(e.target.value);
@@ -56,7 +54,9 @@ const TextInput = ({
         ></TextareaAutosize>
       )}
       {!validInput && invalidText && (
-        <p className="text-red-500 text-xs italic">{invalidText}</p>
+        <span className="flex w-full justify-center mb-2 text-red-500 text-xs italic text-center">
+          {invalidText}
+        </span>
       )}
     </div>
   );

@@ -9,9 +9,25 @@ import { uuid as v4 } from "uuidv4";
 import moment from "moment";
 import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
-
-import { postOptions, postScopeOptions } from "../../utils/UI-Constants";
+import {
+  getScheduleDays,
+  getScheduleHours,
+  getScheduleMinutes,
+  getScheduleMonths,
+  getScheduleYears,
+  postOptions,
+} from "../../utils/UI-Constants";
 import { StyledButton } from "../../components/admin/base-ui-components";
+import PostTypeScreen from "../../components/post/post-type-screen";
+import Select from "../../components/common/select";
+import TextInput from "../../components/common/textInput";
+import ContextualMenu from "../../components/dashboard/contextualMenu";
+import { EmojiHappyIcon } from "@heroicons/react/outline";
+import { Picker } from "emoji-mart";
+import ImageUploader from "../../components/post/image-uploader";
+import SurveyBuilder from "../../components/post/survey-builder";
+import Scheduler from "../../components/post/shared/schedule";
+import PostNewsScreen from "../../components/post/post-news-screen";
 
 function Comunidad() {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -101,24 +117,10 @@ function Comunidad() {
   };
   const handleStepNext = () => {
     setCurrentStep(currentStep + 1);
-    setPostActionBarStatus({
-      ...postActionBarStatus,
-      backEnabled: true,
-      nextEnabled: false,
-      closeEnabled: true,
-      publishEnabled: false,
-    });
   };
 
   const handleCurrentOptionChange = (type) => {
     setCurrentOption(type);
-    setPostActionBarStatus({
-      ...postActionBarStatus,
-      backEnabled: false,
-      nextEnabled: true,
-      closeEnabled: true,
-      publishEnabled: false,
-    });
   };
 
   return (
@@ -161,21 +163,20 @@ function Comunidad() {
           <div>
             <Footer></Footer>
           </div>
+
           {showCreatePost && (
-            <CreatePost
-              step={currentStep}
-              postActionBarStatus={postActionBarStatus}
-              onStepChanged={handleStepChange}
-              option={currentOption}
-              onOptionChanged={handleCurrentOptionChange}
-              postOptions={postOptions}
-              postScopeOptions={postScopeOptions}
-              onCancel={hideCreatePostModal}
-              onConfirm={handlePostCreated}
-              onPreview={handlePostPreview}
-              onBack={handleStepBack}
-              onNext={handleStepNext}
-            ></CreatePost>
+            <CreatePost onCancel={hideCreatePostModal}>
+              {!currentOption && (
+                <PostTypeScreen
+                  onCancel={hideCreatePostModal}
+                  postOptions={postOptions}
+                  onCurrentOptionChange={handleCurrentOptionChange}
+                ></PostTypeScreen>
+              )}
+              {currentOption?.key === "news" && (
+                <PostNewsScreen onCancel={hideCreatePostModal}></PostNewsScreen>
+              )}
+            </CreatePost>
           )}
         </div>
       </NewLayout>
