@@ -6,6 +6,7 @@ import {
   VideoCameraIcon,
   XIcon,
 } from "@heroicons/react/outline";
+import classNames from "classnames";
 import moment from "moment";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -53,7 +54,8 @@ export default function PostNewsScreen({ onCancel }) {
   const handleShowImages = () => {
     setShowImages((prev) => !prev);
   };
-
+  const handleSumitPostNews = () => {};
+  const handleFormStatus = () => {};
   return (
     <div className="flex flex-col w-full">
       {/* Photo and User */}
@@ -163,7 +165,13 @@ export default function PostNewsScreen({ onCancel }) {
           <CalendarIcon className="w-7 h-7"></CalendarIcon>
         </StyledButton>
         <div className="w-2"></div>
-        <StyledButton className="flex flex-1 justify-center items-center">
+        <StyledButton
+          className={classNames("flex flex-1 justify-center items-center", {
+            "text-purple-400": !isFormValid,
+          })}
+          disabled={!isFormValid}
+          onClick={handleSumitPostNews}
+        >
           Publicar
         </StyledButton>
         <div className="w-2"></div>
