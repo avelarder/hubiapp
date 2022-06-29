@@ -9,7 +9,7 @@ import {
 import classNames from "classnames";
 import moment from "moment";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   getScheduleDays,
   getScheduleHours,
@@ -26,11 +26,17 @@ import FileUpload from "../common/file-upload";
 import TextInput from "../common/textInput";
 import Scheduler from "./shared/schedule";
 import SurveyBuilder from "./survey-builder";
+import Firebase from "../../firebase";
+import { toast } from "react-toastify";
+import { uuid as v4 } from "uuidv4";
+import { useAuth } from "../../authUserProvider";
 
 export default function PostNewsScreen({ onCancel }) {
+  const { authUser } = useAuth();
+
   const [isFormValid, setIsFormValid] = useState(false);
   const [description, setDescription] = useState("");
-  const [schedule, setSchedule] = useState(null);
+  const [schedule, setSchedule] = useState(moment(new Date(), true));
   const [showSurvey, setShowSurvey] = useState(false);
   const [showScheduler, setShowScheduler] = useState(false);
   const [showImages, setShowImages] = useState(false);
@@ -39,8 +45,11 @@ export default function PostNewsScreen({ onCancel }) {
     text: "Opción Simple",
   });
   const [allowAddOption, setAllowAddOption] = useState(false);
-  const [options, setOptions] = useState([{ key: 0, text: "" }]);
-  const [expirationDate, setExpirationDate] = useState(false);
+  const [options, setOptions] = useState([
+    { key: 0, text: "" },
+    { key: 1, text: "" },
+  ]);
+  const [expirationDate, setExpirationDate] = useState("");
 
   const [images, setImages] = useState([]);
 
@@ -54,8 +63,77 @@ export default function PostNewsScreen({ onCancel }) {
   const handleShowImages = () => {
     setShowImages((prev) => !prev);
   };
-  const handleSumitPostNews = () => {};
-  const handleFormStatus = () => {};
+
+  const handleSumitPostNews = async () => {
+    const db = Firebase.default.firestore();
+    const postId = v4();
+    await db
+      .collection("Publications")
+      .doc(postId)
+      .set({
+        description: description,
+        hasSurvey: showSurvey,
+        ...(showSurvey && { surveyOptions: options }),
+        ...(showSurvey && { surveyExpiration: expirationDate }),
+        ...(showSurvey && { surveyAnswerType: answerType }),
+        ...(showSurvey && { surveyAllowAddOption: allowAddOption }),
+        hasSchedule: showScheduler,
+        ...(showScheduler && { schedule: schedule.toISOString() }),
+        author: {
+          id: authUser.uid,
+          email: authUser.email,
+        },
+        location: {
+          id: authUser.profiles[0].locationId,
+          name: authUser.profiles[0].location,
+        },
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+
+    toast.success("Tu publicación ha sido aceptada.");
+
+    onCancel();
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleFormStatus = () => {
+    const isDescriptionValid = VALIDATIONS.NONE(description);
+    const isSurveyValid =
+      showSurvey &&
+      options.every((x) => VALIDATIONS.NONE(x.text)) &&
+      VALIDATIONS.NONE(expirationDate) &&
+      VALIDATIONS.DATE(expirationDate);
+
+    const isScheduleValid = showScheduler && schedule;
+
+    return (
+      isDescriptionValid &&
+      (showSurvey ? isSurveyValid : true) &&
+      (showScheduler ? isScheduleValid : true)
+    );
+  };
+
+  const handleScheduleChanged = (schedule) => {
+    const scheduleDate = moment(
+      `${schedule.year}-${schedule.month}-${schedule.day} ${schedule.hour}:${schedule.minute}`,
+      "YYYY-M-D H:m",
+      true
+    );
+    setSchedule(scheduleDate);
+  };
+
+  useEffect(() => {
+    setIsFormValid(handleFormStatus());
+  }, [handleFormStatus]);
+
+  if (!authUser)
+    return (
+      <div className="flex flex-col w-full">
+        Cargango información del usuario
+      </div>
+    );
+
   return (
     <div className="flex flex-col w-full">
       {/* Photo and User */}
@@ -74,7 +152,6 @@ export default function PostNewsScreen({ onCancel }) {
       {/* Content */}
       <div className="flex flex-col mt-2 ">
         <TextInput
-          //   className="text-xs text-gray-500 w-full h-20 border-b-2 border-gray-100 rounded-lg bg-gradient-to-tr from-gray-50 to-white pl-6"
           rows={5}
           minRows={3}
           maxRows={10}
@@ -129,6 +206,7 @@ export default function PostNewsScreen({ onCancel }) {
             onExpirationChanged={setExpirationDate}
             onOptionChanged={(updatedOptions) => {
               setOptions((prev) => [...updatedOptions]);
+              handleFormStatus();
             }}
             onAddOptionChanged={setAllowAddOption}
           ></SurveyBuilder>
@@ -148,8 +226,8 @@ export default function PostNewsScreen({ onCancel }) {
         showSwith={false}
         enabled={showScheduler}
         setEnabled={setShowScheduler}
-        schedule={schedule ?? moment(new Date(), true)}
-        onScheduleChanged={setSchedule}
+        schedule={schedule}
+        onScheduleChanged={handleScheduleChanged}
         years={getScheduleYears()}
         months={getScheduleMonths()}
         days={getScheduleDays()}
