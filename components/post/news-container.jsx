@@ -10,19 +10,19 @@ const DEFAULT_LIMIT = 10;
 const initCommunityNews = {
   headers: [
     {
-      source: "title",
-      columnName: "Título",
+      source: "description",
+      columnName: "Descripción",
       isLink: true,
       path: (id) => `posts/${id}/detalle`,
     },
     {
-      source: "publishedOn",
-      columnName: "Publicado",
+      source: "createdOnUTC",
+      columnName: "Registrado",
       isDate: true,
       format: "DD/MM/YYYY",
     },
     {
-      source: "expiresBy",
+      source: "surveyExpiration",
       columnName: "Expiración",
       isDate: true,
       format: "DD/MM/YYYY",
@@ -41,12 +41,12 @@ function NewsContainer() {
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("publishedOn");
+  const [orderField, setOrderField] = useState("createdOnUTC");
 
   const [filterPost, setFilterPost] = useState("");
 
   const query = db
-    .collection("CommunityNews")
+    .collection("Publications")
     .orderBy(orderField, "desc")
     .limit(rowsPerPage);
 
@@ -66,9 +66,9 @@ function NewsContainer() {
   if (data) {
     var currentDocs = data.map((doc) => ({
       id: doc.id,
-      title: doc.title,
-      publishedOn: doc.publishedOn,
-      expiresBy: doc.expiresBy ?? "--",
+      description: doc.description,
+      createdOnUTC: doc.createdOnUTC,
+      surveyExpiration: doc.surveyExpiration ?? "--",
     }));
 
     communityNews = { ...initCommunityNews, data: currentDocs };
@@ -88,10 +88,7 @@ function NewsContainer() {
   };
 
   const handleDeleteConfirmation = async () => {
-    await db
-      .collection("CommunityNews")
-      .doc(postToDelete)
-      .delete();
+    await db.collection("CommunityNews").doc(postToDelete).delete();
     setShowDeleteModal(false);
   };
 

@@ -28,7 +28,7 @@ import Scheduler from "./shared/schedule";
 import SurveyBuilder from "./survey-builder";
 import Firebase from "../../firebase";
 import { toast } from "react-toastify";
-import v4 from "uuid";
+import { uuid as v4 } from "uuidv4";
 import { useAuth } from "../../authUserProvider";
 import Chip from "../common/chip";
 

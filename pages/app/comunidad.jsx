@@ -3,46 +3,19 @@ import NewLayout from "../../components/newLayout";
 import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
 import CreatePost from "../../components/post/create-post";
-import Firebase from "../../firebase";
+
 import { Disclosure } from "@headlessui/react";
-import { uuid as v4 } from "uuidv4";
-import moment from "moment";
+
 import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
-import {
-  getScheduleDays,
-  getScheduleHours,
-  getScheduleMinutes,
-  getScheduleMonths,
-  getScheduleYears,
-  postOptions,
-} from "../../utils/UI-Constants";
+import { postOptions } from "../../utils/UI-Constants";
 import { StyledButton } from "../../components/admin/base-ui-components";
 import PostTypeScreen from "../../components/post/post-type-screen";
-import Select from "../../components/common/select";
-import TextInput from "../../components/common/textInput";
-import ContextualMenu from "../../components/dashboard/contextualMenu";
-import { EmojiHappyIcon } from "@heroicons/react/outline";
-import { Picker } from "emoji-mart";
-import ImageUploader from "../../components/post/image-uploader";
-import SurveyBuilder from "../../components/post/survey-builder";
-import Scheduler from "../../components/post/shared/schedule";
+
 import PostNewsScreen from "../../components/post/post-news-screen";
 
 function Comunidad() {
   const [showCreatePost, setShowCreatePost] = useState(false);
-
-  const defaultActioBarStatus = {
-    backEnabled: false,
-    nextEnabled: false,
-    closeEnabled: true,
-    publishEnabled: false,
-  };
-
-  const [currentStep, setCurrentStep] = useState(1);
-  const [postActionBarStatus, setPostActionBarStatus] = useState(
-    defaultActioBarStatus
-  );
   const [currentOption, setCurrentOption] = useState(null);
 
   const hideCreatePostModal = () => {
@@ -51,72 +24,8 @@ function Comunidad() {
     setShowCreatePost(false);
   };
 
-  const handlePostCreated = (postData) => {
-    const documentId = v4();
-    const publishedOn = moment(new Date()).format("DD/MM/YYYY");
-
-    const db = Firebase.default.firestore();
-    db.collection("CommunityNews")
-      .doc(documentId)
-      .set({
-        description: postData.data.find((x) => x.key === "description").value,
-        title: postData.data.find((x) => x.key === "title").value,
-        scope: postData.data.find((x) => x.key === "scope").value,
-        postType: postData.data.find((x) => x.key === "postType").value,
-        answerType:
-          postData.data.find((x) => x.key === "answerType")?.value ?? null,
-        options: postData.data.find((x) => x.key === "options")?.value ?? null,
-        expiresBy:
-          postData.data.find((x) => x.key === "expiresBy")?.value ?? null,
-        allowAddOption:
-          postData.data.find((x) => x.key === "allowAddOption")?.value ?? null,
-        schedule:
-          postData.data
-            .find((x) => x.key === "schedule")
-            ?.value.toISOString() ?? null,
-        publishedOn: publishedOn,
-        createdOnUTC: new Date().toISOString(),
-      });
-
-    hideCreatePostModal();
-  };
-
   const handleCreatePostVisibility = (visible) => {
     setShowCreatePost(visible);
-    setPostActionBarStatus({
-      ...postActionBarStatus,
-      backEnabled: false,
-      nextEnabled: false,
-      closeEnabled: true,
-      publishEnabled: false,
-    });
-  };
-  const handlePostPreview = () => {
-    handleStepNext();
-    setPostActionBarStatus({
-      ...postActionBarStatus,
-      backEnabled: true,
-      nextEnabled: false,
-      closeEnabled: true,
-      publishEnabled: true,
-    });
-  };
-
-  const handleStepChange = (newStep) => {
-    setCurrentStep(newStep);
-  };
-  const handleStepBack = () => {
-    setCurrentStep(currentStep - 1);
-    setPostActionBarStatus({
-      ...postActionBarStatus,
-      backEnabled: false,
-      nextEnabled: true,
-      closeEnabled: true,
-      publishEnabled: false,
-    });
-  };
-  const handleStepNext = () => {
-    setCurrentStep(currentStep + 1);
   };
 
   const handleCurrentOptionChange = (type) => {
@@ -136,7 +45,7 @@ function Comunidad() {
                 }}
               >
                 <PlusIcon className="w-5 h-5 mr-2 font-monse"></PlusIcon>Crear
-                Aviso
+                Avisos
               </StyledButton>
 
               <div className="mt-2">
@@ -144,7 +53,7 @@ function Comunidad() {
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex justify-between shadow-md w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg border-1 border-purple-200 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                        <span>Avisos y Encuestas</span>
+                        <span>Publicaciones y Encuestas</span>
                         <ChevronUpIcon
                           className={`${
                             open ? "transform rotate-180" : ""

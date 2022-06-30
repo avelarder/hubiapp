@@ -39,9 +39,9 @@ function TableSection({
       .filter(
         (post) =>
           filterPost === "" ||
-          post.title.toLowerCase().includes(filterPost.toLowerCase()) ||
-          post.publishedOn.toLowerCase().includes(filterPost.toLowerCase()) ||
-          post.expiresBy.toLowerCase().includes(filterPost.toLowerCase())
+          post.description.toLowerCase().includes(filterPost.toLowerCase()) ||
+          post.createdOnUTC.toLowerCase().includes(filterPost.toLowerCase()) ||
+          post.surveyExpiration.toLowerCase().includes(filterPost.toLowerCase())
       )
       .sort((a, b) => {
         if (header.isDate) {
