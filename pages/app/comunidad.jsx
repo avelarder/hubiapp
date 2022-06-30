@@ -168,7 +168,6 @@ function Comunidad() {
             <CreatePost onCancel={hideCreatePostModal}>
               {!currentOption && (
                 <PostTypeScreen
-                  onCancel={hideCreatePostModal}
                   postOptions={postOptions}
                   onCurrentOptionChange={handleCurrentOptionChange}
                 ></PostTypeScreen>

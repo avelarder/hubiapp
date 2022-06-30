@@ -28,8 +28,9 @@ import Scheduler from "./shared/schedule";
 import SurveyBuilder from "./survey-builder";
 import Firebase from "../../firebase";
 import { toast } from "react-toastify";
-import { uuid as v4 } from "uuidv4";
+import v4 from "uuid";
 import { useAuth } from "../../authUserProvider";
+import Chip from "../common/chip";
 
 export default function PostNewsScreen({ onCancel }) {
   const { authUser } = useAuth();
@@ -91,8 +92,9 @@ export default function PostNewsScreen({ onCancel }) {
         updatedOnUTC: new Date().toISOString(),
       });
 
-    toast.success("Tu publicación ha sido aceptada.");
+    if (images.length > 0) await upload(postId);
 
+    toast.success("Tu publicación ha sido aceptada.");
     onCancel();
   };
 
@@ -114,6 +116,10 @@ export default function PostNewsScreen({ onCancel }) {
     );
   };
 
+  const handleRemoveImage = (index) => {
+    setImages([...images.filter((x, i) => i != index)]);
+  };
+
   const handleScheduleChanged = (schedule) => {
     const scheduleDate = moment(
       `${schedule.year}-${schedule.month}-${schedule.day} ${schedule.hour}:${schedule.minute}`,
@@ -121,6 +127,60 @@ export default function PostNewsScreen({ onCancel }) {
       true
     );
     setSchedule(scheduleDate);
+  };
+  const handlePostImage = async (postId, url) => {
+    const db = Firebase.default.firestore();
+    const documentId = v4();
+
+    await db
+      .collection("Publication_Documents")
+      .doc(documentId)
+      .set({
+        url: `${url}`,
+        postId: `${postId}`,
+        status: "ACTIVE",
+
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+
+  const upload = async (postId) => {
+    const storage = Firebase.default.storage();
+
+    for (let index = 0; index < images.length; index++) {
+      const element = images[index];
+      const fileURL = `/files/posts/${postId}/${element.name}`;
+      const refToFile = storage.ref(fileURL);
+
+      const uploadTask = refToFile.put(element);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // Observe state change events such as progress, pause, and resume
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.info("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.info("Upload is paused");
+              break;
+            case "running":
+              console.info("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          console.error(error);
+        },
+        async () => {
+          // Handle successful uploads on complete
+          await handlePostImage(postId, fileURL);
+        }
+      );
+    }
   };
 
   useEffect(() => {
@@ -176,20 +236,30 @@ export default function PostNewsScreen({ onCancel }) {
               <ChartSquareBarIcon></ChartSquareBarIcon>
             </div>
             {/* Images */}
+            {!showSurvey && (
+              <>
+                <div
+                  className={`flex m-2 items-center  w-6 h-6  justify-center cursor-pointer  ${
+                    showImages ? "text-purple-500" : "text-gray-500"
+                  }`}
+                  onClick={handleShowImages}
+                >
+                  <PhotographIcon></PhotographIcon>
+                </div>
+                {/* Video */}
+                <div
+                  className="flex m-2 items-center  w-6 h-6  justify-center cursor-pointer text-gray-500  "
+                  onClick={handleShowImages}
+                >
+                  <VideoCameraIcon></VideoCameraIcon>
+                </div>
+              </>
+            )}
+            {/* Files */}
             <div
-              className={`flex m-2 items-center  w-6 h-6  justify-center cursor-pointer  ${
-                showImages ? "text-purple-500" : "text-gray-500"
-              }`}
+              className="flex m-2 items-center  w-6 h-6  justify-center cursor-pointer text-gray-500 "
               onClick={handleShowImages}
             >
-              <PhotographIcon></PhotographIcon>
-            </div>
-            {/* Video */}
-            <div className="flex m-2 items-center  w-6 h-6  justify-center cursor-pointer text-gray-500  ">
-              <VideoCameraIcon></VideoCameraIcon>
-            </div>
-            {/* Files */}
-            <div className="flex m-2 items-center  w-6 h-6  justify-center cursor-pointer text-gray-500 ">
               <DocumentTextIcon></DocumentTextIcon>
             </div>
           </div>
@@ -213,13 +283,31 @@ export default function PostNewsScreen({ onCancel }) {
         </div>
       )}
       {showImages && (
-        <div className="flex items-center border-1 my-2  rounded-lg border-gray-300">
-          <FileUpload
-            onFileSelected={(file) => {
-              const newImageList = [...images, file];
-              setImages(newImageList);
-            }}
-          ></FileUpload>
+        <div className="flex w-full flex-col">
+          <div className="flex items-center border-1 my-2  rounded-lg border-gray-300">
+            <FileUpload
+              onFileSelected={(file) => {
+                const newImageList = [...images, file];
+                setImages(newImageList);
+              }}
+            ></FileUpload>
+          </div>
+          <div>
+            {images.length === 0 ? (
+              <span className="text-black">0 archivos.</span>
+            ) : (
+              <div className="flex flex-wrap mt-4  w-full">
+                {images.map((image, index) => (
+                  <Chip
+                    key={index}
+                    text={image.name}
+                    index={index}
+                    onRemoveChip={handleRemoveImage}
+                  ></Chip>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
       <Scheduler
@@ -252,13 +340,6 @@ export default function PostNewsScreen({ onCancel }) {
         >
           Publicar
         </StyledButton>
-        <div className="w-2"></div>
-        <StyledSecondaryButton
-          className="inline-flex justify-center items-center h-10 w-32"
-          onClick={onCancel}
-        >
-          <XIcon className="w-5 h-5 mr-2"></XIcon>Cerrar
-        </StyledSecondaryButton>
       </div>
       <div className="flex h-1"></div>
     </div>

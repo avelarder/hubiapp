@@ -21,6 +21,7 @@ import {
 } from "../../utils/UI-Constants";
 import FieldContainer from "../common/field-container";
 import PostTypeScreen from "./post-type-screen";
+import { XCircleIcon } from "@heroicons/react/solid";
 
 function CreatePost({ onCancel, children }) {
   // const [isFormValid, setIsFormValid] = useState(false);
@@ -186,14 +187,24 @@ function CreatePost({ onCancel, children }) {
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-center">
                 <div className="mt-3 text-center sm:mt-0  sm:text-left w-full">
-                  <h3
-                    className="text-2xl leading-6 font-bold text-gray-900 text-center my-3"
-                    id="modal-title"
-                  >
-                    Crear Publicación
-                  </h3>
-
+                  <div className="flex w-full">
+                    <div className="flex flex-1 justify-center">
+                      <h3
+                        className="text-2xl leading-6 font-bold text-gray-900 text-center my-3"
+                        id="modal-title"
+                      >
+                        Crear Publicación
+                      </h3>
+                    </div>
+                    <div className="flex ">
+                      <XCircleIcon
+                        className="w-8 h-8 cursor-pointer"
+                        onClick={onCancel}
+                      ></XCircleIcon>
+                    </div>
+                  </div>
                   {children}
+                  <div className="h-6"></div>
                 </div>
               </div>
             </div>
