@@ -74,7 +74,10 @@ function Comunidad() {
           </div>
 
           {showCreatePost && (
-            <CreatePost onCancel={hideCreatePostModal}>
+            <CreatePost
+              title={"Crear Publicación"}
+              onCancel={hideCreatePostModal}
+            >
               {!currentOption && (
                 <PostTypeScreen
                   postOptions={postOptions}

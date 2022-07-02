@@ -28,29 +28,25 @@ import Scheduler from "./shared/schedule";
 import SurveyBuilder from "./survey-builder";
 import Firebase from "../../firebase";
 import { toast } from "react-toastify";
-import { uuid as v4 } from "uuidv4";
 import { useAuth } from "../../authUserProvider";
 import Chip from "../common/chip";
+import Thumbnail from "../common/thumbnail";
 
-export default function PostNewsScreen({ onCancel }) {
+export default function PostNewsScreenEdit({ post, documents, onCancel }) {
   const { authUser } = useAuth();
 
-  const [isFormValid, setIsFormValid] = useState(false);
-  const [description, setDescription] = useState("");
-  const [schedule, setSchedule] = useState(moment(new Date(), true));
-  const [showSurvey, setShowSurvey] = useState(false);
-  const [showScheduler, setShowScheduler] = useState(false);
-  const [showImages, setShowImages] = useState(false);
-  const [answerType, setAnswerType] = useState({
-    id: "SINGLE",
-    text: "Opción Simple",
-  });
-  const [allowAddOption, setAllowAddOption] = useState(false);
-  const [options, setOptions] = useState([
-    { key: 0, text: "" },
-    { key: 1, text: "" },
-  ]);
-  const [expirationDate, setExpirationDate] = useState("");
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [description, setDescription] = useState(post.description);
+  const [schedule, setSchedule] = useState(moment(post.schedule, true));
+  const [showSurvey, setShowSurvey] = useState(post.hasSurvey);
+  const [showScheduler, setShowScheduler] = useState(post.hasSchedule);
+  const [showImages, setShowImages] = useState(documents.length > 0);
+  const [answerType, setAnswerType] = useState(post.surveyAnswerType);
+  const [allowAddOption, setAllowAddOption] = useState(
+    post.surveyAllowAddOption
+  );
+  const [options, setOptions] = useState(post.surveyOptions);
+  const [expirationDate, setExpirationDate] = useState(post.surveyExpiration);
 
   const [images, setImages] = useState([]);
 
@@ -67,11 +63,11 @@ export default function PostNewsScreen({ onCancel }) {
 
   const handleSumitPostNews = async () => {
     const db = Firebase.default.firestore();
-    const postId = v4();
+    const postId = post.id;
     await db
       .collection("Publications")
       .doc(postId)
-      .set({
+      .update({
         description: description,
         hasSurvey: showSurvey,
         ...(showSurvey && { surveyOptions: options }),
@@ -308,6 +304,15 @@ export default function PostNewsScreen({ onCancel }) {
               </div>
             )}
           </div>
+          <div>
+            {documents.length > 0 && (
+              <div className="flex flex-wrap mt-4  w-full">
+                {documents.map((doc) => (
+                  <Thumbnail imagePath={doc.url} key={doc.id}></Thumbnail>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
       <Scheduler
@@ -338,7 +343,7 @@ export default function PostNewsScreen({ onCancel }) {
           disabled={!isFormValid}
           onClick={handleSumitPostNews}
         >
-          Publicar
+          Actualizar
         </StyledButton>
       </div>
       <div className="flex h-1"></div>

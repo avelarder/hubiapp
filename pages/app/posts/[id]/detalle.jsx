@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
-import ViewPost from "../../../../components/post/view-post";
+
 import NewLayout from "../../../../components/newLayout";
 import MainSection from "../../../../components/dashboard/mainSection";
 import DeleteModal from "../../../../components/common/delete-modal";
 import Loader from "../../../../components/common/loader";
+import FieldContainer from "../../../../components/common/field-container";
+import RoundedLabel from "../../../../components/common/roundedLabel";
+
+import Thumbnail from "../../../../components/common/thumbnail";
+import moment from "moment";
+import {
+  StyledButton,
+  StyledSecondaryButton,
+} from "../../../../components/admin/base-ui-components";
+import CreatePost from "../../../../components/post/create-post";
+import PostNewsScreenEdit from "../../../../components/post/post-news-screen-edit";
 
 function ViewPostPage() {
+  const [showCreatePost, setShowCreatePost] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [images, setImages] = useState([]);
   const router = useRouter();
   const { query } = router;
 
@@ -19,57 +31,213 @@ function ViewPostPage() {
   const db = Firebase.default.firestore();
   let post = {};
 
-  const { data, status, error } = useFirestoreQuery(
-    db.collection("CommunityNews").doc(id)
+  const defaultButton = useRef(null);
+
+  const {
+    data: dataPost,
+    status: statusPost,
+    error: errorPost,
+  } = useFirestoreQuery(db.collection("Publications").doc(id));
+
+  const {
+    data: dataDocuments,
+    status: statusDocuments,
+    error: errorDocuments,
+  } = useFirestoreQuery(
+    db.collection("Publications_Documents").where("postId", "==", id ?? "")
   );
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (dataDocuments) {
+      setImages(dataDocuments.map((document) => document));
+    }
+    return () => {};
+  }, [dataDocuments]);
+
+  if (statusPost === "loading") {
     return <Loader></Loader>;
   }
-  if (status === "error") {
+  if (statusPost === "error") {
     return `Error: ${error.message}`;
   }
-  if (data === null) {
+  if (dataPost === null) {
     return <Loader></Loader>;
   }
-  if (data) {
+  if (dataPost) {
     post = {
-      id: data.id,
-      title: data.title,
-      description: data.description,
-      scope: data.scope,
-      postType: data.postType,
-      answerType: data.answerType,
-      allowAddOption: data.allowAddOption,
-      options: data.options,
-      schedule: data.schedule,
-      publishedOn: data.publishedOn,
-      expiresBy: data.expiresBy,
+      id: dataPost.id,
+      description: dataPost.description,
+      hasSurvey: dataPost.hasSurvey,
+      hasSchedule: dataPost.hasSchedule,
+      author: dataPost.author,
+      createdOnUTC: dataPost.createdOnUTC,
+      location: dataPost.location,
+      schedule: dataPost.schedule,
+      surveyAllowAddOption: dataPost.surveyAllowAddOption,
+      surveyAnswerType: dataPost.surveyAnswerType,
+      surveyExpiration: dataPost.surveyExpiration,
+      updatedOnUTC: dataPost.updatedOnUTC,
+      surveyOptions: dataPost.surveyOptions,
     };
   }
+
+  const handleEditClicked = async (event) => {
+    setShowCreatePost(true);
+  };
 
   const handleBack = () => {
     router.back();
   };
+
   const handleDelete = () => {
     setShowDeleteModal(true);
   };
   const handleDeleteConfirmation = async () => {
-    await db.collection("CommunityNews").doc(id).delete();
+    await db.collection("Publications").doc(id).delete();
     setShowDeleteModal(false);
     router.push("/app/comunidad");
   };
+  const hideCreatePostModal = () => {
+    setShowCreatePost(false);
+  };
   return (
     <NewLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 mx-auto">
         <MainSection>
-          <div className="flex flex-col h-screen w-2/4">
-            <ViewPost
-              post={post}
-              onCancel={handleBack}
-              onDelete={handleDelete}
-            ></ViewPost>
+          <div className="flex flex-col h-screen w-full">
+            <div className="flex h-screen">
+              <div className="flex xs:w-1/6"></div>
+              <div className="flex flex-col flex-1 xs:w-2/6  items-left  align-middle  p-5">
+                <section className="">
+                  <h1 className="text-gray-900 text-2xl font-bold text-center mb-10 uppercase">
+                    Detalle de Publicación
+                  </h1>
+                </section>
+                <section>
+                  <div className="flex items-center ">
+                    <div className="w-full">
+                      <FieldContainer>
+                        <RoundedLabel
+                          label={`Descripción`}
+                          value={post.description}
+                        ></RoundedLabel>
+                      </FieldContainer>
+                      <FieldContainer>
+                        <RoundedLabel
+                          label={`Fecha de Registro`}
+                          value={moment(post.createdOnUTC, true).format(
+                            "DD/MM/YYYY"
+                          )}
+                        ></RoundedLabel>
+                      </FieldContainer>
+                    </div>
+                  </div>
+                </section>
+                {post.hasSchedule && (
+                  <section>
+                    <div className="flex flex-col border-1 border-gray-100 rounded-lg p-4 mt-4 ">
+                      <span className="flex text-gray-400 text-xs my-2 font-bold">
+                        Esta publicación tiene programación
+                      </span>
+                      <div className="w-full">
+                        <FieldContainer>
+                          <RoundedLabel
+                            label={`Fecha en la que esta publicación estará disponible`}
+                            value={moment(post.schedule, true).format(
+                              "DD/MM/YYYY"
+                            )}
+                          ></RoundedLabel>
+                        </FieldContainer>
+                      </div>
+                    </div>
+                  </section>
+                )}
+                {post.hasSurvey && (
+                  <section>
+                    <div className="flex flex-col border-1 border-gray-100 rounded-lg p-4 mt-4 ">
+                      <span className="flex text-gray-400 text-xs my-2 font-bold">
+                        Detalle de la Encuesta
+                      </span>
+                      <div className="w-full">
+                        <FieldContainer>
+                          <RoundedLabel
+                            label={`Esta encuesta permite agregar opciones?`}
+                            value={post.surveyAllowAddOption ? "Si" : "No"}
+                          ></RoundedLabel>
+                        </FieldContainer>
+                        <FieldContainer>
+                          <RoundedLabel
+                            label={`Esta encuesta permite seleccionar más de una opción?`}
+                            value={post.surveyAnswerType.text}
+                          ></RoundedLabel>
+                        </FieldContainer>
+                        <FieldContainer>
+                          <RoundedLabel
+                            label={`Esta encuesta expira:`}
+                            value={post.surveyExpiration}
+                          ></RoundedLabel>
+                        </FieldContainer>
+                        <div className="flex flex-wrap border-1 border-gray-100 rounded-lg p-4 mt-4">
+                          <span className="flex text-gray-400 text-xs font-bold my-2">
+                            Estas son las opciones de la encuesta:
+                          </span>
+                          {post.surveyOptions.map((option, i) => (
+                            <FieldContainer key={option.key}>
+                              <RoundedLabel
+                                label={`Opción ${i + 1}`}
+                                value={option.text}
+                              ></RoundedLabel>
+                            </FieldContainer>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                )}
+                {images.length > 0 && (
+                  <section>
+                    <div className="flex flex-col border-1 border-gray-100 rounded-lg p-4 mt-4 ">
+                      <span className="flex text-gray-400 text-xs my-2 font-bold">
+                        Estas son las opciones de la encuesta:
+                      </span>
+                      <FieldContainer title={"Galería de Imágenes"}>
+                        <div className="grid grid-flow-col w-full h-48 px-2">
+                          {images.map((x, i) => (
+                            <Thumbnail key={i} imagePath={x.url}></Thumbnail>
+                          ))}
+                        </div>
+                      </FieldContainer>
+                    </div>
+                  </section>
+                )}
+                <div className="flex justify-end text-white text-md font-bold  mt-8 ">
+                  <StyledSecondaryButton
+                    ref={defaultButton}
+                    className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
+                    onClick={() => router.back()}
+                  >
+                    Regresar
+                  </StyledSecondaryButton>
+                  <StyledButton onClick={handleEditClicked}>
+                    Editar
+                  </StyledButton>
+                </div>
+              </div>
+              <div className="flex xs:w-1/6"></div>
+            </div>
           </div>
+          {showCreatePost && (
+            <CreatePost
+              title={"Modificar Publicación"}
+              onCancel={hideCreatePostModal}
+            >
+              <PostNewsScreenEdit
+                post={post}
+                documents={images}
+                onCancel={hideCreatePostModal}
+              ></PostNewsScreenEdit>
+            </CreatePost>
+          )}
           {showDeleteModal && (
             <DeleteModal
               onCancel={() => setShowDeleteModal(false)}

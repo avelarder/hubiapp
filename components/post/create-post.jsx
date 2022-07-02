@@ -2,7 +2,7 @@ import React from "react";
 import "emoji-mart/css/emoji-mart.css";
 import { XCircleIcon } from "@heroicons/react/solid";
 
-function CreatePost({ onCancel, children }) {
+function CreatePost({ title, onCancel, children }) {
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -38,7 +38,7 @@ function CreatePost({ onCancel, children }) {
                         className="text-2xl leading-6 font-bold text-gray-900 text-center my-3"
                         id="modal-title"
                       >
-                        Crear Publicación
+                        {title}
                       </h3>
                     </div>
                     <div className="flex ">
