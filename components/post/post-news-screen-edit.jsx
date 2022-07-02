@@ -90,7 +90,7 @@ export default function PostNewsScreenEdit({ post, documents, onCancel }) {
 
     if (images.length > 0) await upload(postId);
 
-    toast.success("Tu publicación ha sido aceptada.");
+    toast.success("Tu publicación ha sido actualizada exitosamente.");
     onCancel();
   };
 
