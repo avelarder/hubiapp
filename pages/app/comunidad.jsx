@@ -19,7 +19,6 @@ function Comunidad() {
   const [currentOption, setCurrentOption] = useState(null);
 
   const hideCreatePostModal = () => {
-    setCurrentStep(1);
     setCurrentOption(null);
     setShowCreatePost(false);
   };

@@ -10,6 +10,7 @@ import {
 } from "../../components/admin/base-ui-components";
 
 import { useRouter } from "next/router";
+import AdminLayout from "../../components/admin-layout";
 
 function AdminDashboardPage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ function AdminDashboardPage() {
     },
   ];
   return (
-    <Container>
+    <AdminLayout>
       <PageHeader>Central de Operaciones</PageHeader>
       <VerticalContainer>
         <StyledInput
@@ -58,7 +59,7 @@ function AdminDashboardPage() {
             </VerticalContainer>
           </ScrollableContainer>
         ))}
-    </Container>
+    </AdminLayout>
   );
 }
 

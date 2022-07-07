@@ -52,7 +52,7 @@ function CollaboratorRegistration({
   const router = useRouter();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <section className="">
         <h1 className="text-gray-900 text-3xl font-bold text-center">
           {title}

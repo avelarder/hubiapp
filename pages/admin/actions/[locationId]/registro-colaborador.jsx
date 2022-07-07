@@ -9,6 +9,7 @@ import { uuid as v4 } from "uuidv4";
 import { useAuth } from "../../../../authUserProvider";
 import { paths } from "../../../../utils/paths";
 import { collaboratorTypeOptions } from "../../../../utils/UI-Constants";
+import AdminLayout from "../../../../components/admin-layout";
 export async function getServerSideProps(context) {
   const sendGridTemplateId =
     process.env.NEXT_PUBLIC_SENDGRID_TEMPLATE_ID_EMAIL_VERIFICATION;
@@ -119,16 +120,13 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
-    await db
-      .collection("Collaborators_Documents")
-      .doc(documentId)
-      .set({
-        url: url,
-        collaboratorId: collaboratorId,
-        status: "ACTIVE",
-        createdOnUTC: new Date().toISOString(),
-        updatedOnUTC: new Date().toISOString(),
-      });
+    await db.collection("Collaborators_Documents").doc(documentId).set({
+      url: url,
+      collaboratorId: collaboratorId,
+      status: "ACTIVE",
+      createdOnUTC: new Date().toISOString(),
+      updatedOnUTC: new Date().toISOString(),
+    });
   };
 
   const upload = async (collaboratorId, images) => {
@@ -205,13 +203,10 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
   };
   const handleActivationRecord = async (userId) => {
     const db = Firebase.default.firestore();
-    await db
-      .collection("ActivationRecords")
-      .doc(userId)
-      .update({
-        registered: true,
-        registeredOnUTC: new Date().toISOString(),
-      });
+    await db.collection("ActivationRecords").doc(userId).update({
+      registered: true,
+      registeredOnUTC: new Date().toISOString(),
+    });
   };
 
   const handleContinueClicked = async (event, formValues) => {
@@ -251,13 +246,15 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
   };
 
   return (
-    <CollaboratorRegistration
-      title="Registro Collaborador HUBI"
-      description={"Un gusto verte, por favor complete sus datos."}
-      formValidatorConfig={validatorConfig}
-      onContinueClicked={handleContinueClicked}
-      collaboratorOptions={collaboratorTypeOptions}
-    ></CollaboratorRegistration>
+    <AdminLayout>
+      <CollaboratorRegistration
+        title="Registro Collaborador HUBI"
+        description={"Un gusto verte, por favor complete sus datos."}
+        formValidatorConfig={validatorConfig}
+        onContinueClicked={handleContinueClicked}
+        collaboratorOptions={collaboratorTypeOptions}
+      ></CollaboratorRegistration>
+    </AdminLayout>
   );
 }
 

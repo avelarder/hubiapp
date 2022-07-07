@@ -136,14 +136,6 @@ export default function Login() {
                 <input type={"checkbox"} onClick={handleOnRemindMe}></input>
                 <span className="mb-4 text-sm"> Recordame</span>
               </div>
-              <span className="mt-2 text-sm ">
-                Eres nuevo usuario?{" "}
-                <Link href="/usuarios/seleccion" passHref>
-                  <span className="cursor-pointer text-purple-700  hover:text-purple-900">
-                    Empieza aquí.
-                  </span>
-                </Link>
-              </span>
             </div>
           </div>
         </div>
