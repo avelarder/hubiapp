@@ -16,7 +16,7 @@ import {
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
-import CreatePost from "../../../../components/post/create-post";
+import PostModal from "../../../../components/post/create-post";
 import PostNewsScreenEdit from "../../../../components/post/post-news-screen-edit";
 
 function ViewPostPage() {
@@ -25,6 +25,7 @@ function ViewPostPage() {
   const [images, setImages] = useState([]);
   const router = useRouter();
   const { query } = router;
+  const [itemsForDeletion, setItemsForDeletion] = useState([]);
 
   const id = query.id;
 
@@ -44,7 +45,7 @@ function ViewPostPage() {
     status: statusDocuments,
     error: errorDocuments,
   } = useFirestoreQuery(
-    db.collection("Publications_Documents").where("postId", "==", id ?? "")
+    db.collection("Publication_Documents").where("postId", "==", id ?? "")
   );
 
   useEffect(() => {
@@ -98,8 +99,14 @@ function ViewPostPage() {
     router.push("/app/comunidad");
   };
   const hideCreatePostModal = () => {
+    setItemsForDeletion([]);
     setShowCreatePost(false);
   };
+
+  const handleRemoveDocument = async (docId) => {
+    setItemsForDeletion((prev) => [...prev, docId]);
+  };
+
   return (
     <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 mx-auto">
@@ -198,9 +205,9 @@ function ViewPostPage() {
                   <section>
                     <div className="flex flex-col border-1 border-gray-100 rounded-lg p-4 mt-4 ">
                       <span className="flex text-gray-400 text-xs my-2 font-bold">
-                        Estas son las opciones de la encuesta:
+                        Archivos Adjuntos
                       </span>
-                      <FieldContainer title={"Galería de Imágenes"}>
+                      <FieldContainer>
                         <div className="grid grid-flow-col w-full h-48 px-2">
                           {images.map((x, i) => (
                             <Thumbnail key={i} imagePath={x.url}></Thumbnail>
@@ -214,7 +221,7 @@ function ViewPostPage() {
                   <StyledSecondaryButton
                     ref={defaultButton}
                     className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
-                    onClick={() => router.back()}
+                    onClick={() => router.push("/app/comunidad")}
                   >
                     Regresar
                   </StyledSecondaryButton>
@@ -227,16 +234,18 @@ function ViewPostPage() {
             </div>
           </div>
           {showCreatePost && (
-            <CreatePost
+            <PostModal
               title={"Modificar Publicación"}
               onCancel={hideCreatePostModal}
             >
               <PostNewsScreenEdit
+                itemsForDeletion={itemsForDeletion}
                 post={post}
                 documents={images}
                 onCancel={hideCreatePostModal}
+                onRemoveDocument={handleRemoveDocument}
               ></PostNewsScreenEdit>
-            </CreatePost>
+            </PostModal>
           )}
           {showDeleteModal && (
             <DeleteModal

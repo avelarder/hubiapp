@@ -2,7 +2,7 @@ import React from "react";
 import "emoji-mart/css/emoji-mart.css";
 import { XCircleIcon } from "@heroicons/react/solid";
 
-function CreatePost({ title, onCancel, children }) {
+function PostModal({ title, onCancel, children }) {
   return (
     <div
       onKeyDownCapture={(e) => {
@@ -60,4 +60,4 @@ function CreatePost({ title, onCancel, children }) {
   );
 }
 
-export default CreatePost;
+export default PostModal;

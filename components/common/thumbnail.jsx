@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import Firebase from "../../firebase";
 import { XIcon } from "@heroicons/react/solid";
 
-function Thumbnail({ imagePath }) {
+function Thumbnail({ sourceId, imagePath, isActionable, onRemove }) {
   let defaultPathImage = "/hubi-logo.jpg";
   const [image, setImage] = useState(defaultPathImage);
 
@@ -32,7 +32,14 @@ function Thumbnail({ imagePath }) {
         alt="Cover"
         onClick={() => window.open(image, "_blank")}
       ></img>
-      <XIcon className="grid w-8 h-8 absolute text-center cursor-pointer hover:bg-purple-700 text-white bg-purple-900 "></XIcon>
+      {isActionable && (
+        <XIcon
+          onClick={() => {
+            onRemove(sourceId);
+          }}
+          className="grid w-8 h-8 absolute text-center cursor-pointer hover:bg-purple-700 text-white bg-purple-900 "
+        ></XIcon>
+      )}
     </div>
   );
 }

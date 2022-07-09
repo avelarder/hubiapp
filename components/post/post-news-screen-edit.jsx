@@ -32,7 +32,13 @@ import { useAuth } from "../../authUserProvider";
 import Chip from "../common/chip";
 import Thumbnail from "../common/thumbnail";
 
-export default function PostNewsScreenEdit({ post, documents, onCancel }) {
+export default function PostNewsScreenEdit({
+  post,
+  documents,
+  itemsForDeletion,
+  onRemoveDocument,
+  onCancel,
+}) {
   const { authUser } = useAuth();
 
   const [isFormValid, setIsFormValid] = useState(true);
@@ -89,9 +95,19 @@ export default function PostNewsScreenEdit({ post, documents, onCancel }) {
       });
 
     if (images.length > 0) await upload(postId);
+    if (itemsForDeletion.length > 0) await deleteImages();
 
     toast.success("Tu publicación ha sido actualizada exitosamente.");
     onCancel();
+  };
+
+  const deleteImages = async () => {
+    const db = Firebase.default.firestore();
+    for (let index = 0; index < itemsForDeletion.length; index++) {
+      const element = itemsForDeletion[index];
+
+      await db.collection("Publication_Documents").doc(element).delete();
+    }
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -305,11 +321,27 @@ export default function PostNewsScreenEdit({ post, documents, onCancel }) {
             )}
           </div>
           <div>
-            {documents.length > 0 && (
+            {documents.filter(
+              (x) =>
+                itemsForDeletion.length === 0 ||
+                !itemsForDeletion.includes(x.id)
+            ) && (
               <div className="flex flex-wrap mt-4  w-full">
-                {documents.map((doc) => (
-                  <Thumbnail imagePath={doc.url} key={doc.id}></Thumbnail>
-                ))}
+                {documents
+                  .filter(
+                    (x) =>
+                      itemsForDeletion.length === 0 ||
+                      !itemsForDeletion.includes(x.id)
+                  )
+                  .map((doc) => (
+                    <Thumbnail
+                      isActionable={true}
+                      imagePath={doc.url}
+                      key={doc.id}
+                      onRemove={onRemoveDocument}
+                      sourceId={doc.id}
+                    ></Thumbnail>
+                  ))}
               </div>
             )}
           </div>
