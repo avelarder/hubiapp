@@ -1,54 +1,35 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
-import Firebase from "../../firebase";
-import TableSection from "../common/table-section";
-import DeleteModal from "../common/delete-modal";
-import useFirestoreQuery from "../../hooks/useFirestoreQuery";
+import Firebase from "../firebase";
+import TableSection from "./common/table-section";
+import DeleteModal from "./common/delete-modal";
+import useFirestoreQuery from "../hooks/useFirestoreQuery";
 
-const DEFAULT_LIMIT = 10;
-
-const initCommunityNews = {
-  headers: [
-    {
-      source: "description",
-      columnName: "Descripción",
-      isLink: true,
-      path: (id) => `posts/${id}/detalle`,
-    },
-    {
-      source: "createdOnUTC",
-      columnName: "Registrado",
-      isDate: true,
-      format: "DD/MM/YYYY",
-    },
-    {
-      source: "surveyExpiration",
-      columnName: "Expiración",
-      isDate: true,
-      format: "DD/MM/YYYY",
-    },
-  ],
-  data: [],
-};
-
-function NewsContainer() {
+function ListContainer({
+  handleViewClicked,
+  tableStructure,
+  rowLimit,
+  firebaseQuery,
+  mapResolver,
+  handleRowClicked,
+  handleDeleteConfirmation,
+  sortingColumn,
+  sectionTitle,
+}) {
   const router = useRouter();
   const db = Firebase.default.firestore();
-  let communityNews = {};
+  let communityEvents = {};
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
-  const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
+  const [currentLimit, setCurrentLimit] = useState(rowLimit);
+  const [rowsPerPage, setRowsPerPage] = useState(rowLimit);
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [orderField, setOrderField] = useState("createdOnUTC");
+  const [orderField, setOrderField] = useState(sortingColumn);
 
   const [filterPost, setFilterPost] = useState("");
 
-  const query = db
-    .collection("Publications")
-    .orderBy(orderField, "desc")
-    .limit(rowsPerPage);
+  const query = firebaseQuery(db, orderField, rowsPerPage);
 
   const { data, status, error } = useFirestoreQuery(query);
 
@@ -64,31 +45,17 @@ function NewsContainer() {
   }
 
   if (data) {
-    var currentDocs = data.map((doc) => ({
-      id: doc.id,
-      description: doc.description,
-      createdOnUTC: doc.createdOnUTC,
-      surveyExpiration: doc.surveyExpiration ?? "--",
-    }));
-
-    communityNews = { ...initCommunityNews, data: currentDocs };
+    var currentDocs = data.map((doc) => mapResolver(doc));
+    communityEvents = { ...tableStructure, data: currentDocs };
   }
-
-  const handleViewClicked = (id) => {
-    router.push(`/app/posts/${id}/detalle`);
-  };
-
-  const handleEditClicked = (id) => {
-    router.push(`/app/posts/${id}/editar`);
-  };
 
   const handleDeleteClicked = (id) => {
     setShowDeleteModal(true);
     setPostToDelete(id);
   };
 
-  const handleDeleteConfirmation = async () => {
-    await db.collection("CommunityNews").doc(postToDelete).delete();
+  const onDeleteConfirmation = async () => {
+    await handleDeleteConfirmation(db, postToDelete);
     setShowDeleteModal(false);
   };
 
@@ -99,6 +66,14 @@ function NewsContainer() {
   const handleChangeLimit = (limit) => {
     setCurrentLimit(limit);
     setRowsPerPage(limit);
+  };
+
+  const onViewClicked = (id) => {
+    handleViewClicked(router, id);
+  };
+
+  const onRowClicked = (id) => {
+    handleRowClicked(router, id);
   };
 
   const handleOrderByFieldChanged = (field) => {
@@ -113,36 +88,33 @@ function NewsContainer() {
 
   return (
     <div>
-      {communityNews.data && (
+      {communityEvents.data && (
         <div>
           <TableSection
-            sectionTitle="Avisos"
-            dataset={communityNews}
+            sectionTitle={sectionTitle}
+            dataset={communityEvents}
             currentLimit={currentLimit}
             isOrderDesc={isOrderDirectionDesc}
             orderField={orderField}
             filterPost={filterPost}
-            onView={handleViewClicked}
-            onEdit={handleEditClicked}
+            onView={onViewClicked}
             onDelete={handleDeleteClicked}
             onShowMore={handleShowMoreNewsClicked}
             onChangeLimit={handleChangeLimit}
             onOrderByFieldChanged={handleOrderByFieldChanged}
             onFilterPostChanged={setFilterPost}
-            onRowIsClicked={(id) => {
-              router.push(`/app/posts/${id}/detalle`);
-            }}
+            onRowIsClicked={onRowClicked}
           ></TableSection>
         </div>
       )}
       {showDeleteModal && (
         <DeleteModal
           onCancel={() => setShowDeleteModal(false)}
-          onConfirm={handleDeleteConfirmation}
+          onConfirm={onDeleteConfirmation}
         ></DeleteModal>
       )}
     </div>
   );
 }
 
-export default NewsContainer;
+export default ListContainer;

@@ -16,7 +16,7 @@ import {
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
-import PostModal from "../../../../components/post/create-post";
+import PostModal from "../../../../components/post/post-modal";
 import PostNewsScreenEdit from "../../../../components/post/post-news-screen-edit";
 
 function ViewPostPage() {

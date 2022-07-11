@@ -2,17 +2,20 @@ import React, { useState } from "react";
 import NewLayout from "../../components/newLayout";
 import MainSection from "../../components/dashboard/mainSection";
 import Footer from "../../components/dashboard/footer";
-import CreatePost from "../../components/post/create-post";
+import PostModal from "../../components/post/post-modal";
 
 import { Disclosure } from "@headlessui/react";
 
-import NewsContainer from "../../components/post/news-container";
 import { ChevronUpIcon, PlusIcon } from "@heroicons/react/solid";
 import { postOptions } from "../../utils/UI-Constants";
 import { StyledButton } from "../../components/admin/base-ui-components";
 import PostTypeScreen from "../../components/post/post-type-screen";
 
 import PostNewsScreen from "../../components/post/post-news-screen";
+import * as Events from "../../components/event/event-list-container-def";
+import * as Posts from "../../components/post/post-list-container-def";
+import ListContainer from "../../components/event-list-container";
+import EventScreen from "../../components/event/event-screen";
 
 function Comunidad() {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -60,7 +63,50 @@ function Comunidad() {
                         />
                       </Disclosure.Button>
                       <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
-                        <NewsContainer></NewsContainer>
+                        <ListContainer
+                          firebaseQuery={Posts.DEFAULT_QUERY}
+                          handleDeleteConfirmation={
+                            Posts.handleDeleteConfirmation
+                          }
+                          handleRowClicked={Posts.handleRowClicked}
+                          handleViewClicked={Posts.handleViewClicked}
+                          mapResolver={Posts.DEFAULT_MAP_RESOLVER}
+                          rowLimit={Posts.DEFAULT_LIMIT}
+                          sectionTitle={Posts.DEFAULT_SECTION_TITLE}
+                          sortingColumn={Posts.DEFAULT_SORTING_COLUMN}
+                          tableStructure={Posts.tableStructure}
+                        ></ListContainer>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              </div>
+              <div className="mt-2">
+                <Disclosure>
+                  {({ open }) => (
+                    <>
+                      <Disclosure.Button className="flex justify-between shadow-md w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg border-1 border-purple-200 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                        <span>Eventos</span>
+                        <ChevronUpIcon
+                          className={`${
+                            open ? "transform rotate-180" : ""
+                          } w-5 h-5 text-purple-500`}
+                        />
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                        <ListContainer
+                          firebaseQuery={Events.DEFAULT_QUERY}
+                          handleDeleteConfirmation={
+                            Events.handleDeleteConfirmation
+                          }
+                          handleRowClicked={Events.handleRowClicked}
+                          handleViewClicked={Events.handleViewClicked}
+                          mapResolver={Events.DEFAULT_MAP_RESOLVER}
+                          rowLimit={Events.DEFAULT_LIMIT}
+                          sectionTitle={Events.DEFAULT_SECTION_TITLE}
+                          sortingColumn={Events.DEFAULT_SORTING_COLUMN}
+                          tableStructure={Events.tableStructure}
+                        ></ListContainer>
                       </Disclosure.Panel>
                     </>
                   )}
@@ -73,7 +119,7 @@ function Comunidad() {
           </div>
 
           {showCreatePost && (
-            <CreatePost
+            <PostModal
               title={"Crear Publicación"}
               onCancel={hideCreatePostModal}
             >
@@ -86,7 +132,10 @@ function Comunidad() {
               {currentOption?.key === "news" && (
                 <PostNewsScreen onCancel={hideCreatePostModal}></PostNewsScreen>
               )}
-            </CreatePost>
+              {currentOption?.key === "events" && (
+                <EventScreen onCancel={hideCreatePostModal}></EventScreen>
+              )}
+            </PostModal>
           )}
         </div>
       </NewLayout>

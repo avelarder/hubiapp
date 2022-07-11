@@ -150,7 +150,7 @@ export default function PostNewsScreen({ onCancel }) {
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/posts/${postId}/${element.name}`;
+      const fileURL = `/files/publicaciones/${postId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);

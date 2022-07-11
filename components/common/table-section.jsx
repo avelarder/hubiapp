@@ -14,7 +14,6 @@ function TableSection({
   dataset,
   filterPost,
   onView,
-  onEdit,
   onDelete,
   onShowMore,
   onChangeLimit,
@@ -185,7 +184,7 @@ function TableSection({
                             Ver
                           </button>
                         </li>
-                        <li>
+                        {/* <li>
                           <button
                             className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
                             onClick={() => {
@@ -194,7 +193,7 @@ function TableSection({
                           >
                             Editar
                           </button>
-                        </li>
+                        </li> */}
                         <li>
                           <button
                             className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100"
