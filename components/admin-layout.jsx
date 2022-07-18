@@ -18,14 +18,14 @@ function AdminLayout(props) {
 
   return (
     <>
-      <Container>
-        {/* Content area */}
-        <div className="flex w-full ">
-          <div className="flex w-1/4 "></div>
-          <div className="flex flex-1 m-6">{props.children}</div>
-          <div className="flex w-1/4 "></div>
+      {/* Content area */}
+      <div className="flex w-full h-screen justify-center">
+        <div className="flex w-1/6 "></div>
+        <div className="flex w-4/6 h-screen items-center ">
+          {props.children}
         </div>
-      </Container>
+        <div className="flex w-1/6 "></div>
+      </div>
     </>
   );
 }

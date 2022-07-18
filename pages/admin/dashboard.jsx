@@ -34,31 +34,34 @@ function AdminDashboardPage() {
   ];
   return (
     <AdminLayout>
-      <PageHeader>Central de Operaciones</PageHeader>
-      <VerticalContainer>
-        <StyledInput
-          placeholder="Ingrese un texto para filtrar la lista de tareas."
-          onChange={(e) => setFilter(e.currentTarget.value)}
-        ></StyledInput>
-      </VerticalContainer>
-
-      {listOfTask
-        .filter((x) => x.title.toLowerCase().includes(filter))
-        .map((task) => (
-          <ScrollableContainer
-            key={task.code}
-            className="mt-2 w-full flex justify-around items-center"
-          >
-            <VerticalContainer>
-              <div className="w-min-96 font-bold text-xl">{task.title}</div>
-              <div className="flex w-full">{task.description}</div>
-              <StyledButton onClick={(e) => router.push(task.path)}>
-                Ir
-              </StyledButton>
-              <Divider></Divider>
-            </VerticalContainer>
-          </ScrollableContainer>
-        ))}
+      <Container>
+        <PageHeader>Central de Operaciones</PageHeader>
+        <VerticalContainer>
+          <StyledInput
+            placeholder="Ingrese un texto para filtrar la lista de tareas."
+            onChange={(e) => setFilter(e.currentTarget.value)}
+          ></StyledInput>
+        </VerticalContainer>
+        <ScrollableContainer>
+          {listOfTask
+            .filter((x) => x.title.toLowerCase().includes(filter))
+            .map((task) => (
+              <div
+                key={task.code}
+                className="mt-2 w-full flex justify-around items-center"
+              >
+                <VerticalContainer>
+                  <div className="w-min-96 font-bold text-xl">{task.title}</div>
+                  <div className="flex w-full">{task.description}</div>
+                  <StyledButton onClick={(e) => router.push(task.path)}>
+                    Ir
+                  </StyledButton>
+                  <Divider></Divider>
+                </VerticalContainer>
+              </div>
+            ))}
+        </ScrollableContainer>
+      </Container>
     </AdminLayout>
   );
 }

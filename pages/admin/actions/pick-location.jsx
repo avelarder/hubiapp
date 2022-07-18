@@ -11,6 +11,7 @@ import {
 } from "../../../components/admin/base-ui-components";
 import { useRouter } from "next/router";
 import { paths } from "../../../utils/paths";
+import AdminLayout from "../../../components/admin-layout";
 
 function LocationPickerPage() {
   const [filter, setFilter] = useState("");
@@ -76,32 +77,35 @@ function LocationPickerPage() {
   ];
 
   return (
-    <Container>
-      <PageHeader>Seleccione una locación HUBI</PageHeader>
-      <VerticalContainer>
-        <StyledInput
-          placeholder="Ingrese un texto para filtrar la lista de Ubicaciones."
-          onChange={(e) => setFilter(e.currentTarget.value)}
-        ></StyledInput>
-      </VerticalContainer>
-      <ScrollableContainer>
-        {locations
-          .filter((x) => x.title.toLowerCase().includes(filter))
-          .map((task) => (
-            <div key={task.code} className="inline-flex md:w-1/3 m-4">
-              <Card
-                buttonLabel={"Seleccionar"}
-                description={task.description}
-                onButtonClick={() => {
-                  router.push(paths.ADMIN.REGISTER_COLLABORATOR(task.code));
-                }}
-                title={task.title}
-                imageSrc={task.image}
-              ></Card>
-            </div>
-          ))}
-      </ScrollableContainer>
-    </Container>
+    <AdminLayout>
+      <Container>
+        <PageHeader>Seleccione una locación HUBI</PageHeader>
+        <VerticalContainer>
+          <StyledInput
+            placeholder="Ingrese un texto para filtrar la lista de Ubicaciones."
+            onChange={(e) => setFilter(e.currentTarget.value)}
+          ></StyledInput>
+        </VerticalContainer>
+
+        <ScrollableContainer>
+          {locations
+            .filter((x) => x.title.toLowerCase().includes(filter))
+            .map((task) => (
+              <div key={task.code} className="flex md:w-1/3 m-4">
+                <Card
+                  buttonLabel={"Seleccionar"}
+                  description={task.description}
+                  onButtonClick={() => {
+                    router.push(paths.ADMIN.REGISTER_COLLABORATOR(task.code));
+                  }}
+                  title={task.title}
+                  imageSrc={task.image}
+                ></Card>
+              </div>
+            ))}
+        </ScrollableContainer>
+      </Container>
+    </AdminLayout>
   );
 }
 

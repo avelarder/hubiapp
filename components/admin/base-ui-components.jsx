@@ -17,14 +17,15 @@ const PageHeader = tw.div`
     justify-center
     text-3xl
     mt-4
+    w-full
 `;
 
 const VerticalContainer = tw.div`
     flex
     flex-col
-    md:w-1/2
     w-full
     p-2
+    justify-center
 `;
 
 const StyledInput = tw.input`
