@@ -132,7 +132,7 @@ function Comunidad() {
               {currentOption?.key === "news" && (
                 <PostNewsScreen onCancel={hideCreatePostModal}></PostNewsScreen>
               )}
-              {currentOption?.key === "events" && (
+              {currentOption?.key === "event" && (
                 <EventScreen onCancel={hideCreatePostModal}></EventScreen>
               )}
             </PostModal>

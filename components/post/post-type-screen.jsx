@@ -43,7 +43,7 @@ export default function PostTypeScreen({ postOptions, onCurrentOptionChange }) {
           </div>
         </PostTile>
         <PostTile
-          type={postOptions.find((x) => x.key === "marketplace")}
+          type={postOptions.find((x) => x.key === "event")}
           onClick={handleCurrentOptionChange}
         >
           <div className="flex flex-col justify-start items-center h-full mt-10">
@@ -70,7 +70,7 @@ export default function PostTypeScreen({ postOptions, onCurrentOptionChange }) {
           </div>
         </PostTile>
         <PostTile
-          type={postOptions.find((x) => x.key === "event")}
+          type={postOptions.find((x) => x.key === "marketplace")}
           onClick={handleCurrentOptionChange}
         >
           <div className="flex flex-col justify-start items-center h-full mt-10">
