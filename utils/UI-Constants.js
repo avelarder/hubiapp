@@ -35,6 +35,11 @@ export const documentTypeOptions = [
   { id: "PASSPORT", text: "Pasaporte" },
   { id: "OTHER", text: "Otro" },
 ];
+export const eventPrivacyOptions = [
+  { id: "PUBLIC", text: "Público" },
+  { id: "LOCATION", text: "Comunidad" },
+  { id: "PRIVATE", text: "Privado" },
+];
 export const phoneAreaOptions = [
   { id: "AF/AFG", text: "Afghanistan (+93)" },
   { id: "AL/ALB", text: "Albania (+355)" },
