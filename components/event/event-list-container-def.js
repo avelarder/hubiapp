@@ -1,7 +1,7 @@
 export const tableStructure = {
   headers: [
     {
-      source: "title",
+      source: "eventName",
       columnName: "Título",
       isLink: true,
       path: (id) => `events/${id}/detalle`,
@@ -12,24 +12,14 @@ export const tableStructure = {
       isDate: true,
       format: "DD/MM/YYYY",
     },
-    {
-      source: "startTime",
-      columnName: "Hora de Inicio",
-      isDate: true,
-      format: "DD/MM/YYYY",
-    },
+
     {
       source: "endDate",
       columnName: "Fecha de Fin",
       isDate: true,
       format: "DD/MM/YYYY",
     },
-    {
-      source: "endTime",
-      columnName: "Hora de Fin",
-      isDate: true,
-      format: "DD/MM/YYYY",
-    },
+
     {
       source: "createdOnUTC",
       columnName: "Registrado",
@@ -53,11 +43,9 @@ export const DEFAULT_QUERY = (dbInstance, orderField, rowsPerPage) =>
 export const DEFAULT_MAP_RESOLVER = (doc) => {
   return {
     id: doc.id,
-    title: doc.title,
+    eventName: doc.eventName,
     startDate: doc.startDate,
-    startTime: doc.startTime,
     endDate: doc.endDate,
-    endTime: doc.endTime,
     createdOnUTC: doc.createdOnUTC,
   };
 };

@@ -4,12 +4,11 @@ import {
   DocumentTextIcon,
   PhotographIcon,
   VideoCameraIcon,
-  XIcon,
 } from "@heroicons/react/outline";
 import classNames from "classnames";
 import moment from "moment";
 import Image from "next/image";
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getScheduleDays,
   getScheduleHours,
@@ -18,10 +17,7 @@ import {
   getScheduleYears,
   VALIDATIONS,
 } from "../../utils/UI-Constants";
-import {
-  StyledButton,
-  StyledSecondaryButton,
-} from "../admin/base-ui-components";
+import { StyledButton } from "../admin/base-ui-components";
 import FileUpload from "../common/file-upload";
 import TextInput from "../common/textInput";
 import Scheduler from "./shared/schedule";
