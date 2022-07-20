@@ -4,7 +4,7 @@ export const tableStructure = {
       source: "eventName",
       columnName: "Título",
       isLink: true,
-      path: (id) => `events/${id}/detalle`,
+      path: (id) => `eventos/${id}/detalle`,
     },
     {
       source: "startDate",

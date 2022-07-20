@@ -25,18 +25,25 @@ import Firebase from "../../firebase";
 import { uuid as v4 } from "uuidv4";
 
 import { toast } from "react-toastify";
+import Thumbnail from "../common/thumbnail";
 
-export default function EventScreen({ onCancel }) {
-  const [isFormValid, setIsFormValid] = useState(false);
+export default function EventScreenEdit({
+  event,
+  documents,
+  itemsForDeletion,
+  onRemoveDocument,
+  onCancel,
+}) {
+  const [isFormValid, setIsFormValid] = useState(true);
   const [images, setImages] = useState([]);
   const [eventPrivacyOption, setEventPrivacyOption] = useState(
-    eventPrivacyOptions[0]
+    event.eventPrivacy
   );
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [eventName, setEventName] = useState("");
-  const [eventDescription, setEventDescription] = useState("");
-  const [eventLocation, setEventLocation] = useState("");
+  const [startDate, setStartDate] = useState(new Date(event.startDate));
+  const [endDate, setEndDate] = useState(new Date(event.endDate));
+  const [eventName, setEventName] = useState(event.eventName);
+  const [eventDescription, setEventDescription] = useState(event.description);
+  const [eventLocation, setEventLocation] = useState(event.eventLocation);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleFormStatus = () => {
@@ -55,7 +62,7 @@ export default function EventScreen({ onCancel }) {
     );
   };
 
-  const handlePostImage = async (eventId, url) => {
+  const handleEventImage = async (eventId, url) => {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
@@ -104,7 +111,7 @@ export default function EventScreen({ onCancel }) {
         },
         async () => {
           // Handle successful uploads on complete
-          await handlePostImage(postId, fileURL);
+          await handleEventImage(postId, fileURL);
         }
       );
     }
@@ -113,14 +120,13 @@ export default function EventScreen({ onCancel }) {
   const handleSumitEvent = async () => {
     const db = Firebase.default.firestore();
     const eventId = v4();
-    await db.collection("Events").doc(eventId).set({
+    await db.collection("Events").doc(eventId).update({
       description: eventDescription,
       startDate: startDate.toLocaleString(),
       endDate: endDate.toLocaleString(),
       eventName: eventName,
       eventLocation: eventLocation,
       eventPrivacy: eventPrivacyOption,
-      createdOnUTC: new Date().toISOString(),
       updatedOnUTC: new Date().toISOString(),
     });
 
@@ -252,12 +258,35 @@ export default function EventScreen({ onCancel }) {
             disabled={!isFormValid}
             onClick={handleSumitEvent}
           >
-            Publicar
+            Actualizar
           </StyledButton>
         </div>
       </div>
       <div className="flex flex-col w-2/3 border-1 border-gray-100 rounded-lg p-4">
-        <div className="flex  w-full rounded-lg border-1 border-gray-100 h-2/6 mb-4"></div>
+        <div className="flex  w-full rounded-lg border-1 border-gray-100 h-2/6 mb-4">
+          {documents.filter(
+            (x) =>
+              itemsForDeletion.length === 0 || !itemsForDeletion.includes(x.id)
+          ) && (
+            <div className="flex flex-wrap mt-4  w-full">
+              {documents
+                .filter(
+                  (x) =>
+                    itemsForDeletion.length === 0 ||
+                    !itemsForDeletion.includes(x.id)
+                )
+                .map((doc) => (
+                  <Thumbnail
+                    isActionable={true}
+                    imagePath={doc.url}
+                    key={doc.id}
+                    onRemove={onRemoveDocument}
+                    sourceId={doc.id}
+                  ></Thumbnail>
+                ))}
+            </div>
+          )}
+        </div>
         <div className="flex  w-full rounded-lg border-1 border-purple-200 h-1/6 mb-4">
           <div className="flex items-center ml-4 w-full">
             <Image
