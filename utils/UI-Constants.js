@@ -40,6 +40,20 @@ export const eventPrivacyOptions = [
   { id: "LOCATION", text: "Comunidad" },
   { id: "PRIVATE", text: "Privado" },
 ];
+export const operationTypeOptions = [
+  { id: "SELL", text: "Vender" },
+  { id: "BUY", text: "Comprar" },
+];
+export const operationStatusOptions = [
+  { id: "AVAILABLE", text: "Disponible" },
+  { id: "SOLD", text: "Vendido" },
+  { id: "SUSPENDED", text: "Suspendido" },
+];
+export const operationPrivacyOptions = [
+  { id: "PUBLIC", text: "Público" },
+  { id: "LOCATION", text: "Comunidad" },
+  { id: "PRIVATE", text: "Privado" },
+];
 export const monthsInText = (month) => {
   switch (month) {
     case 1:

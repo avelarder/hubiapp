@@ -14,8 +14,10 @@ import PostTypeScreen from "../../components/post/post-type-screen";
 import PostNewsScreen from "../../components/post/post-news-screen";
 import * as Events from "../../components/event/event-list-container-def";
 import * as Posts from "../../components/post/post-list-container-def";
+import * as Marketplace from "../../components/marketplace/marketplace-list-container-def";
 import ListContainer from "../../components/event-list-container";
 import EventScreen from "../../components/event/event-screen";
+import MarketplaceScreen from "../../components/marketplace/marketplace-screen";
 
 function Comunidad() {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -112,6 +114,37 @@ function Comunidad() {
                   )}
                 </Disclosure>
               </div>
+              <div className="mt-2">
+                <Disclosure>
+                  {({ open }) => (
+                    <>
+                      <Disclosure.Button className="flex justify-between shadow-md w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg border-1 border-purple-200 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                        <span>Compra y Venta</span>
+                        <ChevronUpIcon
+                          className={`${
+                            open ? "transform rotate-180" : ""
+                          } w-5 h-5 text-purple-500`}
+                        />
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                        <ListContainer
+                          firebaseQuery={Marketplace.DEFAULT_QUERY}
+                          handleDeleteConfirmation={
+                            Marketplace.handleDeleteConfirmation
+                          }
+                          handleRowClicked={Marketplace.handleRowClicked}
+                          handleViewClicked={Marketplace.handleViewClicked}
+                          mapResolver={Marketplace.DEFAULT_MAP_RESOLVER}
+                          rowLimit={Marketplace.DEFAULT_LIMIT}
+                          sectionTitle={Marketplace.DEFAULT_SECTION_TITLE}
+                          sortingColumn={Marketplace.DEFAULT_SORTING_COLUMN}
+                          tableStructure={Marketplace.tableStructure}
+                        ></ListContainer>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              </div>
             </div>
           </MainSection>
           <div>
@@ -134,6 +167,11 @@ function Comunidad() {
               )}
               {currentOption?.key === "event" && (
                 <EventScreen onCancel={hideCreatePostModal}></EventScreen>
+              )}
+              {currentOption?.key === "marketplace" && (
+                <MarketplaceScreen
+                  onCancel={hideCreatePostModal}
+                ></MarketplaceScreen>
               )}
             </PostModal>
           )}
