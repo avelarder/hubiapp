@@ -331,7 +331,7 @@ export default function EventScreenEdit({
           <div className="flex flex-col w-1/3 items-center justify-center">
             <div className="flex flex-col justify-center w-20">
               <span className="flex font-bold bg-purple-400 text-white text-center justify-center rounded-t-md items-center">
-                {monthsInText(startDate.getMonth())}
+                {monthsInText(startDate.getMonth() + 1)}
               </span>
               <span className="flex text-4xl font-bold text-center justify-center bg-gray-200 h-14 items-center">
                 {startDate.getDate()}
