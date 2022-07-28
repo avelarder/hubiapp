@@ -48,7 +48,7 @@ export default function MarketplaceScreenEdit({
   const [title, setTitle] = useState(operation.title);
   const [price, setPrice] = useState(operation.price);
   const [description, setDescription] = useState(operation.description);
-  const [phone, setPhone] = useState(operation.description);
+  const [phone, setPhone] = useState(operation.phone);
   const [location, setLocation] = useState(operation.location);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -213,7 +213,7 @@ export default function MarketplaceScreenEdit({
             <FieldContainer title={"Privacidad"}>
               <Select
                 options={operationPrivacyOptions}
-                selectedOption={operationTypeOption}
+                selectedOption={operationPrivacyOption}
                 onOptionChanged={setOperationPrivacyOption}
               ></Select>
             </FieldContainer>
@@ -341,7 +341,7 @@ export default function MarketplaceScreenEdit({
             </p>
             <p className="flex text-sm w-full items-center">
               <PhoneIcon className="w-4 h-4 mr-4"></PhoneIcon>
-              {phone.text}
+              {phone}
             </p>
             <p className="flex text-sm w-full items-center">
               <CalendarIcon className="w-4 h-4 mr-4"></CalendarIcon>

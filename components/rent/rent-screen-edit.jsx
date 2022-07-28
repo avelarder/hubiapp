@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
-
 import {
   operationTypeOptions,
   operationStatusOptions,
@@ -26,27 +25,29 @@ import Firebase from "../../firebase";
 import { uuid as v4 } from "uuidv4";
 
 import { toast } from "react-toastify";
-
 import Thumbnail from "../common/thumbnail";
-import ImageCover from "../common/imageCover";
 
-export default function MarketplaceScreen({ onCancel }) {
-  const [isFormValid, setIsFormValid] = useState(false);
+export default function RentScreenEdit({
+  operation,
+  documents,
+  itemsForDeletion,
+  onRemoveDocument,
+  onCancel,
+}) {
+  const [isFormValid, setIsFormValid] = useState(true);
   const [images, setImages] = useState([]);
-  const [operationPrivacyOption, setOperationPrivacyOption] = useState(
-    operationPrivacyOptions[0]
-  );
+
   const [operationStatusOption, setOperationStatusOption] = useState(
-    operationStatusOptions[0]
+    operation.operationStatusOption
   );
-  const [operationTypeOption, setOperationTypeOption] = useState(
-    operationTypeOptions[0]
+  const [operationPrivacyOption, setOperationPrivacyOption] = useState(
+    operation.operationPrivacyOption
   );
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [phone, setPhone] = useState("");
-  const [location, setLocation] = useState("");
-  const [price, setPrice] = useState("");
+  const [title, setTitle] = useState(operation.title);
+  const [price, setPrice] = useState(operation.price);
+  const [description, setDescription] = useState(operation.description);
+  const [phone, setPhone] = useState(operation.phone);
+  const [location, setLocation] = useState(operation.location);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleFormStatus = () => {
@@ -69,7 +70,7 @@ export default function MarketplaceScreen({ onCancel }) {
     const documentId = v4();
 
     await db
-      .collection("Marketplace_Documents")
+      .collection("Rent_Documents")
       .doc(documentId)
       .set({
         url: `${url}`,
@@ -81,12 +82,12 @@ export default function MarketplaceScreen({ onCancel }) {
       });
   };
 
-  const upload = async (operationId) => {
+  const upload = async (postId) => {
     const storage = Firebase.default.storage();
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/marketplace/${operationId}/${element.name}`;
+      const fileURL = `/files/rent/${postId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);
@@ -113,7 +114,7 @@ export default function MarketplaceScreen({ onCancel }) {
         },
         async () => {
           // Handle successful uploads on complete
-          await handleOperationImage(operationId, fileURL);
+          await handleOperationImage(postId, fileURL);
         }
       );
     }
@@ -122,16 +123,14 @@ export default function MarketplaceScreen({ onCancel }) {
   const handleSubmitOperation = async () => {
     const db = Firebase.default.firestore();
     const operationId = v4();
-    await db.collection("Marketplace").doc(operationId).set({
+    await db.collection("Rent").doc(operationId).update({
       description: description,
       title: title.toLocaleString(),
       phone: phone,
       price: price,
       location: location,
-      operationTypeOption: operationTypeOption,
       operationStatusOption: operationStatusOption,
       operationPrivacyOption: operationPrivacyOption,
-      createdOnUTC: new Date().toISOString(),
       updatedOnUTC: new Date().toISOString(),
     });
 
@@ -151,14 +150,35 @@ export default function MarketplaceScreen({ onCancel }) {
         {/* Content */}
         <div className="flex flex-col mt-2 ">
           <div className="flex w-full gap-2">
-            <FieldContainer title={"Tipo de Operación"}>
-              <Select
-                options={operationTypeOptions}
-                selectedOption={operationTypeOption}
-                onOptionChanged={setOperationTypeOption}
-              ></Select>
+            <FieldContainer title={"Título"}>
+              <RoundedInputText
+                validator={{
+                  validate: (content) => {
+                    return VALIDATIONS.NONE(content);
+                  },
+                  message: "Ingrese una opción válida",
+                }}
+                placeholder="Ingrese un titulo"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              ></RoundedInputText>
             </FieldContainer>
-            <FieldContainer title={"Ubicación"}>
+          </div>
+          <FieldContainer title={"Teléfono"}>
+            <RoundedInputText
+              validator={{
+                validate: (content) => {
+                  return VALIDATIONS.NONE(content);
+                },
+                message: "Ingrese una opción válida",
+              }}
+              placeholder="Número de Contacto"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            ></RoundedInputText>
+          </FieldContainer>
+          <div className="flex w-full gap-2">
+            <FieldContainer title={"Precio"}>
               <RoundedInputText
                 validator={{
                   validate: (content) => {
@@ -171,35 +191,7 @@ export default function MarketplaceScreen({ onCancel }) {
                 onChange={(e) => setPrice(e.target.value)}
               ></RoundedInputText>
             </FieldContainer>
-          </div>
-          <FieldContainer title={"Titulo"}>
-            <RoundedInputText
-              validator={{
-                validate: (content) => {
-                  return VALIDATIONS.NONE(content);
-                },
-                message: "Ingrese una opción válida",
-              }}
-              placeholder="Título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            ></RoundedInputText>
-          </FieldContainer>
-          <div className="flex w-full gap-2">
-            <FieldContainer title={"Ubicación"}>
-              <RoundedInputText
-                validator={{
-                  validate: (content) => {
-                    return VALIDATIONS.NONE(content);
-                  },
-                  message: "Ingrese una opción válida",
-                }}
-                placeholder="Teléfono"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              ></RoundedInputText>
-            </FieldContainer>
-            <FieldContainer>
+            <FieldContainer title={"Estado"}>
               <Select
                 options={operationStatusOptions}
                 selectedOption={operationStatusOption}
@@ -276,19 +268,34 @@ export default function MarketplaceScreen({ onCancel }) {
             disabled={!isFormValid}
             onClick={handleSubmitOperation}
           >
-            Publicar
+            Actualizar
           </StyledButton>
         </div>
       </div>
       <div className="flex flex-col w-2/3 border-1 border-gray-100 rounded-lg p-4">
         <div className="flex  w-full rounded-lg border-1 border-gray-100 h-2/6 mb-4">
-          {/* {images && (
+          {documents.filter(
+            (x) =>
+              itemsForDeletion.length === 0 || !itemsForDeletion.includes(x.id)
+          ) && (
             <div className="flex flex-wrap mt-4  w-full">
-              {images.map((doc) => (
-                <ImageCover imagePath={doc.url} key={doc.id}></ImageCover>
-              ))}
+              {documents
+                .filter(
+                  (x) =>
+                    itemsForDeletion.length === 0 ||
+                    !itemsForDeletion.includes(x.id)
+                )
+                .map((doc) => (
+                  <Thumbnail
+                    isActionable={true}
+                    imagePath={doc.url}
+                    key={doc.id}
+                    onRemove={onRemoveDocument}
+                    sourceId={doc.id}
+                  ></Thumbnail>
+                ))}
             </div>
-          )} */}
+          )}
         </div>
         <div className="flex  w-full rounded-lg border-1 border-purple-200 h-1/6 mb-4">
           <div className="flex items-center ml-4 w-full">
@@ -328,7 +335,7 @@ export default function MarketplaceScreen({ onCancel }) {
             </p>
             <p className="flex text-sm w-full items-center">
               <CalendarIcon className="w-4 h-4 mr-4"></CalendarIcon>
-              {new Date().toLocaleString("es-ES")}
+              {operation.createdOnUTC.toLocaleString("es-ES")}
             </p>
             <p className="flex text-sm w-full items-center">
               <LocationMarkerIcon className="w-4 h-4 mr-4"></LocationMarkerIcon>
@@ -337,9 +344,6 @@ export default function MarketplaceScreen({ onCancel }) {
           </div>
           <div className="flex flex-col w-1/3 items-center justify-center">
             <div className="flex flex-col justify-center w-20">
-              <span className="flex font-bold bg-purple-400 text-white text-center justify-center rounded-t-md items-center">
-                {operationTypeOption.text}
-              </span>
               <span className="flex text-4xl font-bold text-center justify-center bg-gray-200 h-14 items-center">
                 S/.{price}
               </span>

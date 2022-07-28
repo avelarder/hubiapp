@@ -27,10 +27,7 @@ import { uuid as v4 } from "uuidv4";
 
 import { toast } from "react-toastify";
 
-import Thumbnail from "../common/thumbnail";
-import ImageCover from "../common/imageCover";
-
-export default function MarketplaceScreen({ onCancel }) {
+export default function RentScreen({ onCancel }) {
   const [isFormValid, setIsFormValid] = useState(false);
   const [images, setImages] = useState([]);
   const [operationPrivacyOption, setOperationPrivacyOption] = useState(
@@ -69,7 +66,7 @@ export default function MarketplaceScreen({ onCancel }) {
     const documentId = v4();
 
     await db
-      .collection("Marketplace_Documents")
+      .collection("Rent_Documents")
       .doc(documentId)
       .set({
         url: `${url}`,
@@ -86,7 +83,7 @@ export default function MarketplaceScreen({ onCancel }) {
 
     for (let index = 0; index < images.length; index++) {
       const element = images[index];
-      const fileURL = `/files/marketplace/${operationId}/${element.name}`;
+      const fileURL = `/files/rent/${operationId}/${element.name}`;
       const refToFile = storage.ref(fileURL);
 
       const uploadTask = refToFile.put(element);
@@ -122,13 +119,12 @@ export default function MarketplaceScreen({ onCancel }) {
   const handleSubmitOperation = async () => {
     const db = Firebase.default.firestore();
     const operationId = v4();
-    await db.collection("Marketplace").doc(operationId).set({
+    await db.collection("Rent").doc(operationId).set({
       description: description,
       title: title.toLocaleString(),
       phone: phone,
       price: price,
       location: location,
-      operationTypeOption: operationTypeOption,
       operationStatusOption: operationStatusOption,
       operationPrivacyOption: operationPrivacyOption,
       createdOnUTC: new Date().toISOString(),
@@ -151,14 +147,7 @@ export default function MarketplaceScreen({ onCancel }) {
         {/* Content */}
         <div className="flex flex-col mt-2 ">
           <div className="flex w-full gap-2">
-            <FieldContainer title={"Tipo de Operación"}>
-              <Select
-                options={operationTypeOptions}
-                selectedOption={operationTypeOption}
-                onOptionChanged={setOperationTypeOption}
-              ></Select>
-            </FieldContainer>
-            <FieldContainer title={"Ubicación"}>
+            <FieldContainer>
               <RoundedInputText
                 validator={{
                   validate: (content) => {
@@ -166,13 +155,13 @@ export default function MarketplaceScreen({ onCancel }) {
                   },
                   message: "Ingrese una opción válida",
                 }}
-                placeholder="Precio"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Ingrese una breve descripción"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
               ></RoundedInputText>
             </FieldContainer>
           </div>
-          <FieldContainer title={"Titulo"}>
+          <FieldContainer>
             <RoundedInputText
               validator={{
                 validate: (content) => {
@@ -180,13 +169,13 @@ export default function MarketplaceScreen({ onCancel }) {
                 },
                 message: "Ingrese una opción válida",
               }}
-              placeholder="Título"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Precio"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
             ></RoundedInputText>
           </FieldContainer>
           <div className="flex w-full gap-2">
-            <FieldContainer title={"Ubicación"}>
+            <FieldContainer>
               <RoundedInputText
                 validator={{
                   validate: (content) => {
@@ -337,9 +326,6 @@ export default function MarketplaceScreen({ onCancel }) {
           </div>
           <div className="flex flex-col w-1/3 items-center justify-center">
             <div className="flex flex-col justify-center w-20">
-              <span className="flex font-bold bg-purple-400 text-white text-center justify-center rounded-t-md items-center">
-                {operationTypeOption.text}
-              </span>
               <span className="flex text-4xl font-bold text-center justify-center bg-gray-200 h-14 items-center">
                 S/.{price}
               </span>

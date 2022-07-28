@@ -15,9 +15,11 @@ import PostNewsScreen from "../../components/post/post-news-screen";
 import * as Events from "../../components/event/event-list-container-def";
 import * as Posts from "../../components/post/post-list-container-def";
 import * as Marketplace from "../../components/marketplace/marketplace-list-container-def";
+import * as Rent from "../../components/rent/rent-list-container-def";
 import ListContainer from "../../components/event-list-container";
 import EventScreen from "../../components/event/event-screen";
 import MarketplaceScreen from "../../components/marketplace/marketplace-screen";
+import RentScreen from "../../components/rent/rent-screen";
 
 function Comunidad() {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -145,6 +147,37 @@ function Comunidad() {
                   )}
                 </Disclosure>
               </div>
+              <div className="mt-2">
+                <Disclosure>
+                  {({ open }) => (
+                    <>
+                      <Disclosure.Button className="flex justify-between shadow-md w-full px-4 py-2 text-sm font-medium text-left text-purple-900 bg-purple-100 rounded-lg border-1 border-purple-200 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                        <span>Alquileres</span>
+                        <ChevronUpIcon
+                          className={`${
+                            open ? "transform rotate-180" : ""
+                          } w-5 h-5 text-purple-500`}
+                        />
+                      </Disclosure.Button>
+                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+                        <ListContainer
+                          firebaseQuery={Rent.DEFAULT_QUERY}
+                          handleDeleteConfirmation={
+                            Rent.handleDeleteConfirmation
+                          }
+                          handleRowClicked={Rent.handleRowClicked}
+                          handleViewClicked={Rent.handleViewClicked}
+                          mapResolver={Rent.DEFAULT_MAP_RESOLVER}
+                          rowLimit={Rent.DEFAULT_LIMIT}
+                          sectionTitle={Rent.DEFAULT_SECTION_TITLE}
+                          sortingColumn={Rent.DEFAULT_SORTING_COLUMN}
+                          tableStructure={Rent.tableStructure}
+                        ></ListContainer>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              </div>
             </div>
           </MainSection>
           <div>
@@ -172,6 +205,9 @@ function Comunidad() {
                 <MarketplaceScreen
                   onCancel={hideCreatePostModal}
                 ></MarketplaceScreen>
+              )}
+              {currentOption?.key === "rent" && (
+                <RentScreen onCancel={hideCreatePostModal}></RentScreen>
               )}
             </PostModal>
           )}
