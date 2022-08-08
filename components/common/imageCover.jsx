@@ -23,12 +23,12 @@ function ImageCover({ imagePath }) {
   }, [image, imagePath, storage, defaultPathImage]);
 
   return (
-    <div className="flex relative h-32 bg-green-400 m-2 w-full">
+    <div className="flex bg-green-400 w-full">
       <img
-        className=" bg-cover w-full h-full"
+        className="bg-cover w-full h-full"
         src={image}
         width="100%"
-        height="32"
+        height="100%"
         alt="Cover"
         onClick={() => window.open(image, "_blank")}
       ></img>

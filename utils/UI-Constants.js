@@ -445,4 +445,21 @@ export const MASKS = {
   PHONE_NUMBER: "(999) 999-9999",
 };
 
+export const handleOptionSelected = (option, router) => {
+  switch (option) {
+    case 1:
+      router.push("/app/configuracion");
+      break;
+    case 2:
+      router.push("/app/configuracion/suscripcion");
+      break;
+    case 3:
+      router.push("/app/configuracion/equipo");
+      break;
+    case 4:
+      router.push("/app/configuracion/facturacion");
+      break;
+  }
+};
+
 export const INPUT_TEXT_VALIDATIONS = ["NONE", "EMAIL"];

@@ -16,6 +16,7 @@ import {
 import RentModal from "../../../../components/event/event-modal";
 import Image from "next/image";
 import {
+  BadgeCheckIcon,
   CalendarIcon,
   LocationMarkerIcon,
   LockClosedIcon,
@@ -113,24 +114,24 @@ function ViewRentPage() {
     <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 mx-auto">
         <MainSection>
-          <div className="flex flex-col h-screen w-full">
+          <div className="flex flex-col h-screen w-full ">
             <div className="flex h-screen">
-              <div className="flex xs:w-1/6"></div>
-              <div className="flex flex-col flex-1 xs:w-2/6 w-full  items-center align-middle  p-5">
-                <section className="">
-                  <h1 className="text-gray-900 text-2xl font-bold text-center mb-10 uppercase">
+              <div className="flex lg:w-1/6"></div>
+              <div className="flex flex-col flex-1 lg:w-4/6 w-full items-center align-middle p-5 ">
+                <section className="w-full ">
+                  <h1 className="text-gray-900 text-2xl font-bold text-center mb-10 uppercase w-full ">
                     Detalle de Alquiler
                   </h1>
                 </section>
-                <section className="flex justify-center">
-                  <div className="flex flex-col w-2/3 border-1 border-gray-100  rounded-lg p-4">
-                    <div className="flex  w-full rounded-lg border-1 border-gray-100 h-2/6 mb-4">
+                <section className="flex w-full justify-center ">
+                  <div className="flex flex-col w-full border-1 border-gray-100  rounded-lg p-4">
+                    <div className="flex w-full rounded-lg border-1 border-gray-100 mb-4">
                       {images.filter(
                         (x) =>
                           itemsForDeletion.length === 0 ||
                           !itemsForDeletion.includes(x.id)
                       ) && (
-                        <div className="flex flex-wrap mt-4  w-full">
+                        <div className="flex flex-wrap w-full">
                           {images
                             .filter(
                               (x) =>
@@ -146,8 +147,8 @@ function ViewRentPage() {
                         </div>
                       )}
                     </div>
-                    <div className="flex xs:flex-col  w-full rounded-lg border-1 border-purple-200 h-1/6 mb-4 ">
-                      <div className="flex items-center ml-4 w-full">
+                    <div className="flex w-full rounded-lg border-1 border-purple-200  mb-4 flex-wrap ">
+                      <div className="flex flex-col items-center ml-4 w-full">
                         <Image
                           className="w-6 h-6 rounded-full"
                           src="/sample-profile.jpg"
@@ -156,11 +157,11 @@ function ViewRentPage() {
                           alt="User"
                         />
 
-                        <span className="flex ml-4 text-sm">
+                        <span className=" ml-4 text-sm ">
                           publicado por &nbsp;<b>Oscar Velarde</b>
                         </span>
                       </div>
-                      <div className="flex xs:justify-end w-full mr-4 items-center ">
+                      <div className="flex  justify-center w-full ">
                         <StyledButton className={"w-28"}>
                           Interesado
                         </StyledButton>
@@ -169,8 +170,8 @@ function ViewRentPage() {
                         </StyledButton>
                       </div>
                     </div>
-                    <div className="flex  w-full rounded-lg border-1 border-purple-200 h-3/6 px-8 py-4">
-                      <div className="flex flex-col w-2/3">
+                    <div className="flex  w-full rounded-lg border-1 item border-purple-200  px-8 py-4 ">
+                      <div className="flex xs:flex-col w-2/3">
                         <span className="text-2xl font-bold">
                           {operation.title}
                         </span>
@@ -181,12 +182,12 @@ function ViewRentPage() {
                           {operation.operationPrivacyOption.text}
                         </p>
                         <p className="flex text-sm w-full items-center">
-                          <LockClosedIcon className="w-4 h-4 mr-4"></LockClosedIcon>
+                          <BadgeCheckIcon className="w-4 h-4 mr-4"></BadgeCheckIcon>
                           {operation.operationStatusOption.text}
                         </p>
                         <p className="flex text-sm w-full items-center">
                           <PhoneIcon className="w-4 h-4 mr-4"></PhoneIcon>
-                          {operation.phone.text}
+                          {operation.phone}
                         </p>
                         <p className="flex text-sm w-full items-center">
                           <CalendarIcon className="w-4 h-4 mr-4"></CalendarIcon>
@@ -197,18 +198,16 @@ function ViewRentPage() {
                           {operation.location}
                         </p>
                       </div>
-                      <div className="flex flex-col w-1/3 items-center justify-center">
-                        <div className="flex flex-col justify-center w-20">
-                          <span className="flex text-4xl font-bold text-center justify-center bg-gray-200 h-14 items-center">
-                            S/.{operation.price}
-                          </span>
-                        </div>
+                      <div className="flex flex-col xs:flex-wrap w-1/3 items-center justify-center">
+                        <span className="flex text-4xl font-bold text-center justify-center bg-gray-200 h-14 items-center p-4">
+                          S/.{operation.price}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </section>
 
-                <div className="flex justify-end text-white text-md font-bold  mt-8 ">
+                <div className="flex justify-end text-white text-md font-bold  mt-8 w-full pr-4 ">
                   <StyledSecondaryButton
                     ref={defaultButton}
                     className="w-32 bg-gray-400  h-10 shadow-md rounded-md mr-5"
@@ -221,7 +220,7 @@ function ViewRentPage() {
                   </StyledButton>
                 </div>
               </div>
-              <div className="flex xs:w-1/6"></div>
+              <div className="flex xs:w-1/6 w-0"></div>
             </div>
           </div>
           {showCreateRent && (
