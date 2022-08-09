@@ -29,7 +29,7 @@ function SubcriptionPage() {
                       className="rounded-full text-purple-600 mb-4"
                       type={"checkbox"}
                     ></input>
-                    <span className="text-3xl font-semibold mb-8">Free</span>
+                    <span className="text-3xl font-semibold mb-8">Libre</span>
                     <span className="font-semibold text-gray-500 mb-8 ">
                       Pagarás
                     </span>
@@ -45,7 +45,7 @@ function SubcriptionPage() {
                       type={"checkbox"}
                     ></input>
                     <span className="text-3xl font-semibold mb-8">
-                      Standard
+                      Estándar
                     </span>
                     <span className="font-semibold text-gray-500 mb-8 ">
                       Pagarás
@@ -62,7 +62,7 @@ function SubcriptionPage() {
                       className="rounded-full text-purple-600 mb-4"
                       type={"checkbox"}
                     ></input>
-                    <span className="text-3xl font-semibold mb-8">Free</span>
+                    <span className="text-3xl font-semibold mb-8">Premium</span>
                     <span className="font-semibold text-gray-500 mb-8 ">
                       Pagarás
                     </span>

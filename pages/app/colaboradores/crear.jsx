@@ -63,16 +63,13 @@ function EmployeeCreatePage() {
     const db = Firebase.default.firestore();
     const documentId = v4();
 
-    await db
-      .collection("Collaborators_Documents")
-      .doc(documentId)
-      .set({
-        url: url,
-        collaboratorId: collaboratorId,
-        status: "ACTIVE",
-        createdOnUTC: new Date().toISOString(),
-        updatedOnUTC: new Date().toISOString(),
-      });
+    await db.collection("Collaborators_Documents").doc(documentId).set({
+      url: url,
+      collaboratorId: collaboratorId,
+      status: "ACTIVE",
+      createdOnUTC: new Date().toISOString(),
+      updatedOnUTC: new Date().toISOString(),
+    });
   };
 
   const upload = async (collaboratorId, images) => {
@@ -182,7 +179,7 @@ function EmployeeCreatePage() {
         <div className="flex xs:w-1/6"></div>
         <div className="flex flex-col  xs:w-4/6  items-left  align-middle mt-10">
           <CollaboratorRegistration
-            title="Registro Collaborador HUBI"
+            title="Registro Colaborador HUBI"
             formValidatorConfig={validatorConfig}
             onContinueClicked={handleContinueClicked}
             collaboratorOptions={collaboratorTypeOptions.filter(

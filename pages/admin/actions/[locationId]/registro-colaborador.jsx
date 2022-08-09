@@ -248,7 +248,7 @@ function CollaboratorRegistrationPage({ sendGridTemplateId }) {
   return (
     <AdminLayout>
       <CollaboratorRegistration
-        title="Registro Collaborador HUBI"
+        title="Registro Colaborador HUBI"
         description={"Un gusto verte, por favor complete sus datos."}
         formValidatorConfig={validatorConfig}
         onContinueClicked={handleContinueClicked}
