@@ -13,6 +13,7 @@ function TableSection({
   orderField,
   dataset,
   filterPost,
+  hideContextualMenu,
   onView,
   onDelete,
   onShowMore,
@@ -169,44 +170,37 @@ function TableSection({
                         </div>
                       </td>
                     ))}
-                    <td className="w-5">
-                      <ContextualMenu
-                        key={row.id}
-                        className="relative inline-flex"
-                      >
-                        <li>
-                          <button
-                            className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
-                            onClick={() => {
-                              onView(row["id"]);
-                            }}
-                          >
-                            Ver
-                          </button>
-                        </li>
-                        {/* <li>
-                          <button
-                            className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
-                            onClick={() => {
-                              onEdit(row["id"]);
-                            }}
-                          >
-                            Editar
-                          </button>
-                        </li> */}
-                        <li>
-                          <button
-                            className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100"
-                            onClick={(e) => {
-                              onDelete(row["id"]);
-                              e.currentTarget.blur();
-                            }}
-                          >
-                            Eliminar
-                          </button>
-                        </li>
-                      </ContextualMenu>
-                    </td>
+                    {!hideContextualMenu && (
+                      <td className="w-5">
+                        <ContextualMenu
+                          key={row.id}
+                          className="relative inline-flex"
+                        >
+                          <li>
+                            <button
+                              className="w-full p-2 text-base text-purple-800 hover:text-purple-600 hover:bg-gray-100"
+                              onClick={() => {
+                                onView(row["id"]);
+                              }}
+                            >
+                              Ver
+                            </button>
+                          </li>
+
+                          <li>
+                            <button
+                              className="w-full p-2 text-base text-red-800 hover:text-red-600 hover:bg-gray-100"
+                              onClick={(e) => {
+                                onDelete(row["id"]);
+                                e.currentTarget.blur();
+                              }}
+                            >
+                              Eliminar
+                            </button>
+                          </li>
+                        </ContextualMenu>
+                      </td>
+                    )}
                   </tr>
                 );
               })}

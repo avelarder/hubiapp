@@ -25,6 +25,7 @@ export const collaboratorTypeOptions = [
   { id: "CONCIERGE", text: "Conserje" },
   { id: "CLEANNING", text: "Limpieza" },
 ];
+
 export const residentTypeOptions = [
   { id: "OWNER", text: "Propietario" },
   { id: "TENANT", text: "Inquilino" },
