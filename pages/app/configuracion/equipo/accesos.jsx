@@ -76,8 +76,6 @@ function AccessPage() {
   const [desktopAccessEnabled, setDesktopAccessEnabled] = useState(false);
   const [dashboardAccessEnabled, setDashboardAccessEnabled] = useState(false);
 
-  console.log("*** LOCATION", locationSelected);
-
   const query = db
     .collection("AccessProfiles")
     .where("locationId", "==", locationSelected.id ?? "");
@@ -86,7 +84,6 @@ function AccessPage() {
 
   useEffect(() => {
     if (data) {
-      console.log("*** DATA", data);
       setMovileAccessEnabled(data[0]?.movileAccess);
       setDesktopAccessEnabled(data[0]?.desktopAccess);
       setDashboardAccessEnabled(data[0]?.dashboardAccess);
@@ -109,13 +106,6 @@ function AccessPage() {
   if (status === "error") {
     return `Error: ${error.message}`;
   }
-
-  console.log(
-    "*** REFERENCED DATA: ",
-    data?.length > 0 &&
-      data[0].role == collaboratorType.id &&
-      data[0].dashboardOptions[0].get().data()
-  );
 
   return (
     <NewLayout>
