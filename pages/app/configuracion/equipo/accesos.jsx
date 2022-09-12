@@ -1,5 +1,5 @@
 import { Switch } from "@headlessui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import FieldContainer from "../../../../components/common/field-container";
 import Select from "../../../../components/common/select";
 import NewLayout from "../../../../components/newLayout";
@@ -44,22 +44,33 @@ function AccessToggleSection({ title, description, toggleState, onToggle }) {
   );
 }
 
-function AccessOptionsSection({ options }) {
+function AccessOptionItem({ option }) {
+  const db = Firebase.default.firestore();
+
+  const handleOptionChanged = async (option, newValue) => {
+    await db.collection("AccessProfileOptions").doc(option.id).update({
+      enabled: newValue,
+    });
+  };
+
+  return (
+    <div key={option.index} className="flex gap-2 items-center px-4">
+      <input
+        type={"checkbox"}
+        onChange={() => handleOptionChanged(option, !option.value)}
+        checked={option.value}
+      />
+      <span>{option.title}</span>
+    </div>
+  );
+}
+
+function AccessOptionsSection({ children }) {
   return (
     <div className="flex flex-col  border-1 border-gray-400 my-4 rounded-lg ">
       <FieldContainer>
         <div className="flex flex-col items-start border-1 border-gray-300 m-4 p-4 rounded-lg bg-gray-50 text-sm ">
-          {options &&
-            options.map((option, index) => (
-              <div key={index} className="flex gap-2 items-center px-4">
-                <input
-                  type={"checkbox"}
-                  onChange={option.onChange}
-                  value={option.value}
-                />
-                <span>{option.title}</span>
-              </div>
-            ))}
+          {children}
         </div>
       </FieldContainer>
     </div>
@@ -73,9 +84,6 @@ function AccessPage() {
   const [collaboratorType, setCollaboratorType] = useState(
     collaboratorTypeOptions[0]
   );
-  // const [mobileAccessEnabled, setMobileAccessEnabled] = useState(false);
-  // const [desktopAccessEnabled, setDesktopAccessEnabled] = useState(false);
-  // const [dashboardAccessEnabled, setDashboardAccessEnabled] = useState(false);
 
   const [dashboardOptions, setDashboardOptions] = useState([]);
 
@@ -112,6 +120,10 @@ function AccessPage() {
   const handleDashboardAccess = (value) => {};
   const handleDesktopdAccess = (value) => {};
 
+  const localDataProfiles = useMemo(() => {
+    return dataProfiles;
+  }, [dataProfiles]);
+
   if (statusProfiles === "loading") {
     return (
       <div className="flex justify-center items-center w-full bg-purple-100 h-10 text-xs text-purple-500">
@@ -123,6 +135,11 @@ function AccessPage() {
   if (statusProfiles === "error") {
     return `Error: ${error.message}`;
   }
+
+  const handleCollaborationTypeChanged = (value) => {
+    setCollaboratorType(value);
+    setDashboardOptions([]);
+  };
 
   return (
     <NewLayout>
@@ -138,14 +155,14 @@ function AccessPage() {
                 <Select
                   options={collaboratorTypeOptions}
                   selectedOption={collaboratorType}
-                  onOptionChanged={setCollaboratorType}
+                  onOptionChanged={handleCollaborationTypeChanged}
                 ></Select>
               </div>
             </div>
           </FieldContainer>
         </div>
-        {dataProfiles?.length > 0 &&
-          dataProfiles.find((x) => x.role == collaboratorType.id) && (
+        {localDataProfiles?.length > 0 &&
+          localDataProfiles.find((x) => x.role == collaboratorType.id) && (
             <div className="flex flex-col justify-center mt-8">
               <span className="font-bold text-2xl">Permisos</span>
               <AccessToggleSection
@@ -156,7 +173,7 @@ function AccessPage() {
                 onToggle={handleMobileAccess}
                 key={"movileAccess"}
                 toggleState={
-                  dataProfiles.find((x) => x.role == collaboratorType.id)
+                  localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .mobileAccess
                 }
               ></AccessToggleSection>
@@ -168,7 +185,7 @@ function AccessPage() {
                 onToggle={handleDesktopdAccess}
                 key={"desktopAccess"}
                 toggleState={
-                  dataProfiles.find((x) => x.role == collaboratorType.id)
+                  localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .desktopAccess
                 }
               ></AccessToggleSection>
@@ -180,15 +197,25 @@ function AccessPage() {
                 onToggle={handleDashboardAccess}
                 key={"dashboardAccess"}
                 toggleState={
-                  dataProfiles.find((x) => x.role == collaboratorType.id)
+                  localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .dashboardAccess
                 }
               ></AccessToggleSection>
-              <AccessOptionsSection
-                options={dashboardOptions.map((x) => {
-                  return { title: x.title, value: x.enabled };
+              <AccessOptionsSection>
+                {dashboardOptions.map((x, index) => {
+                  return (
+                    <AccessOptionItem
+                      key={index}
+                      option={{
+                        index: index,
+                        id: x.id,
+                        title: x.title,
+                        value: x.enabled,
+                      }}
+                    ></AccessOptionItem>
+                  );
                 })}
-              ></AccessOptionsSection>
+              </AccessOptionsSection>
             </div>
           )}
       </div>
