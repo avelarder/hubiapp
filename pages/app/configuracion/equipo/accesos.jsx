@@ -46,6 +46,20 @@ function AccessToggleSection({ title, description, toggleState, onToggle }) {
 
 function AccessOptionItem({ option }) {
   const db = Firebase.default.firestore();
+  const [optionItem, setOptionItem] = useState(null);
+
+  useEffect(() => {
+    option.onSnapshot((response) => {
+      setOptionItem(
+        response.exists === true
+          ? { id: response.id, ...response.data() }
+          : null
+      );
+    });
+    return () => {
+      setOptionItem(null);
+    };
+  }, [setOptionItem, option]);
 
   const handleOptionChanged = async (option, newValue) => {
     await db.collection("AccessProfileOptions").doc(option.id).update({
@@ -54,14 +68,24 @@ function AccessOptionItem({ option }) {
   };
 
   return (
-    <div key={option.index} className="flex gap-2 items-center px-4">
-      <input
-        type={"checkbox"}
-        onChange={() => handleOptionChanged(option, !option.value)}
-        checked={option.value}
-      />
-      <span>{option.title}</span>
-    </div>
+    <>
+      {optionItem ? (
+        <>
+          <div key={optionItem.index} className="flex gap-2 items-center px-4">
+            <input
+              type={"checkbox"}
+              onChange={() =>
+                handleOptionChanged(optionItem, !optionItem.enabled)
+              }
+              checked={optionItem.enabled}
+            />
+            <span>{optionItem.title}</span>
+          </div>
+        </>
+      ) : (
+        <div></div>
+      )}
+    </>
   );
 }
 
@@ -85,8 +109,6 @@ function AccessPage() {
     collaboratorTypeOptions[0]
   );
 
-  const [dashboardOptions, setDashboardOptions] = useState([]);
-
   const queryProfiles = db
     .collection("AccessProfiles")
     .where("locationId", "==", locationSelected.id ?? "");
@@ -97,28 +119,30 @@ function AccessPage() {
     error,
   } = useFirestoreQuery(queryProfiles);
 
-  useEffect(() => {
-    if (dataProfiles) {
-      const profile = dataProfiles.find((x) => x.role === collaboratorType.id);
-
-      for (let index = 0; index < profile?.options.length; index++) {
-        const element = profile.options[index];
-
-        element.onSnapshot((response) => {
-          const option =
-            response.exists === true
-              ? { id: response.id, ...response.data() }
-              : null;
-
-          setDashboardOptions((prev) => [...prev, option]);
-        });
-      }
-    }
-  }, [dataProfiles, collaboratorType]);
-
-  const handleMobileAccess = (value) => {};
-  const handleDashboardAccess = (value) => {};
-  const handleDesktopdAccess = (value) => {};
+  const handleMobileAccess = async (value) => {
+    const accessProfile = localDataProfiles.find(
+      (x) => x.role == collaboratorType.id
+    );
+    await db.collection("AccessProfiles").doc(accessProfile.id).update({
+      mobileAccess: value,
+    });
+  };
+  const handleDashboardAccess = async (value) => {
+    const accessProfile = localDataProfiles.find(
+      (x) => x.role == collaboratorType.id
+    );
+    await db.collection("AccessProfiles").doc(accessProfile.id).update({
+      dashboardAccess: value,
+    });
+  };
+  const handleDesktopdAccess = async (value) => {
+    const accessProfile = localDataProfiles.find(
+      (x) => x.role == collaboratorType.id
+    );
+    await db.collection("AccessProfiles").doc(accessProfile.id).update({
+      desktopAccess: value,
+    });
+  };
 
   const localDataProfiles = useMemo(() => {
     return dataProfiles;
@@ -138,7 +162,6 @@ function AccessPage() {
 
   const handleCollaborationTypeChanged = (value) => {
     setCollaboratorType(value);
-    setDashboardOptions([]);
   };
 
   return (
@@ -202,19 +225,16 @@ function AccessPage() {
                 }
               ></AccessToggleSection>
               <AccessOptionsSection>
-                {dashboardOptions.map((x, index) => {
-                  return (
-                    <AccessOptionItem
-                      key={index}
-                      option={{
-                        index: index,
-                        id: x.id,
-                        title: x.title,
-                        value: x.enabled,
-                      }}
-                    ></AccessOptionItem>
-                  );
-                })}
+                {localDataProfiles
+                  .find((x) => x.role == collaboratorType.id)
+                  .options.map((x, index) => {
+                    return (
+                      <AccessOptionItem
+                        key={index}
+                        option={x}
+                      ></AccessOptionItem>
+                    );
+                  })}
               </AccessOptionsSection>
             </div>
           )}
