@@ -176,7 +176,6 @@ export default function EventScreen({ onCancel }) {
                 locale="es"
                 selected={endDate}
                 onChange={(date) => {
-                  console.log(date);
                   setEndDate(date);
                 }}
                 showTimeSelect

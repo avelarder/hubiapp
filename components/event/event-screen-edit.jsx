@@ -182,7 +182,6 @@ export default function EventScreenEdit({
                 locale="es"
                 selected={endDate}
                 onChange={(date) => {
-                  console.log(date);
                   setEndDate(date);
                 }}
                 showTimeSelect

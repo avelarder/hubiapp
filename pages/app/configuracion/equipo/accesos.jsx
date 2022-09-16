@@ -1,5 +1,5 @@
 import { Switch } from "@headlessui/react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import FieldContainer from "../../../../components/common/field-container";
 import Select from "../../../../components/common/select";
 import NewLayout from "../../../../components/newLayout";
@@ -9,10 +9,7 @@ import Firebase from "../../../../firebase";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
 
 function AccessToggleSection({ title, description, toggleState, onToggle }) {
-  const [toggle, setToggle] = useState(toggleState);
-
   const handleToggle = (value) => {
-    setToggle(value);
     onToggle(value);
   };
 
@@ -26,14 +23,14 @@ function AccessToggleSection({ title, description, toggleState, onToggle }) {
           </div>
           <div className="w-1/4 justify-end items-end">
             <Switch
-              checked={toggle}
+              checked={toggleState}
               onChange={handleToggle}
-              className={`${toggle ? "bg-purple-900" : "bg-purple-200"}
+              className={`${toggleState ? "bg-purple-900" : "bg-purple-200"}
           relative inline-flex flex-shrink-0 h-5 w-10 border-1 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
             >
               <span
                 aria-hidden="true"
-                className={`${toggle ? "translate-x-5" : "translate-x-0"}
+                className={`${toggleState ? "translate-x-5" : "translate-x-0"}
             pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200`}
               />
             </Switch>
@@ -114,7 +111,7 @@ function AccessPage() {
     .where("locationId", "==", locationSelected.id ?? "");
 
   const {
-    data: dataProfiles,
+    data: localDataProfiles,
     status: statusProfiles,
     error,
   } = useFirestoreQuery(queryProfiles);
@@ -143,10 +140,6 @@ function AccessPage() {
       desktopAccess: value,
     });
   };
-
-  const localDataProfiles = useMemo(() => {
-    return dataProfiles;
-  }, [dataProfiles]);
 
   if (statusProfiles === "loading") {
     return (
@@ -194,7 +187,7 @@ function AccessPage() {
                   "Permite a los empleados tengan acceso con su password de 4 dígitos desde su móvil."
                 }
                 onToggle={handleMobileAccess}
-                key={"movileAccess"}
+                key={collaboratorType.id + "_movileAccess"}
                 toggleState={
                   localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .mobileAccess
@@ -206,7 +199,7 @@ function AccessPage() {
                   " Permite a los empleados tengan acceso con su password de 4 dígitos desde su computador."
                 }
                 onToggle={handleDesktopdAccess}
-                key={"desktopAccess"}
+                key={collaboratorType.id + "desktopAccess"}
                 toggleState={
                   localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .desktopAccess
@@ -218,7 +211,7 @@ function AccessPage() {
                   " Permite a los empleados tengan acceso con su password de 4 dígitos desde su computador."
                 }
                 onToggle={handleDashboardAccess}
-                key={"dashboardAccess"}
+                key={collaboratorType.id + "dashboardAccess"}
                 toggleState={
                   localDataProfiles.find((x) => x.role == collaboratorType.id)
                     .dashboardAccess
