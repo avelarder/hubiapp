@@ -115,8 +115,8 @@ function NewLayout(props) {
               icon={
                 <ClipboardListIcon className="text-purple-600  w-8 h-8"></ClipboardListIcon>
               }
-              path="/app/informes"
-              text="Informes"
+              path="/app/documentos"
+              text="Documentos"
             ></SidebarItem>
 
             <SidebarItem

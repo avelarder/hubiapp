@@ -153,8 +153,8 @@ function Sidebar({ sidebarOpen, setSidebarOpen }) {
               icon={
                 <ClipboardListIcon className="text-purple-600"></ClipboardListIcon>
               }
-              path="/app/informes"
-              text="Informes"
+              path="/app/documentos"
+              text="Documentos"
             ></SidebarItem>
 
             <SidebarItem
