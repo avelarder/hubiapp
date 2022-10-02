@@ -1,10 +1,12 @@
 import { StarIcon, TagIcon, TrashIcon } from "@heroicons/react/outline";
+import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
 import DropzoneComponent from "../../../components/common/DropzoneComponent";
 import OffCanvas from "../../../components/common/OffCanvas";
 import RoundedInputText from "../../../components/common/roundedInputText";
 import TableSection from "../../../components/common/table-section";
+import TagModal from "../../../components/common/tag-modal";
 import Thumbnail from "../../../components/common/thumbnail";
 import Footer from "../../../components/dashboard/footer";
 import MainSection from "../../../components/dashboard/mainSection";
@@ -73,13 +75,18 @@ const ExcelIcon = () => (
   </svg>
 );
 
-const IconContainer = ({ sourceId, documentName, icon, onClick }) => {
+const IconContainer = ({
+  sourceId,
+  documentName,
+  icon,
+  isFavorited,
+  onClick,
+  onDocumentTag,
+}) => {
   const handleDocumentDelete = () => {
     console.log("***DELETED", sourceId);
   };
-  const handleDocumentTag = () => {
-    console.log("***TAGGED", sourceId);
-  };
+
   const handleDocumentFavorite = () => {
     console.log("***FAVORITED", sourceId);
   };
@@ -92,12 +99,16 @@ const IconContainer = ({ sourceId, documentName, icon, onClick }) => {
       ></Thumbnail>
       <div className="flex justify-center mt-8 ">
         <StarIcon
-          className="text-gray-300 w-6 h-6 cursor-pointer"
+          className={classNames({
+            "text-gray-300 w-6 h-6 cursor-pointer": true,
+            "text-yellow-400 fill-current": isFavorited,
+          })}
           onClick={handleDocumentFavorite}
         ></StarIcon>
+
         <TagIcon
           className="text-gray-300 w-6 h-6  cursor-pointer"
-          onClick={handleDocumentTag}
+          onClick={onDocumentTag}
         ></TagIcon>
         <TrashIcon
           className="text-gray-300 w-6 h-6  cursor-pointer"
@@ -143,62 +154,72 @@ function DocumentPage() {
     "Plantillas",
   ];
 
-  const documents = {
+  const docs = [
+    {
+      documentName: "File 1",
+      type: "PDF",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "1",
+      id: "1",
+      icon: PdfIcon(),
+      isFavorited: false,
+    },
+    {
+      documentName: "File 2",
+      type: "DOC",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "2",
+      id: "2",
+      icon: DocIcon(),
+      isFavorited: true,
+    },
+    {
+      documentName: "File 3",
+      type: "PPT",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "3",
+      id: "3",
+      icon: PptIcon(),
+      isFavorited: false,
+    },
+    {
+      documentName: "File 4",
+      type: "EXCEL",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "4",
+      id: "4",
+      icon: ExcelIcon(),
+      isFavorited: false,
+    },
+    {
+      documentName: "File 5",
+      type: "PDF",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "5",
+      id: "5",
+      icon: PdfIcon(),
+      isFavorited: true,
+    },
+    {
+      documentName: "File 6",
+      type: "PDF",
+      lastUpdatedOn: "2020-01-01",
+      documentId: "6",
+      id: "6",
+      icon: PdfIcon(),
+      isFavorited: false,
+    },
+  ];
+
+  const documentList = {
     ...initDocuments,
-    data: [
-      {
-        documentName: "File 1",
-        type: "PDF",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "1",
-        id: "1",
-        icon: PdfIcon(),
-      },
-      {
-        documentName: "File 2",
-        type: "DOC",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "2",
-        id: "2",
-        icon: DocIcon(),
-      },
-      {
-        documentName: "File 3",
-        type: "PPT",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "3",
-        id: "3",
-        icon: PptIcon(),
-      },
-      {
-        documentName: "File 4",
-        type: "EXCEL",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "4",
-        id: "4",
-        icon: ExcelIcon(),
-      },
-      {
-        documentName: "File 5",
-        type: "PDF",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "5",
-        id: "5",
-        icon: PdfIcon(),
-      },
-      {
-        documentName: "File 6",
-        type: "PDF",
-        lastUpdatedOn: "2020-01-01",
-        documentId: "6",
-        id: "6",
-        icon: PdfIcon(),
-      },
-    ],
+    data: docs,
+    origin: docs,
   };
 
   const DEFAULT_LIMIT = 10;
-
+  const [showModal, setShowModal] = useState(false);
+  const [documents, setDocuments] = useState(documentList);
   const [selectedDocument, setSelectedDocument] = useState({});
   const [showOffCanvas, setShowOffCanvas] = useState(false);
   const [orderField, setOrderField] = useState("documentName");
@@ -217,6 +238,14 @@ function DocumentPage() {
     text: "ROLES: Todos",
   });
 
+  const handleDocumentFiltering = (filter) => {
+    const data = documents.origin;
+    data = data.filter((x) => x.documentName.includes(filter));
+    setDocuments({ ...documents, data });
+
+    setFilterText(filter);
+  };
+
   const handleShowOffCanvas = (rowId) => {
     setSelectedDocument(documents.data.find((x) => x.id === rowId));
     setShowOffCanvas(true);
@@ -233,6 +262,7 @@ function DocumentPage() {
     setRowsPerPage((prev) => prev + currentLimit);
   };
 
+  const onTagModalConfirmation = () => {};
   const handleChangeLimit = (limit) => {
     setCurrentLimit(limit);
     setRowsPerPage(limit);
@@ -259,7 +289,9 @@ function DocumentPage() {
                 <div className="flex mt-4 items-center">
                   <RoundedInputText
                     value={filterText}
-                    onChange={(e) => setFilterText(e.currentTarget.value)}
+                    onChange={(e) =>
+                      handleDocumentFiltering(e.currentTarget.value)
+                    }
                     placeholder="Ingrese el texto a buscar"
                   ></RoundedInputText>
                   {showDetails ? (
@@ -348,6 +380,8 @@ function DocumentPage() {
                           documentName={x.documentName}
                           icon={x.icon}
                           onClick={handleShowOffCanvas}
+                          onDocumentTag={() => setShowModal(true)}
+                          isFavorited={x.isFavorited}
                         ></IconContainer>
                       ))}
                     </div>
@@ -355,6 +389,12 @@ function DocumentPage() {
                 </div>
               </div>
             </div>
+            {showModal && (
+              <TagModal
+                onCancel={() => setShowModal(false)}
+                onConfirm={onTagModalConfirmation}
+              ></TagModal>
+            )}
           </div>
           <OffCanvas
             showSidebar={showOffCanvas}
