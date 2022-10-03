@@ -21,7 +21,6 @@ function TagModal({ tags, onConfirm, onCancel }) {
   }, []);
 
   const handleAddNewOption = (e) => {
-    console.log(e);
     if (e.target.value && e.target.value.length > 0) {
       const option = e.target.value;
       setSelectedOptions((prev) => [...prev, option]);
