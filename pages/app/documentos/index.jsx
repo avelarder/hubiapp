@@ -1,4 +1,5 @@
 import { StarIcon, TagIcon, TrashIcon } from "@heroicons/react/outline";
+import { DotsVerticalIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
@@ -8,6 +9,7 @@ import RoundedInputText from "../../../components/common/roundedInputText";
 import TableSection from "../../../components/common/table-section";
 import TagModal from "../../../components/common/tag-modal";
 import Thumbnail from "../../../components/common/thumbnail";
+import ContextualMenu from "../../../components/dashboard/contextualMenu";
 import Footer from "../../../components/dashboard/footer";
 import MainSection from "../../../components/dashboard/mainSection";
 import NewLayout from "../../../components/newLayout";
@@ -218,6 +220,7 @@ function DocumentPage() {
   };
 
   const DEFAULT_LIMIT = 10;
+
   const [showModal, setShowModal] = useState(false);
   const [documents, setDocuments] = useState(documentList);
   const [selectedDocument, setSelectedDocument] = useState({});
@@ -327,21 +330,49 @@ function DocumentPage() {
                       />
                     </svg>
                   )}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="#bdbdbd"
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={handleShowOffCanvas}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"
-                    />
-                  </svg>
+
+                  <ContextualMenu className="relative inline-flex">
+                    <li>
+                      <button
+                        className="w-full p-2 text-sm pl-8 text-left  hover:bg-gray-100"
+                        onClick={() => {}}
+                      >
+                        Nombre
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full p-2 text-sm pl-8 text-left  hover:bg-gray-100"
+                        onClick={(e) => {}}
+                      >
+                        Tamaño Mayor a Menor
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full p-2 text-sm pl-8 text-left  hover:bg-gray-100"
+                        onClick={(e) => {}}
+                      >
+                        Tamaño Menor a Mayor
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full p-2 text-sm pl-8 text-left  hover:bg-gray-100"
+                        onClick={(e) => {}}
+                      >
+                        Tipo
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        className="w-full p-2 text-sm pl-8 text-left  hover:bg-gray-100"
+                        onClick={(e) => {}}
+                      >
+                        Fecha de Modificación
+                      </button>
+                    </li>
+                  </ContextualMenu>
                 </div>
 
                 <div className="flex h-full w-full flex-col ">

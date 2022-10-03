@@ -1,15 +1,12 @@
 import React, { useEffect, useRef } from "react";
+import { useState } from "react";
 import ModalContainer from "./modal";
 import Multiselect from "./multiselect";
 
 function TagModal({ tags, onConfirm, onCancel }) {
   const defaultButton = useRef(null);
-
-  useEffect(() => {
-    defaultButton.current.focus();
-  }, []);
-
-  const options = [
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [options, setOptions] = useState([
     { text: "Tag1", value: "tag1" },
     { text: "Tag2", value: "tag2" },
     { text: "Tag3", value: "tag3" },
@@ -18,19 +15,44 @@ function TagModal({ tags, onConfirm, onCancel }) {
     { text: "Tag6", value: "tag6" },
     { text: "Tag7", value: "tag7" },
     { text: "Tag8", value: "tag8" },
-  ];
-  const selectedOptions = ["Tag1", "Tag2"];
+  ]);
+  useEffect(() => {
+    defaultButton.current.focus();
+  }, []);
+
+  const handleAddNewOption = (e) => {
+    console.log(e);
+    if (e.target.value && e.target.value.length > 0) {
+      const option = e.target.value;
+      setSelectedOptions((prev) => [...prev, option]);
+      e.target.value = "";
+    }
+  };
+
+  console.log("New label", selectedOptions);
+
   return (
     <ModalContainer onCancel={onCancel}>
       <div className="flex flex-col items-center justify-center">
         <span className="font-semibold">{"Etiquetas"}</span>
-        <span className="text-sm">
+        <span className="text-sm w-full h-64">
           <Multiselect
             dropdownHeight={"200px"}
             options={options}
             selectedOptions={selectedOptions}
-            onSelectionChange={(e) => {}}
+            onSelectionChange={(e) => {
+              setSelectedOptions(e);
+            }}
           ></Multiselect>
+          <div>
+            <span>
+              No encuentras lo que buscas? Ingresa una nueva etiqueta aquí.
+            </span>
+            <input
+              className="border-1 h-10 rounded-lg w-full"
+              onBlur={handleAddNewOption}
+            ></input>
+          </div>
         </span>
         <div className="flex mt-4 flex-row-reverse">
           <button
