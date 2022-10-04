@@ -16,6 +16,7 @@ function TagModal({ tags, onConfirm, onCancel }) {
     { text: "Tag7", value: "tag7" },
     { text: "Tag8", value: "tag8" },
   ]);
+
   useEffect(() => {
     defaultButton.current.focus();
   }, []);
@@ -23,12 +24,12 @@ function TagModal({ tags, onConfirm, onCancel }) {
   const handleAddNewOption = (e) => {
     if (e.target.value && e.target.value.length > 0) {
       const option = e.target.value;
+
+      setOptions((prev) => [...prev, { text: option, value: option }]);
       setSelectedOptions((prev) => [...prev, option]);
       e.target.value = "";
     }
   };
-
-  console.log("New label", selectedOptions);
 
   return (
     <ModalContainer onCancel={onCancel}>
@@ -48,7 +49,7 @@ function TagModal({ tags, onConfirm, onCancel }) {
               No encuentras lo que buscas? Ingresa una nueva etiqueta aquí.
             </span>
             <input
-              className="border-1 h-10 rounded-lg w-full"
+              className="border-1 h-10 rounded-lg w-full p-4"
               onBlur={handleAddNewOption}
             ></input>
           </div>
