@@ -1,39 +1,81 @@
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ModalContainer from "./modal";
-import Multiselect from "./multiselect";
+import { useLocationContext } from "../../locationProvider";
+import Firebase from "../../firebase";
+import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 
-function TagModal({ tags, onConfirm, onCancel }) {
+function TagModal({
+  selectedTags,
+  sourceId,
+  onAddingTag,
+  onRemovingTag,
+  onConfirm,
+  onCancel,
+}) {
+  const db = Firebase.default.firestore();
+  const { locationSelected } = useLocationContext();
+
   const defaultButton = useRef(null);
+  const inputTag = useRef(null);
   const [inputText, setInputText] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState([]);
-  const [options, setOptions] = useState(
-    [
-      { text: "demo", value: "demo", isSelected: false },
-      { text: "task", value: "task", isSelected: false },
-      { text: "risk", value: "risk", isSelected: false },
-      { text: "tarro", value: "tarro", isSelected: false },
-      { text: "cargo", value: "cargo", isSelected: false },
-      { text: "medico", value: "medico", isSelected: false },
-      { text: "seguridad", value: "seguridad", isSelected: false },
-      { text: "guia", value: "guia", isSelected: false },
-    ].sort((x, y) => (x.value > y.value ? 1 : -1))
-  );
+  const [selectedOptions, setSelectedOptions] = useState(selectedTags);
+  const [showOptions, setShowOptions] = useState(false);
 
-  useEffect(() => {
-    defaultButton.current.focus();
-  }, []);
+  // const [options, setOptions] = useState(
+  //   [
+  //     { text: "demo", value: "demo", isSelected: false },
+  //     { text: "task", value: "task", isSelected: false },
+  //     { text: "risk", value: "risk", isSelected: false },
+  //     { text: "tarro", value: "tarro", isSelected: false },
+  //     { text: "cargo", value: "cargo", isSelected: false },
+  //     { text: "medico", value: "medico", isSelected: false },
+  //     { text: "seguridad", value: "seguridad", isSelected: false },
+  //     { text: "guia", value: "guia", isSelected: false },
+  //   ].sort((x, y) => (x.value > y.value ? 1 : -1))
+  // );
+
+  const queryTags = db
+    .collection("Tags")
+    .where("location", "==", locationSelected.id ?? "");
+
+  const {
+    data: localTags,
+    status: loadingTags,
+    error,
+  } = useFirestoreQuery(queryTags);
+
+  // useEffect(() => {
+  //   defaultButton.current.focus();
+  // }, []);
+
+  const removeTag = (e) => {
+    const localOptions = options.filter((x) => x.value !== e);
+
+    setOptions(
+      [...localOptions, { text: e, value: e, isSelected: false }].sort((x, y) =>
+        x.value > y.value ? 1 : -1
+      )
+    );
+    setSelectedOptions(selectedOptions.filter((x) => x !== e));
+  };
 
   const handleAddNewOption = (e) => {
     if (e.keyCode === 13) {
-      //   const option = e.target.value;
-      //   setOptions((prev) => [...prev, { text: option, value: option }]);
-      //   setSelectedOptions((prev) => [...prev, option]);
-      //   e.target.value = "";
+      const text = inputTag.current.value;
+
+      const localOptions = options.filter((x) => x.value !== text);
+
+      setOptions([
+        ...localOptions,
+        { text: text, value: text, isSelected: true },
+      ]);
+      setSelectedOptions((prev) => [...prev, text]);
+      inputTag.current.value = "";
     }
   };
 
   const handleInputTyping = (e) => {
+    setShowOptions(e.currentTarget.value.length > 0);
     setInputText(e.currentTarget.value);
   };
 
@@ -41,45 +83,103 @@ function TagModal({ tags, onConfirm, onCancel }) {
     const selectedTag = e.currentTarget.value;
     const isSelected = e.currentTarget.checked;
 
-    const localOptions = options.filter((x) => x.value !== selectedTag);
+    if (isSelected) {
+      onAddingTag(sourceId, selectedTag);
+      setSelectedOptions((prev) => [...prev, selectedTag]);
+    } else {
+      onRemovingTag(sourceId, selectedTag);
+      setSelectedOptions(selectedOptions.filter((x) => x !== selectedTag));
+    }
 
-    setOptions(
-      [
-        ...localOptions,
-        { text: selectedTag, value: selectedTag, isSelected: isSelected },
-      ].sort((x, y) => (x.value > y.value ? 1 : -1))
-    );
+    setInputText("");
+    setShowOptions(false);
+    inputTag.current.value = "";
+    inputTag.current.focus();
   };
+
+  if (loadingTags === "loading") {
+    return (
+      <div className="flex justify-center items-center w-full bg-purple-100 h-10 text-xs text-purple-500">
+        Los datos se están cargando, un momento por favor.
+      </div>
+    );
+  }
+
+  if (loadingTags === "error") {
+    return `Error: ${error.message}`;
+  }
 
   return (
     <ModalContainer onCancel={onCancel}>
       <div className="flex flex-col items-center justify-center">
         <span className="font-semibold">{"Etiquetas"}</span>
-        <div className="text-sm w-full h-64">
+        <div className="text-sm w-full h-44 mt-4">
           <div>
-            <input
-              className="border-1 h-10 rounded-lg w-full p-4"
-              onKeyDown={handleAddNewOption}
-              onChange={handleInputTyping}
-            ></input>
-          </div>
-          <div className="flex flex-col overflow-y-scroll h-40">
-            {options
-              .filter((x) => x.text.includes(inputText))
-              .map((x, index) => (
-                <div key={index}>
-                  <input
-                    type="checkbox"
-                    value={x.value}
-                    checked={x.isSelected}
-                    onChange={handleSelection}
-                  ></input>
-                  <b>
-                    <x>{x.text}</x>
-                  </b>
+            <div className="flex border-1 rounded-lg h-10">
+              {selectedOptions.map((tag, index) => (
+                <div
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-indigo-700 bg-indigo-100 border border-indigo-300 "
+                >
+                  <div className="text-xs font-normal leading-none max-w-full flex-initial">
+                    {tag}
+                  </div>
+                  <div className="flex flex-auto flex-row-reverse">
+                    <div onClick={() => removeTag(tag)}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="100%"
+                        height="100%"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="feather feather-x cursor-pointer hover:text-indigo-400 rounded-full w-4 h-4 ml-2"
+                      >
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </div>
+                  </div>
                 </div>
               ))}
+              <input
+                ref={inputTag}
+                className="rounded-lg w-auto px-4 h-8 outline-none"
+                onKeyDown={handleAddNewOption}
+                onChange={handleInputTyping}
+              ></input>
+            </div>
           </div>
+          {showOptions && (
+            <div className="flex flex-col overflow-y-auto h-28 border-1 rounded-lg mt-4">
+              {localTags
+                .map((x) => {
+                  return {
+                    value: x.id,
+                    text: x.tag,
+                    isSelected: selectedOptions.includes(x.tag),
+                  };
+                })
+                .filter((x) => x.text.includes(inputText))
+                .map((x, index) => (
+                  <div key={index} className="flexmt-2 ml-2 items-center">
+                    <input
+                      type="checkbox"
+                      value={x.text}
+                      checked={x.isSelected}
+                      onChange={handleSelection}
+                    ></input>
+                    <b className="px-4 items-center">{x.text}</b>
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
         <div className="flex mt-4 flex-row-reverse">
           <button

@@ -1,5 +1,4 @@
 import { StarIcon, TagIcon, TrashIcon } from "@heroicons/react/outline";
-import { DotsVerticalIcon } from "@heroicons/react/solid";
 import classNames from "classnames";
 import React from "react";
 import { useState } from "react";
@@ -13,6 +12,10 @@ import ContextualMenu from "../../../components/dashboard/contextualMenu";
 import Footer from "../../../components/dashboard/footer";
 import MainSection from "../../../components/dashboard/mainSection";
 import NewLayout from "../../../components/newLayout";
+import { useLocationContext } from "../../../locationProvider";
+import Firebase from "../../../firebase";
+import useFirestoreQuery from "../../../hooks/useFirestoreQuery";
+import { useAuth } from "../../../authUserProvider";
 
 const PdfIcon = () => (
   <svg
@@ -79,9 +82,11 @@ const ExcelIcon = () => (
 
 const IconContainer = ({
   sourceId,
+  isSelected,
   documentName,
   icon,
   isFavorited,
+  onMouseOver,
   onClick,
   onDocumentTag,
 }) => {
@@ -92,8 +97,21 @@ const IconContainer = ({
   const handleDocumentFavorite = () => {
     console.log("***FAVORITED", sourceId);
   };
+
+  const handleMouseOver = (e) => {
+    onMouseOver();
+  };
+
   return (
-    <div className="flex flex-col items-center text-center">
+    <div
+      className={classNames(
+        "flex flex-col items-center text-center rounded-lg p-2",
+        {
+          "bg-gray-50": isSelected,
+        }
+      )}
+      onMouseOver={handleMouseOver}
+    >
       <Thumbnail
         sourceId={sourceId}
         documentName={documentName}
@@ -125,7 +143,7 @@ function DocumentPage() {
   const initDocuments = {
     headers: [
       {
-        source: "documentName",
+        source: "name",
         columnName: "Nombre",
         isLink: true,
         path: (id) => `documentos/${id}/detalle`,
@@ -136,7 +154,7 @@ function DocumentPage() {
         isDate: false,
       },
       {
-        source: "lastUpdatedOn",
+        source: "updatedOn",
         columnName: "Fecha última modificación",
         isDate: false,
       },
@@ -156,81 +174,22 @@ function DocumentPage() {
     "Plantillas",
   ];
 
-  const docs = [
-    {
-      documentName: "File 1",
-      type: "PDF",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "1",
-      id: "1",
-      icon: PdfIcon(),
-      isFavorited: false,
-    },
-    {
-      documentName: "File 2",
-      type: "DOC",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "2",
-      id: "2",
-      icon: DocIcon(),
-      isFavorited: true,
-    },
-    {
-      documentName: "File 3",
-      type: "PPT",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "3",
-      id: "3",
-      icon: PptIcon(),
-      isFavorited: false,
-    },
-    {
-      documentName: "File 4",
-      type: "EXCEL",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "4",
-      id: "4",
-      icon: ExcelIcon(),
-      isFavorited: false,
-    },
-    {
-      documentName: "File 5",
-      type: "PDF",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "5",
-      id: "5",
-      icon: PdfIcon(),
-      isFavorited: true,
-    },
-    {
-      documentName: "File 6",
-      type: "PDF",
-      lastUpdatedOn: "2020-01-01",
-      documentId: "6",
-      id: "6",
-      icon: PdfIcon(),
-      isFavorited: false,
-    },
-  ];
-
-  const documentList = {
-    ...initDocuments,
-    data: docs,
-    origin: docs,
-  };
-
   const DEFAULT_LIMIT = 10;
 
+  const db = Firebase.default.firestore();
+  const { locationSelected } = useLocationContext();
+  const { authUser, loading } = useAuth();
+
   const [showModal, setShowModal] = useState(false);
-  const [documents, setDocuments] = useState(documentList);
   const [selectedDocument, setSelectedDocument] = useState({});
   const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const [orderField, setOrderField] = useState("documentName");
+  const [orderField, setOrderField] = useState("name");
   const [isOrderDirectionDesc, setOrderDirection] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [filterText, setFilterText] = useState("");
   const [showDetails, setShowDetails] = useState(false);
+
   const [statusFilter, setStatusFilter] = useState({
     id: "ALL",
     text: "ESTADOS: Todos",
@@ -241,10 +200,20 @@ function DocumentPage() {
     text: "ROLES: Todos",
   });
 
+  const queryDocuments = db
+    .collection("Documents")
+    .where("location", "==", locationSelected.id ?? "");
+
+  const {
+    data: localDocuments,
+    status: loadingDocuments,
+    error,
+  } = useFirestoreQuery(queryDocuments);
+
   const handleDocumentFiltering = (filter) => {
-    const data = documents.origin;
-    data = data.filter((x) => x.documentName.includes(filter));
-    setDocuments({ ...documents, data });
+    // const data = documentList.origin;
+    // data = data.filter((x) => x.documentName.includes(filter));
+    // setDocuments({ ...documents, data });
 
     setFilterText(filter);
   };
@@ -281,6 +250,35 @@ function DocumentPage() {
     setOrderDirection(localDirection);
   };
 
+  const getIcon = (type) => {
+    const types = [
+      { type: "PDF", icon: PdfIcon() },
+      { type: "DOC", icon: DocIcon() },
+      { type: "PPT", icon: PptIcon() },
+      { type: "EXCEL", icon: ExcelIcon() },
+    ];
+
+    return types.find((x) => x.type === type).icon;
+  };
+
+  if (loadingDocuments === "loading") {
+    return (
+      <div className="flex justify-center items-center w-full bg-purple-100 h-10 text-xs text-purple-500">
+        Los datos se están cargando, un momento por favor.
+      </div>
+    );
+  }
+
+  if (loadingDocuments === "error") {
+    return `Error: ${error.message}`;
+  }
+
+  const documentList = {
+    ...initDocuments,
+    data: localDocuments.filter((x) => x.name.includes(filterText)),
+    origin: localDocuments,
+  };
+  console.log(documentList);
   return (
     <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
@@ -389,7 +387,7 @@ function DocumentPage() {
                   {showDetails ? (
                     <TableSection
                       sectionTitle="Documntos"
-                      dataset={documents}
+                      dataset={documentList}
                       currentLimit={currentLimit}
                       isOrderDesc={isOrderDirectionDesc}
                       orderField={orderField}
@@ -404,15 +402,19 @@ function DocumentPage() {
                     ></TableSection>
                   ) : (
                     <div className="flex flex-wrap gap-8">
-                      {documents.data.map((x) => (
+                      {documentList.data.map((x) => (
                         <IconContainer
-                          key={x.documentId}
-                          sourceId={x.documentId}
-                          documentName={x.documentName}
-                          icon={x.icon}
+                          key={x.id}
+                          sourceId={x.id}
+                          documentName={x.name}
+                          icon={getIcon(x.type)}
+                          isSelected={selectedDocument.id == x.id}
+                          onMouseOver={() => setSelectedDocument(x)}
                           onClick={handleShowOffCanvas}
-                          onDocumentTag={() => setShowModal(true)}
-                          isFavorited={x.isFavorited}
+                          onDocumentTag={() => {
+                            setShowModal(true);
+                          }}
+                          isFavorited={x.featuredBy.indexOf(authUser.uid) > -1}
                         ></IconContainer>
                       ))}
                     </div>
@@ -422,6 +424,8 @@ function DocumentPage() {
             </div>
             {showModal && (
               <TagModal
+                sourceId={selectedDocument.id}
+                selectedTags={["2022"]}
                 onCancel={() => setShowModal(false)}
                 onConfirm={onTagModalConfirmation}
               ></TagModal>
