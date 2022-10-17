@@ -3,6 +3,7 @@ import ModalContainer from "./modal";
 import { useLocationContext } from "../../locationProvider";
 import Firebase from "../../firebase";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
+import { uuid } from "uuidv4";
 
 function TagModal({
   selectedTags,
@@ -21,19 +22,6 @@ function TagModal({
   const [selectedOptions, setSelectedOptions] = useState(selectedTags);
   const [showOptions, setShowOptions] = useState(false);
 
-  // const [options, setOptions] = useState(
-  //   [
-  //     { text: "demo", value: "demo", isSelected: false },
-  //     { text: "task", value: "task", isSelected: false },
-  //     { text: "risk", value: "risk", isSelected: false },
-  //     { text: "tarro", value: "tarro", isSelected: false },
-  //     { text: "cargo", value: "cargo", isSelected: false },
-  //     { text: "medico", value: "medico", isSelected: false },
-  //     { text: "seguridad", value: "seguridad", isSelected: false },
-  //     { text: "guia", value: "guia", isSelected: false },
-  //   ].sort((x, y) => (x.value > y.value ? 1 : -1))
-  // );
-
   const queryTags = db
     .collection("Tags")
     .where("location", "==", locationSelected.id ?? "");
@@ -44,31 +32,23 @@ function TagModal({
     error,
   } = useFirestoreQuery(queryTags);
 
-  // useEffect(() => {
-  //   defaultButton.current.focus();
-  // }, []);
-
   const removeTag = (e) => {
-    const localOptions = options.filter((x) => x.value !== e);
-
-    setOptions(
-      [...localOptions, { text: e, value: e, isSelected: false }].sort((x, y) =>
-        x.value > y.value ? 1 : -1
-      )
-    );
     setSelectedOptions(selectedOptions.filter((x) => x !== e));
+    onRemovingTag(sourceId, e);
   };
 
   const handleAddNewOption = (e) => {
     if (e.keyCode === 13) {
       const text = inputTag.current.value;
 
-      const localOptions = options.filter((x) => x.value !== text);
-
-      setOptions([
-        ...localOptions,
-        { text: text, value: text, isSelected: true },
-      ]);
+      const newTagId = uuid();
+      db.collection("Tags").doc(newTagId).set({
+        location: locationSelected.id,
+        tag: text,
+        createdOnUTC: new Date().toISOString(),
+        updatedOnUTC: new Date().toISOString(),
+      });
+      onAddingTag(sourceId, text);
       setSelectedOptions((prev) => [...prev, text]);
       inputTag.current.value = "";
     }

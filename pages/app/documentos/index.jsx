@@ -84,18 +84,39 @@ const IconContainer = ({
   sourceId,
   isSelected,
   documentName,
+  featuredBy,
   icon,
   isFavorited,
   onMouseOver,
   onClick,
   onDocumentTag,
+  currentUser,
 }) => {
+  const db = Firebase.default.firestore();
+
   const handleDocumentDelete = () => {
-    console.log("***DELETED", sourceId);
+    db.collection("Documents").doc(sourceId).set({
+      isRemoved: true,
+      updatedOnUTC: new Date().toISOString(),
+    });
   };
 
   const handleDocumentFavorite = () => {
-    console.log("***FAVORITED", sourceId);
+    if (isFavorited) {
+      db.collection("Documents")
+        .doc(sourceId)
+        .update({
+          featuredBy: featuredBy.filter((x) => x !== currentUser),
+          updatedOnUTC: new Date().toISOString(),
+        });
+    } else {
+      db.collection("Documents")
+        .doc(sourceId)
+        .update({
+          featuredBy: [...featuredBy, currentUser],
+          updatedOnUTC: new Date().toISOString(),
+        });
+    }
   };
 
   const handleMouseOver = (e) => {
@@ -273,12 +294,26 @@ function DocumentPage() {
     return `Error: ${error.message}`;
   }
 
+  const addTagToDocument = (documentId, tag) => {
+    db.collection("Documents")
+      .doc(documentId)
+      .update({
+        tags: [...selectedDocument.tags, tag],
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+  const removeTagFromDocument = (documentId, tag) => {
+    const selectedTags = selectedDocument.tags.filter((x) => x !== tag);
+    db.collection("Documents").doc(documentId).update({
+      tags: selectedTags,
+      updatedOnUTC: new Date().toISOString(),
+    });
+  };
   const documentList = {
     ...initDocuments,
     data: localDocuments.filter((x) => x.name.includes(filterText)),
     origin: localDocuments,
   };
-  console.log(documentList);
   return (
     <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
@@ -407,6 +442,7 @@ function DocumentPage() {
                           key={x.id}
                           sourceId={x.id}
                           documentName={x.name}
+                          tags={x.tags}
                           icon={getIcon(x.type)}
                           isSelected={selectedDocument.id == x.id}
                           onMouseOver={() => setSelectedDocument(x)}
@@ -415,6 +451,8 @@ function DocumentPage() {
                             setShowModal(true);
                           }}
                           isFavorited={x.featuredBy.indexOf(authUser.uid) > -1}
+                          currentUser={authUser.uid}
+                          featuredBy={x.featuredBy}
                         ></IconContainer>
                       ))}
                     </div>
@@ -425,9 +463,11 @@ function DocumentPage() {
             {showModal && (
               <TagModal
                 sourceId={selectedDocument.id}
-                selectedTags={["2022"]}
+                selectedTags={selectedDocument.tags}
                 onCancel={() => setShowModal(false)}
                 onConfirm={onTagModalConfirmation}
+                onAddingTag={addTagToDocument}
+                onRemovingTag={removeTagFromDocument}
               ></TagModal>
             )}
           </div>
