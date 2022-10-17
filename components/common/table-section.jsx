@@ -37,11 +37,10 @@ function TableSection({
 
     dataset.data = dataset.data
       .filter(
-        (post) =>
-          filterPost === "" ||
-          post.description.toLowerCase().includes(filterPost.toLowerCase()) ||
-          post.createdOnUTC.toLowerCase().includes(filterPost.toLowerCase()) ||
-          post.surveyExpiration.toLowerCase().includes(filterPost.toLowerCase())
+        (post) => !filterPost || filterPost === ""
+        // post.description.toLowerCase().includes(filterPost.toLowerCase()) ||
+        // post.createdOnUTC.toLowerCase().includes(filterPost.toLowerCase()) ||
+        // post.surveyExpiration.toLowerCase().includes(filterPost.toLowerCase())
       )
       .sort((a, b) => {
         if (header.isDate) {
