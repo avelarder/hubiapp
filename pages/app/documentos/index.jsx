@@ -232,10 +232,6 @@ function DocumentPage() {
   } = useFirestoreQuery(queryDocuments);
 
   const handleDocumentFiltering = (filter) => {
-    // const data = documentList.origin;
-    // data = data.filter((x) => x.documentName.includes(filter));
-    // setDocuments({ ...documents, data });
-
     setFilterText(filter);
   };
 
