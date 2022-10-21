@@ -269,10 +269,21 @@ function DocumentPage() {
 
   const getIcon = (type) => {
     const types = [
-      { type: "PDF", icon: PdfIcon() },
-      { type: "DOC", icon: DocIcon() },
-      { type: "PPT", icon: PptIcon() },
-      { type: "EXCEL", icon: ExcelIcon() },
+      { type: "application/pdf", icon: PdfIcon() },
+      { type: "image/jpeg", icon: PdfIcon() },
+      {
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        icon: DocIcon(),
+      },
+      {
+        type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        icon: PptIcon(),
+      },
+      {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        icon: ExcelIcon(),
+      },
+      { type: "application/x-zip-compressed", icon: ExcelIcon() },
     ];
 
     return types.find((x) => x.type === type).icon;
@@ -317,7 +328,9 @@ function DocumentPage() {
           <div className="flex flex-col w-full">
             <div className="mt-2">
               <div className="flex justify-start flex-col h-screen">
-                <DropzoneComponent></DropzoneComponent>
+                <DropzoneComponent
+                  location={locationSelected}
+                ></DropzoneComponent>
                 <div className="flex mt-4 items-center">
                   <RoundedInputText
                     value={filterText}
