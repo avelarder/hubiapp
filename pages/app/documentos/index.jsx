@@ -210,6 +210,7 @@ function DocumentPage() {
   const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
   const [filterText, setFilterText] = useState("");
   const [showDetails, setShowDetails] = useState(false);
+  const [filterByFileType, setFilterByFileType] = useState("Todos");
 
   const [statusFilter, setStatusFilter] = useState({
     id: "ALL",
@@ -269,21 +270,28 @@ function DocumentPage() {
 
   const getIcon = (type) => {
     const types = [
-      { type: "application/pdf", icon: PdfIcon() },
-      { type: "image/jpeg", icon: PdfIcon() },
+      { filter: "PDF", type: "application/pdf", icon: PdfIcon() },
+      { filter: "JPG", type: "image/jpeg", icon: PdfIcon() },
       {
+        filter: "DOC",
         type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         icon: DocIcon(),
       },
       {
+        filter: "PPT",
         type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
         icon: PptIcon(),
       },
       {
+        filter: "EXCEL",
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         icon: ExcelIcon(),
       },
-      { type: "application/x-zip-compressed", icon: ExcelIcon() },
+      {
+        filter: "ZIP",
+        type: "application/x-zip-compressed",
+        icon: ExcelIcon(),
+      },
     ];
 
     return types.find((x) => x.type === type).icon;
@@ -423,6 +431,7 @@ function DocumentPage() {
                       <div
                         key={x}
                         className="flex cursor-pointer font-bold hover:text-purple-700 "
+                        onClick={() => setFilterByFileType(x)}
                       >
                         {x}
                       </div>
