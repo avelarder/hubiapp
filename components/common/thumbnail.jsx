@@ -30,12 +30,12 @@ function Thumbnail({
   }, [image, imagePath, storage, defaultPathImage]);
 
   return (
-    <div className="grid relative w-32 h-32  m-2">
+    <div className="grid relative w-28 h-full m-2 ">
       {!imagePath ? (
         <div className="flex flex-col items-center">
           {icon}
           <span
-            className="text-gray-400 text-sm mt-4 cursor-pointer"
+            className="text-gray-400 text-xs mt-4 cursor-pointer "
             onClick={() => window.open(image, "_blank")}
           >
             {documentName}

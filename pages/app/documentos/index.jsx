@@ -138,7 +138,7 @@ const IconContainer = ({
         documentName={documentName}
         icon={icon}
       ></Thumbnail>
-      <div className="flex justify-center mt-8 ">
+      <div className="flex justify-center mt-2">
         <StarIcon
           className={classNames({
             "text-gray-300 w-6 h-6 cursor-pointer": true,
