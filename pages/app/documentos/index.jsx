@@ -160,175 +160,25 @@ const IconContainer = ({
   );
 };
 
-function DocumentPage() {
-  const initDocuments = {
-    headers: [
-      {
-        source: "name",
-        columnName: "Nombre",
-        isLink: true,
-        path: (id) => `documentos/${id}/detalle`,
-        onClick: (e, id) => {
-          e.preventDefault();
-          handleShowOffCanvas(id);
-        },
-        isDate: false,
-      },
-      {
-        source: "updatedOn",
-        columnName: "Fecha última modificación",
-        isDate: false,
-      },
-      { source: "type", columnName: "Tipo", isDate: false },
-    ],
-    data: [],
-  };
-
-  const filterOptions = [
-    "Todo",
-    "PDF",
-    "Doc",
-    "Jpg",
-    "Excel",
-    "PPT",
-    "Otros",
-    "Plantillas",
-  ];
-
-  const DEFAULT_LIMIT = 10;
-
-  const db = Firebase.default.firestore();
-  const { locationSelected } = useLocationContext();
-  const { authUser, loading } = useAuth();
-
-  const [showModal, setShowModal] = useState(false);
-  const [selectedDocument, setSelectedDocument] = useState({});
-  const [showOffCanvas, setShowOffCanvas] = useState(false);
-  const [orderField, setOrderField] = useState("name");
-  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
-  const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
-  const [filterText, setFilterText] = useState("");
-  const [showDetails, setShowDetails] = useState(false);
-  const [filterByFileType, setFilterByFileType] = useState("Todos");
-
-  const [statusFilter, setStatusFilter] = useState({
-    id: "ALL",
-    text: "ESTADOS: Todos",
-  });
-
-  const [roleFilter, setRoleFilter] = useState({
-    id: "ALL",
-    text: "ROLES: Todos",
-  });
-
-  const queryDocuments = db
-    .collection("Documents")
-    .where("location", "==", locationSelected.id ?? "");
-
-  const {
-    data: localDocuments,
-    status: loadingDocuments,
-    error,
-  } = useFirestoreQuery(queryDocuments);
-
-  const handleDocumentFiltering = (filter) => {
-    setFilterText(filter);
-  };
-
-  const handleShowOffCanvas = (rowId) => {
-    setSelectedDocument(documents.data.find((x) => x.id === rowId));
-    setShowOffCanvas(true);
-  };
-
-  const handleStatusFilterChanged = (value) => {
-    setStatusFilter(value);
-  };
-  const handleRoleFilterChanged = (value) => {
-    setRoleFilter(value);
-  };
-
-  const handleShowMoreNewsClicked = () => {
-    setRowsPerPage((prev) => prev + currentLimit);
-  };
-
-  const onTagModalConfirmation = () => {};
-  const handleChangeLimit = (limit) => {
-    setCurrentLimit(limit);
-    setRowsPerPage(limit);
-  };
-
-  const handleOrderByFieldChanged = (field) => {
-    let localDirection;
-    if (field === orderField) localDirection = !isOrderDirectionDesc;
-    else {
-      setOrderField(field);
-      localDirection = false;
-    }
-    setOrderDirection(localDirection);
-  };
-
-  const getIcon = (type) => {
-    const types = [
-      { filter: "PDF", type: "application/pdf", icon: PdfIcon() },
-      { filter: "JPG", type: "image/jpeg", icon: PdfIcon() },
-      {
-        filter: "DOC",
-        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        icon: DocIcon(),
-      },
-      {
-        filter: "PPT",
-        type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        icon: PptIcon(),
-      },
-      {
-        filter: "EXCEL",
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        icon: ExcelIcon(),
-      },
-      {
-        filter: "ZIP",
-        type: "application/x-zip-compressed",
-        icon: ExcelIcon(),
-      },
-    ];
-
-    return types.find((x) => x.type === type).icon;
-  };
-
-  if (loadingDocuments === "loading") {
-    return (
-      <div className="flex justify-center items-center w-full bg-purple-100 h-10 text-xs text-purple-500">
-        Los datos se están cargando, un momento por favor.
-      </div>
-    );
-  }
-
-  if (loadingDocuments === "error") {
-    return `Error: ${error.message}`;
-  }
-
-  const addTagToDocument = (documentId, tag) => {
-    db.collection("Documents")
-      .doc(documentId)
-      .update({
-        tags: [...selectedDocument.tags, tag],
-        updatedOnUTC: new Date().toISOString(),
-      });
-  };
-  const removeTagFromDocument = (documentId, tag) => {
-    const selectedTags = selectedDocument.tags.filter((x) => x !== tag);
-    db.collection("Documents").doc(documentId).update({
-      tags: selectedTags,
-      updatedOnUTC: new Date().toISOString(),
-    });
-  };
-  const documentList = {
-    ...initDocuments,
-    data: localDocuments.filter((x) => x.name.includes(filterText)),
-    origin: localDocuments,
-  };
+function DocumentContainer({
+  handleDocumentFiltering,
+  selectedDocument,
+  setShowModal,
+  onTagModalConfirmation,
+  addTagToDocument,
+  removeTagFromDocument,
+  showOffCanvas,
+  setShowOffCanvas,
+  showModal,
+  setFilterByFileType,
+  filterByFileType,
+  filterOptions,
+  locationSelected,
+  filterText,
+  showDetails,
+  setShowDetails,
+  children,
+}) {
   return (
     <NewLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8 mx-auto">
@@ -429,52 +279,21 @@ function DocumentPage() {
                   <div className="flex justify-around text-xs my-4">
                     {filterOptions.map((x) => (
                       <div
-                        key={x}
-                        className="flex cursor-pointer font-bold hover:text-purple-700 "
+                        key={x.filter}
+                        className={classNames(
+                          "flex cursor-pointer font-bold hover:text-purple-700 ",
+                          {
+                            "text-purple-500":
+                              filterByFileType.filter == x.filter,
+                          }
+                        )}
                         onClick={() => setFilterByFileType(x)}
                       >
-                        {x}
+                        {x.filter}
                       </div>
                     ))}
                   </div>
-                  {showDetails ? (
-                    <TableSection
-                      sectionTitle="Documntos"
-                      dataset={documentList}
-                      currentLimit={currentLimit}
-                      isOrderDesc={isOrderDirectionDesc}
-                      orderField={orderField}
-                      onShowOffCanvas={() => {}}
-                      onView={() => {}}
-                      onEdit={() => {}}
-                      onDelete={() => {}}
-                      onShowMore={handleShowMoreNewsClicked}
-                      onChangeLimit={handleChangeLimit}
-                      onOrderByFieldChanged={handleOrderByFieldChanged}
-                      onFilterPostChanged={() => {}}
-                    ></TableSection>
-                  ) : (
-                    <div className="flex flex-wrap gap-8">
-                      {documentList.data.map((x) => (
-                        <IconContainer
-                          key={x.id}
-                          sourceId={x.id}
-                          documentName={x.name}
-                          tags={x.tags}
-                          icon={getIcon(x.type)}
-                          isSelected={selectedDocument.id == x.id}
-                          onMouseOver={() => setSelectedDocument(x)}
-                          onClick={handleShowOffCanvas}
-                          onDocumentTag={() => {
-                            setShowModal(true);
-                          }}
-                          isFavorited={x.featuredBy.indexOf(authUser.uid) > -1}
-                          currentUser={authUser.uid}
-                          featuredBy={x.featuredBy}
-                        ></IconContainer>
-                      ))}
-                    </div>
-                  )}
+                  {children}
                 </div>
               </div>
             </div>
@@ -505,6 +324,281 @@ function DocumentPage() {
         </div>
       </div>
     </NewLayout>
+  );
+}
+
+function DocumentPage() {
+  const initDocuments = {
+    headers: [
+      {
+        source: "name",
+        columnName: "Nombre",
+        isLink: true,
+        path: (id) => `documentos/${id}/detalle`,
+        onClick: (e, id) => {
+          e.preventDefault();
+          handleShowOffCanvas(id);
+        },
+        isDate: false,
+      },
+      {
+        source: "updatedOn",
+        columnName: "Fecha última modificación",
+        isDate: false,
+      },
+      { source: "type", columnName: "Tipo", isDate: false },
+    ],
+    data: [],
+  };
+
+  const filterOptions = [
+    { filter: "Todos", type: "" },
+    { filter: "PDF", type: "application/pdf" },
+    { filter: "JPG", type: "image/jpeg" },
+    {
+      filter: "DOC",
+      type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    },
+    {
+      filter: "PPT",
+      type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    },
+    {
+      filter: "EXCEL",
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    },
+    {
+      filter: "ZIP",
+      type: "application/x-zip-compressed",
+    },
+  ];
+
+  const DEFAULT_LIMIT = 10;
+
+  const db = Firebase.default.firestore();
+  const { locationSelected } = useLocationContext();
+  const { authUser, loading } = useAuth();
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState({});
+  const [showOffCanvas, setShowOffCanvas] = useState(false);
+  const [orderField, setOrderField] = useState("name");
+  const [isOrderDirectionDesc, setOrderDirection] = useState(false);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
+  const [currentLimit, setCurrentLimit] = useState(DEFAULT_LIMIT);
+  const [filterText, setFilterText] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
+  const [filterByFileType, setFilterByFileType] = useState({
+    filter: "Todos",
+    type: "",
+  });
+
+  const [statusFilter, setStatusFilter] = useState({
+    id: "ALL",
+    text: "ESTADOS: Todos",
+  });
+
+  const [roleFilter, setRoleFilter] = useState({
+    id: "ALL",
+    text: "ROLES: Todos",
+  });
+
+  const queryDocuments =
+    filterByFileType.filter === "Todos"
+      ? db
+          .collection("Documents")
+          .where("location", "==", locationSelected.id ?? "")
+      : db
+          .collection("Documents")
+          .where("location", "==", locationSelected.id ?? "")
+          .where("type", "==", filterByFileType.type);
+
+  const {
+    data: localDocuments,
+    status: loadingDocuments,
+    error,
+  } = useFirestoreQuery(queryDocuments);
+
+  const handleDocumentFiltering = (filter) => {
+    setFilterText(filter);
+  };
+
+  const handleShowOffCanvas = (rowId) => {
+    setSelectedDocument(documents.data.find((x) => x.id === rowId));
+    setShowOffCanvas(true);
+  };
+
+  const handleStatusFilterChanged = (value) => {
+    setStatusFilter(value);
+  };
+  const handleRoleFilterChanged = (value) => {
+    setRoleFilter(value);
+  };
+
+  const handleShowMoreNewsClicked = () => {
+    setRowsPerPage((prev) => prev + currentLimit);
+  };
+
+  const onTagModalConfirmation = () => {};
+  const handleChangeLimit = (limit) => {
+    setCurrentLimit(limit);
+    setRowsPerPage(limit);
+  };
+
+  const handleOrderByFieldChanged = (field) => {
+    let localDirection;
+    if (field === orderField) localDirection = !isOrderDirectionDesc;
+    else {
+      setOrderField(field);
+      localDirection = false;
+    }
+    setOrderDirection(localDirection);
+  };
+
+  const getIcon = (type) => {
+    const types = [
+      { filter: "PDF", type: "application/pdf", icon: PdfIcon() },
+      { filter: "JPG", type: "image/jpeg", icon: PdfIcon() },
+      {
+        filter: "DOC",
+        type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        icon: DocIcon(),
+      },
+      {
+        filter: "PPT",
+        type: "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        icon: PptIcon(),
+      },
+      {
+        filter: "EXCEL",
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        icon: ExcelIcon(),
+      },
+      {
+        filter: "ZIP",
+        type: "application/x-zip-compressed",
+        icon: ExcelIcon(),
+      },
+    ];
+
+    return types.find((x) => x.type === type).icon;
+  };
+
+  const addTagToDocument = (documentId, tag) => {
+    db.collection("Documents")
+      .doc(documentId)
+      .update({
+        tags: [...selectedDocument.tags, tag],
+        updatedOnUTC: new Date().toISOString(),
+      });
+  };
+  const removeTagFromDocument = (documentId, tag) => {
+    const selectedTags = selectedDocument.tags.filter((x) => x !== tag);
+    db.collection("Documents").doc(documentId).update({
+      tags: selectedTags,
+      updatedOnUTC: new Date().toISOString(),
+    });
+  };
+
+  if (loadingDocuments === "loading") {
+    return (
+      // <div className="flex justify-center items-center w-full bg-purple-100 h-10 text-xs text-purple-500">
+      //   Los datos se están cargando, un momento por favor.
+      // </div>
+
+      <DocumentContainer
+        filterOptions={filterOptions}
+        filterText={filterText}
+        locationSelected={locationSelected}
+        filterByFileType={filterByFileType}
+        setFilterByFileType={setFilterByFileType}
+        setShowDetails={setShowDetails}
+        showDetails={showDetails}
+        addTagToDocument={addTagToDocument}
+        onTagModalConfirmation={onTagModalConfirmation}
+        removeTagFromDocument={removeTagFromDocument}
+        selectedDocument={selectedDocument}
+        setShowModal={setShowModal}
+        setShowOffCanvas={setShowOffCanvas}
+        showModal={showModal}
+        showOffCanvas={showOffCanvas}
+        handleDocumentFiltering={handleDocumentFiltering}
+      >
+        <div className="flex text-purple-500  w-full h-full"></div>
+      </DocumentContainer>
+    );
+  }
+
+  if (loadingDocuments === "error") {
+    return `Error: ${error.message}`;
+  }
+
+  const documentList = {
+    ...initDocuments,
+    data: localDocuments.filter((x) => x.name.includes(filterText)),
+    origin: localDocuments,
+  };
+
+  return (
+    <DocumentContainer
+      filterOptions={filterOptions}
+      filterText={filterText}
+      locationSelected={locationSelected}
+      setFilterByFileType={setFilterByFileType}
+      filterByFileType={filterByFileType}
+      setShowDetails={setShowDetails}
+      showDetails={showDetails}
+      addTagToDocument={addTagToDocument}
+      onTagModalConfirmation={onTagModalConfirmation}
+      removeTagFromDocument={removeTagFromDocument}
+      selectedDocument={selectedDocument}
+      setShowModal={setShowModal}
+      setShowOffCanvas={setShowOffCanvas}
+      showModal={showModal}
+      showOffCanvas={showOffCanvas}
+      handleDocumentFiltering={handleDocumentFiltering}
+    >
+      <div>
+        {showDetails ? (
+          <TableSection
+            sectionTitle="Documntos"
+            dataset={documentList}
+            currentLimit={currentLimit}
+            isOrderDesc={isOrderDirectionDesc}
+            orderField={orderField}
+            onShowOffCanvas={() => {}}
+            onView={() => {}}
+            onEdit={() => {}}
+            onDelete={() => {}}
+            onShowMore={handleShowMoreNewsClicked}
+            onChangeLimit={handleChangeLimit}
+            onOrderByFieldChanged={handleOrderByFieldChanged}
+            onFilterPostChanged={() => {}}
+          ></TableSection>
+        ) : (
+          <div className="flex flex-wrap gap-8">
+            {documentList.data.map((x) => (
+              <IconContainer
+                key={x.id}
+                sourceId={x.id}
+                documentName={x.name}
+                tags={x.tags}
+                icon={getIcon(x.type)}
+                isSelected={selectedDocument.id == x.id}
+                onMouseOver={() => setSelectedDocument(x)}
+                onClick={handleShowOffCanvas}
+                onDocumentTag={() => {
+                  setShowModal(true);
+                }}
+                isFavorited={x.featuredBy.indexOf(authUser.uid) > -1}
+                currentUser={authUser.uid}
+                featuredBy={x.featuredBy}
+              ></IconContainer>
+            ))}
+          </div>
+        )}
+      </div>
+    </DocumentContainer>
   );
 }
 
