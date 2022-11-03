@@ -12,6 +12,36 @@ export const statusOptions = [
   { id: "WIDOW", text: "Viudo(a)" },
   { id: "OTHER", text: "Otro" },
 ];
+export const incidentOptions = [
+  {
+    id: "FIRE",
+    text: "Incendios",
+  },
+  {
+    id: "BULGAR",
+    text: "Robo",
+  },
+  {
+    id: "LOST_OBJECTS",
+    text: "Pérdida de Objetos",
+  },
+  {
+    id: "COMMON_SERVICES",
+    text: "Servicios Públicos",
+  },
+  {
+    id: "EQUIPTMENT_FAILURE",
+    text: "Falla de Equipo",
+  },
+  {
+    id: "MAINTENANCE",
+    text: "Mantenimiento",
+  },
+  {
+    id: "OTHER",
+    text: "Otros",
+  },
+];
 export const accessTypeOptions = [
   { id: "ADMINISTRATOR", text: "Administrador" },
   { id: "CONCIERGE", text: "Conserje" },

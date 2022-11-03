@@ -21,6 +21,12 @@ export const paths = {
     EDIT: (collaboratorId) => `/collaboradores/${collaboratorId}/editar`,
     DETAILS: (collaboratorId) => `/collaboradores/${collaboratorId}/detalle`,
   },
+  SECURITY: {
+    LIST: () => "/app/seguridad",
+    CREATE: () => "/seguridad/crear",
+    EDIT: (incidentId) => `/seguridad/${incidentId}/editar`,
+    DETAILS: (incidentId) => `/seguridad/${incidentId}/detalle`,
+  },
   ERROR: {
     NO_REGISTRATION: () => "/usuarios/sin-registro",
     NO_LOCATION: () => "/usuarios/sin-locacion",
