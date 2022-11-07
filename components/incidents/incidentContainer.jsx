@@ -32,7 +32,7 @@ function IncidentContainer({ onCreateClicked }) {
         path: (id) => `seguridad/${id}/detalle`,
         onClick: (e, id) => {
           e.preventDefault();
-          handleShowOffCanvas(id);
+          router.push(`seguridad/${id}/detalle`);
         },
         isDate: false,
       },
