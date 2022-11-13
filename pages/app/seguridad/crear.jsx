@@ -89,13 +89,16 @@ function IncidentCreatePage() {
 
     await db.collection("Incidents").doc(incidentId).set({
       title: incidentData.title,
+      status: "SUBMITTED",
       description: incidentData.description,
       incidentType: incidentData.incidentType,
       location: locationSelected.id,
+      locationText: locationSelected.text,
       incidentDate: new Date().toISOString(),
       createdBy: authUser.email,
       createdById: authUser.uid,
-      createdOn: new Date().toISOString(),
+      createdOnUTC: new Date().toISOString(),
+      updatedOnUTC: new Date().toISOString(),
     });
   };
 

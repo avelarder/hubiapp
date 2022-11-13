@@ -26,6 +26,7 @@ export const paths = {
     CREATE: () => "/seguridad/crear",
     EDIT: (incidentId) => `/seguridad/${incidentId}/editar`,
     DETAILS: (incidentId) => `/seguridad/${incidentId}/detalle`,
+    REVIEW: (incidentId) => `/seguridad/${incidentId}/supervisar`,
   },
   ERROR: {
     NO_REGISTRATION: () => "/usuarios/sin-registro",

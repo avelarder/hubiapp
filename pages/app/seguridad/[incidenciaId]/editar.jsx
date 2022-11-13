@@ -12,7 +12,7 @@ import { useLocationContext } from "../../../../locationProvider";
 import IncidentEdit from "../../../../components/incidents/edit";
 import useFirestoreQuery from "../../../../hooks/useFirestoreQuery";
 import Thumbnail from "../../../../components/common/thumbnail";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 
 function IncidentEditPage() {
   const db = Firebase.default.firestore();

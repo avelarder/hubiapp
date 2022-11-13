@@ -10,7 +10,6 @@ import RoundedInputText from "../common/roundedInputText";
 import Select from "../common/select";
 import TableSection from "../common/table-section";
 import { useLocationContext } from "../../locationProvider";
-import { useAuth } from "../../authUserProvider";
 import useFirestoreQuery from "../../hooks/useFirestoreQuery";
 import { incidentOptions } from "../../utils/UI-Constants";
 
@@ -19,7 +18,6 @@ const DEFAULT_LIMIT = 10;
 function IncidentContainer({ onCreateClicked }) {
   const router = useRouter();
   const { locationSelected } = useLocationContext();
-  const { authUser, loading } = useAuth();
   const db = Firebase.default.firestore();
   let incidents = {};
 
@@ -36,9 +34,13 @@ function IncidentContainer({ onCreateClicked }) {
         },
         isDate: false,
       },
-      { source: "createdBy", columnName: "Creado por", isDate: true },
-      { source: "createdOn", columnName: "Fecha creación", isDate: false },
-      { source: "incidentDate", columnName: "Ocurrencia", isDate: true },
+      { source: "incidentType", columnName: "Tipo", isDate: false },
+      {
+        source: "updatedOnUTC",
+        columnName: "Fecha Actualización",
+        isDate: true,
+      },
+      { source: "status", columnName: "Estado", isDate: false },
     ],
     data: [],
   };
@@ -95,7 +97,12 @@ function IncidentContainer({ onCreateClicked }) {
     }
     setOrderDirection(localDirection);
   };
-
+  const getIncidentStatus = (status) => {
+    if (!status) return "REPORTADO";
+    if (status === "SUBMITTED") return "REPORTADO";
+    if (status === "REVIEWED") return "SUPERVISADO";
+    if (status === "RETURNED") return "DEVUELTO";
+  };
   const query = db
     .collection("Incidents")
     .orderBy(orderField, "desc")
@@ -119,17 +126,10 @@ function IncidentContainer({ onCreateClicked }) {
     var incidentsData = data.map((doc) => ({
       id: doc.id,
       title: doc.title,
-      description: doc.description,
       incidentType: doc.incidentType,
-      location: doc.location,
       documents: doc.documents,
-      incidentDate: doc.incidentDate,
-      createdBy: doc.createdBy,
-      createdOn: doc.createdOn,
-      verifiedBY: doc.verifiedBy,
-      verifiedOn: doc.verifiedOn,
-      deletedOn: doc.deletedOn,
-      deletedBy: doc.deletedBy,
+      updatedOnUTC: doc.updatedOnUTC,
+      status: getIncidentStatus(doc.status),
     }));
 
     incidents = { ...initIncidents, data: incidentsData };

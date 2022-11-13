@@ -162,6 +162,10 @@ function TableSection({
                               </NavLink>
                             ) : isObject(row[header.source]) ? (
                               row[header.source].text
+                            ) : header.isDate ? (
+                              moment(row[header.source]).format(
+                                "YYYY-MM-DD HH:mm"
+                              )
                             ) : (
                               row[header.source]
                             )}

@@ -64,6 +64,29 @@ const StyledButton = tw.button`
     font-regular
     shadow-sm`;
 
+const StateStyledButton = tw.button`
+    bg-gradient-to-tr
+    border-1
+    from-purple-700
+    to-purple-400 
+    hover:border-purple-200
+    w-40
+    h-10
+    my-2
+    rounded-lg 
+    text-white 
+    text-sm
+    font-regular
+    shadow-sm
+    
+    ${(props) =>
+      props.disabled &&
+      `
+      from-purple-300
+      to-purple-400 
+      `}
+    `;
+
 const StyledSecondaryButton = tw.button`
     bg-gradient-to-tr
     from-gray-400
@@ -97,4 +120,5 @@ export {
   StyledButton,
   StyledSecondaryButton,
   ScrollableContainer,
+  StateStyledButton,
 };

@@ -11,9 +11,13 @@ import RoundedLabel from "../../../../components/common/roundedLabel";
 
 import DeleteModal from "../../../../components/common/delete-modal";
 import {
+  Divider,
+  StateStyledButton,
   StyledButton,
   StyledSecondaryButton,
 } from "../../../../components/admin/base-ui-components";
+import RoundedFieldValue from "../../../../components/common/roundedFieldValue";
+import moment from "moment";
 
 function IncidentDetails() {
   const router = useRouter();
@@ -58,9 +62,6 @@ function IncidentDetails() {
   if (statusIncident === "error") {
     return `Error: ${errorIncident.message}`;
   }
-  //   if (dataIncident === null) {
-  //     return <Loader></Loader>;
-  //   }
 
   const handleEditClicked = async (event) => {
     router.push(`/app/seguridad/${id}/editar`);
@@ -83,28 +84,37 @@ function IncidentDetails() {
             </h1>
           </section>
           <section>
-            <FieldContainer>
-              <RoundedLabel
-                label={`Tipo de Incidente`}
-                value={dataIncident.incidentType.text}
-              ></RoundedLabel>
-              <RoundedLabel
-                label={`Título`}
-                value={dataIncident.title}
-              ></RoundedLabel>
-              <div className="mt-4">
-                <span className="text-gray-400 text-xs ml-6 ">
-                  {"Description"}
-                </span>
-                <div
-                  className={
-                    "flex items-start p-2 text-sm h-40 text-black w-full  border-gray-100  rounded-2xl border-1 pl-6"
-                  }
-                >
-                  {dataIncident.description}
-                </div>
-              </div>
-            </FieldContainer>
+            <div className="flex flex-col items-center gap-3 ">
+              <FieldContainer title={"Nombre del Reportante"}>
+                <RoundedFieldValue
+                  value={dataIncident?.createdBy}
+                ></RoundedFieldValue>
+              </FieldContainer>
+              <FieldContainer title={"Ubicación"}>
+                <RoundedFieldValue
+                  value={dataIncident?.locationText}
+                ></RoundedFieldValue>
+              </FieldContainer>
+              <FieldContainer title={"Tipo de Incidente"}>
+                <RoundedFieldValue
+                  value={dataIncident?.incidentType.text}
+                ></RoundedFieldValue>
+              </FieldContainer>
+              <FieldContainer title={"Fecha de Registro"}>
+                <RoundedFieldValue
+                  value={moment(dataIncident?.createdOnUTC).format(
+                    "YYYY-MM-DD HH:mm"
+                  )}
+                ></RoundedFieldValue>
+              </FieldContainer>
+
+              <FieldContainer title={"Detalle de Inicidencia"}>
+                <RoundedFieldValue
+                  value={dataIncident?.description}
+                  multilines={true}
+                ></RoundedFieldValue>
+              </FieldContainer>
+            </div>
 
             <FieldContainer title={"Galería de Imágenes"}>
               <div className="grid grid-flow-col w-full h-48 px-2">
@@ -113,6 +123,26 @@ function IncidentDetails() {
                 ))}
               </div>
             </FieldContainer>
+
+            <FieldContainer title={"Actiones"}>
+              <RoundedFieldValue
+                value={dataIncident?.actions}
+                multilines={true}
+              ></RoundedFieldValue>
+            </FieldContainer>
+
+            <FieldContainer title={"Comentarios"}>
+              {dataIncident?.comments?.map((comment, index) => (
+                <RoundedFieldValue
+                  key={index}
+                  multilines={true}
+                  value={`${comment.comment} ${moment(comment.postedOn).format(
+                    "YYYY-MM-DD HH:mm"
+                  )}-${comment.authorEmail}`}
+                ></RoundedFieldValue>
+              ))}
+            </FieldContainer>
+
             <div className="flex justify-end text-white text-md font-bold  mt-8 ">
               <StyledSecondaryButton
                 ref={defaultButton}
@@ -122,23 +152,14 @@ function IncidentDetails() {
                 Regresar
               </StyledSecondaryButton>
 
-              <StyledButton
-                className="w-64 bg-purple-600 h-10 shadow-md rounded-md"
-                onClick={handleEditClicked}
-              >
+              <StateStyledButton onClick={handleEditClicked}>
                 Editar
-              </StyledButton>
+              </StateStyledButton>
             </div>
           </section>
         </div>
         <div className="flex xs:w-1/6"></div>
       </div>
-      {showDeleteModal && (
-        <DeleteModal
-          onCancel={() => setShowDeleteModal(false)}
-          onConfirm={handleDeleteConfirmation}
-        ></DeleteModal>
-      )}
     </NewLayout>
   );
 }
