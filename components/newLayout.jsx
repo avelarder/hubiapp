@@ -10,6 +10,7 @@ import {
   UserGroupIcon,
   IdentificationIcon,
 } from "@heroicons/react/outline";
+import SosButton from "./common/sos";
 
 function NewLayout(props) {
   const { authUser, loading } = useAuth();
@@ -124,6 +125,8 @@ function NewLayout(props) {
               path="/app/configuracion"
               text="Configuración"
             ></SidebarItem>
+
+            <SosButton></SosButton>
           </ul>
         </div>
 

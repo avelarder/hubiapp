@@ -8,7 +8,7 @@ function ModalContainer({ onCancel, children }) {
       }}
     >
       <div
-        className="fixed z-100 inset-0 overflow-y-auto"
+        className="fixed z-800 inset-0 overflow-y-auto"
         aria-labelledby="modal-title"
         role="dialog"
         aria-modal="true"
